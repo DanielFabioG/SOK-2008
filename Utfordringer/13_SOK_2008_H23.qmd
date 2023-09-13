@@ -16,11 +16,16 @@ bibliography: referanse.bib
 
 ```{r}
 #| output: false
+
+# Loading packages needed
 rm(list = ls())
 library(tidyverse)
 library(rjstat)
 library(httr)
 library(readr)
+library(eurostat)
+library(countrycode)
+options(scipen = 999)
 ```
 
 ```{r}
@@ -65,10 +70,94 @@ df <-  hent_indeks.tmp %>%
 ```
 
 ```{r}
+# Data for population pyramid
+url <- "https://data.ssb.no/api/v0/no/table/07459/"
+
+query <- '{
+  "query": [
+    {
+      "code": "Region",
+      "selection": {
+        "filter": "vs:Landet",
+        "values": [
+          "0"
+        ]
+      }
+    },
+    {
+      "code": "Kjonn",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "1",
+          "2"
+        ]
+      }
+    },
+    {
+      "code": "Alder",
+      "selection": {
+        "filter": "agg:FemAarigGruppering",
+        "values": [
+          "F00-04",
+          "F05-09",
+          "F10-14",
+          "F15-19",
+          "F20-24",
+          "F25-29",
+          "F30-34",
+          "F35-39",
+          "F40-44",
+          "F45-49",
+          "F50-54",
+          "F55-59",
+          "F60-64",
+          "F65-69",
+          "F70-74",
+          "F75-79",
+          "F80-84",
+          "F85-89",
+          "F90-94",
+          "F95-99",
+          "F100G5+"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2003",
+          "2023"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+hent_indeks.tmp <- url %>%
+  POST(body = query, encode = "json")
+
+df_pop <-  hent_indeks.tmp %>%
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble()
+```
+
+```{r}
 # Importing the data for women based on generosity of parental leave and womens employment ratio in 24 OECD (Organization for Economic Cooperation and Development) countries
 
 women <- read_delim("https://raw.githubusercontent.com/uit-sok-2008-h23/uit-sok-2008-h23.github.io/main/assets/women.csv", 
     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+# Using the package eurostat to download the data needed
+# Code used from the eurostat package description site
+eurostat <- get_eurostat(id = "hlth_sha11_hf", 
+                     type = "label")
 
 # Removing a list, query and the url to free up memory since it is not needed anymore
 rm(hent_indeks.tmp, query, url)
@@ -99,7 +188,7 @@ df %>%
   geom_point(alpha=0.5)+
   theme_minimal()+
   theme(legend.position = "bottom")+
-  labs(title="Gjennomsnitt arbeidstimer i Norge", 
+  labs(title="Gjennomsnittlig arbeidstimer per uke i Norge", 
        subtitle="Kvinner mot Menn. 1995-2022.", 
        y="Arbeidstimer per uke", 
        x="", 
@@ -160,18 +249,156 @@ women %>%
 
 For at den nordiske modellen skal kunne fortsette trenger vi høy yrkesdeltakelse blant kvinner slik at vi fortsetter å få inn skattbar inntekt som hovedsakelig brukes til å finansiere alle godene som vi får tilbake av den. For eksempel pensjon, trygd når man havner utenfor arbeidsstyrken, gratis utdanning, eldreomsorg, og gratis helsetjenester for å nevne noen eksempler.
 
-Barnetall er også veldig viktig for den nordiske modellen, for om vi får en skjevhet i befolknings-pyramiden hvor vi får et flertall av eldre mennesker i Norge enn nyfødte barn og mennesker i arbeidsstyrken så vil samfunnet slite med å finansiere godene som modellen gir oss. (Kanskje lag en befolknings-pyramide som eksempel.)
+Barnetall er også veldig viktig for den nordiske modellen, for om vi får en skjevhet i befolknings-pyramiden hvor vi får et flertall av eldre mennesker i Norge enn nyfødte barn og mennesker i arbeidsstyrken så vil samfunnet slite med å finansiere godene som modellen gir oss. Hvis antall fødsler per 2 voksne er mindre enn 2 vil befolkningen på sikt minke, og som man kan se i pyramiden under så er det flere eldre mennesker i 2023 enn det var for 20 år siden i Norge.
+
+```{r}
+# Fikser så legenden får stor K i kjønn
+df_pop<-df_pop %>%
+  rename(Kjønn = kjønn)
+
+# Fixing so it is possible to arrange the age groups correctly 
+df_pop$alder <- gsub("år", "", df_pop$alder)
+df_pop$alder <- gsub("100 år eller eldre", "100+", df_pop$alder)
+df_pop$alder <- gsub(" ", "", df_pop$alder)
+df_pop$alder <- gsub("100ellereldre", "100+", df_pop$alder)
+
+# Forced ChatGPT to write this for me
+age_levels <- c("0-4", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", "35-39", "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70-74", "75-79", "80-84", "85-89", "90-94", "95-99", "100+")
+
+# This code makes the alder col a factor and replaces vales with age_levels above
+df_pop$alder <- factor(df_pop$alder, levels = age_levels)
+
+# Code inspired by this blog post: https://www.r-bloggers.com/2023/09/creating-population-pyramid-plots-in-r-with-ggplot2/
+pyramide_2003 <- df_pop %>%
+  filter(år == 2003) %>%
+  ggplot(aes(x=alder, fill=Kjønn,
+             y = ifelse(
+               test = Kjønn == "Menn",
+               yes = -value,
+               no = value
+             )
+             )) +
+  geom_bar(stat="identity") +
+  scale_fill_manual(values = colours)
+
+# I improved upon this and made ChatGPT rewrite it to add 2023 since I had no
+# clue at all how to do it myself
+
+pop_pyramide <- pyramide_2003 +
+  geom_bar(data=filter(df_pop, år == 2023),
+           aes(y = ifelse(
+             test = Kjønn == "Menn",
+             yes = -value,
+             no = value
+           ), fill=Kjønn),
+           stat="identity", alpha=0.5) +
+  scale_y_continuous(
+    labels = abs,
+    limits = max(df_pop$value) * c(-1,1)
+  ) +
+  coord_flip() +
+  theme_minimal() +
+  labs(x="", y="", title="Befolkningspyramide for Norge", 
+       subtitle="2003, hele søyler. 2023, gjennomsiktige")
+
+pop_pyramide
+```
 
 # Utfordring 1.2
 
 ## Sammenhengen mellom andelen av egenbetalinger og helsetjenesteforbruk pr. innbygger
 
+```{r}
+# Small fix for variable names and fixing date.time object
+eurostat <- eurostat %>%
+  transmute(date = as.Date(time),unit = unit,
+            spending = icha11_hf, country = geo, val = values)
+```
+
+```{r}
+# Filtering for 2019 and aggregated values then pivoting it wide
+# renaming two variables afterwards in euro_wide
+euro_wide <- eurostat %>%
+  filter(date == "2019-01-01", 
+         !country %in% c('European Union - 27 countries (from 2020)',
+                         'European Union - 28 countries (2013-2020)',
+                         'European Union - 27 countries (2007-2013)',
+                         'European Union - 15 countries (1995-2004)',
+                         'Euro area – 20 countries (from 2023)',
+                         'Euro area - 19 countries  (2015-2022)',
+                         'Euro area - 18 countries (2014)',
+                         'Euro area - 12 countries (2001-2006)')) %>%
+  pivot_wider(names_from = "spending", values_from = "val") %>%
+  rename(house = 'Household out-of-pocket payment', gov = 'Government schemes and compulsory contributory health care financing schemes') %>%
+  mutate(abbrev =countrycode(sourcevar = country, destination = "iso2c",
+                   origin = "country.name"))
+```
+
+```{r}
+#| output: false
+#| 
+# Looking for correlation with a linear regression model
+lm( gov ~ house, euro_wide)
+```
+
+```{r}
+# Plotting the correlation and the linear regression model
+euro_wide%>%
+  filter(unit == 'Purchasing power standard (PPS) per inhabitant') %>%
+  ggplot(aes(x=house, y=gov,label=abbrev))+
+  geom_point(size=6, alpha=0.5, color="cornflowerblue")+
+  geom_smooth(method = lm, se=FALSE)+
+  labs(x="Husholdningen selv", y="Myndighetens helsetjenesteforuk", 
+       title="Korrelasjonen mellom egenbetalinger og helsetjenesteforbruk",
+       caption= "Kilde: Eurostat", subtitle="Purchasing power standard (PPS) justert per innbygger")+
+  theme_minimal()+
+  geom_text(size=3)
+```
+
 ## Hvordan økt egenbetaling påvirker helsetjenesteforbruk og øker effektiviteten
+
+```{r}
+# Adding the colours I want 
+colours <- c('Government schemes and compulsory contributory health care financing schemes' = "palevioletred", 'Household out-of-pocket payment' = "cornflowerblue")
+
+# This figure needed alot of filtering to work, mostly just saying to look at 2019
+# and remove some observations in country that was aggregated and not needed
+# also had to filter for types of spending I wanted to look at
+# and finally I wanted to look at percentages of spending from gov and households
+# Rest is just some small finetuning to make it look better
+eurostat %>%
+  filter(date == "2019-01-01", 
+         !country %in% c('European Union - 27 countries (from 2020)',
+                         'European Union - 28 countries (2013-2020)',
+                         'European Union - 27 countries (2007-2013)',
+                         'European Union - 15 countries (1995-2004)',
+                         'Euro area – 20 countries (from 2023)',
+                         'Euro area - 19 countries  (2015-2022)',
+                         'Euro area - 18 countries (2014)',
+                         'Euro area - 12 countries (2001-2006)'),
+         spending %in% c('Government schemes and compulsory contributory health care financing schemes', 'Household out-of-pocket payment'),
+         unit == 'Percentual share of total current health expenditure (CHE)') %>%
+  ggplot(aes(x=country, y=val, fill=spending)) +
+  theme_minimal()+
+  geom_col(alpha=0.9) +
+  theme(legend.position = "top") +
+  scale_x_discrete(guide = guide_axis(angle=45))+
+  labs(title="Helsetjenestekostnader og type finansiering (2019)", y="", x="")+
+  scale_fill_manual(values = colours, 
+                    labels=c('Staten', 'Husholdningenes egenandel'),
+                    name= ""
+                    )+
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+```
 
 ## Fordelingseffekter av økte egenandeler
 
 # Appendix
 
 [ChatGPT forespørsel om endring av farger til søyler](https://chat.openai.com/share/37e54a43-9162-4396-a50c-90e3a005110b) (Endte opp med å bruke colours_country_named \<- setNames(colours_country, sort(unique(women\$country))) )
+
+[ChatGPT forespørsel om hjelp til å huske ! for å eksludere ting](https://chat.openai.com/share/2df38c59-8cae-4de7-89d3-73ecdc385db9) (Endte opp med å bruke koden med !)
+
+[Hjelp til befolkningspyramide](https://chat.openai.com/share/7aadd5cd-290a-4c62-a34f-3082adfcc2c6) (Endte opp med å bruke mye av koden hvor jeg nevner i kodeblokk at ChatGPT hjelper meg)
 
 # Referanser
