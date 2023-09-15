@@ -154,7 +154,6 @@ df_pop <-  hent_indeks.tmp %>%
 
 ```{r}
 # Importing the data for women based on generosity of parental leave and womens employment ratio in 24 OECD (Organization for Economic Cooperation and Development) countries
-
 women <- read_delim("https://raw.githubusercontent.com/uit-sok-2008-h23/uit-sok-2008-h23.github.io/main/assets/women.csv", 
     delim = ";", escape_double = FALSE, trim_ws = TRUE)
 
@@ -179,15 +178,15 @@ df_plot<-df_1 %>%
 
 # Innledning
 
-Gjennom det siste århundret har samfunnet vi lever i gått gjennom store forandringer for hvordan vi fungerer. Vi har gått fra et samfunn som for nøyaktig 100 år siden nettopp hadde opplevd den første store verdenskrigen, paripolitikk, deflasjonen og andre store endringer hvor fagforeninger blir etablert og man levde i et samfunn hvor kvinnens rolle var å være hjemme, mens mannen dro ut for å fiske eller jobbe i fabrikk et cetera. Det er også her den første delen av den nordiske modellen blir etablert som heter trepartssamarbeidet. Direkte forklart er dette samarbeidet mellom arbeidsgiver, arbeidstaker, fagforeninger og staten, hvor disse forhandler lønnsvilkår og eventuelt streik hvis de blir uenige.
+Gjennom det siste århundret har samfunnet vi lever i gått gjennom store forandringer for hvordan vi fungerer. Vi har gått fra et samfunn som for 100 år siden akkurat hadde opplevd den første store verdenskrigen, paripolitikk, deflasjonen og andre store endringer hvor fagforeninger ble etablert og man levde i et samfunn hvor kvinnens rolle var å være hjemme, mens mannen dro ut for å fiske eller jobbe i fabrikk et cetera. Det er også her den første delen av den nordiske modellen blir etablert som heter trepartssamarbeidet. Direkte forklart er dette samarbeidet mellom arbeidsgiver, arbeidstaker, fagforeninger og staten, hvor disse forhandler lønnsvilkår og eventuelt streik hvis de blir uenige.
 
-Spol frem 100 år og etter vi etablerte organisert arbeidsliv (trepartssamarbeidet) har dette vært starten på et drastisk endret samfunn. Vi har laget oss en velferdsmodell som virker simpelt forklart som et tannhjul, og for at vi videre skal nyte velferden av at det fortsetter å gå rundt må vi som et samfunn gjøre det vi kan for at det ikke skal stikkes kjepper i tannhjulet. Før vi går videre er det greit å vite kort fortalt så lever den nordiske modellen vi har idag på grunn av at arbeidsstyrken (de i samfunnet vårt som arbeider) går på jobb, får en inntekt, og progressivt skattes for hvor stor inntekten er. Den andre inntekten som kommer inn til velferdsmodellen er via avgifter som vi pålegger samfunnet vi lever i, for eksempel siden det er en kostnad tilknyttet å kjøpe tobakk så legges det på en avgift som indirekte hjelper personen med helseutgifter ikke nå, men i fremtiden når han eksempelvis får lungekreft. Videre gjennom økonomisk styring bestemmer vi hvordan pengene skal fordeles gjennom subsidier til markedene som opplever størst svikt på grunn av at markedene selv ikke klarer finne likevekt, eller er lite hensiktsmessig å investere i et cetera. (Skriv bedre)
+Spol frem 100 år og etter vi etablerte organisert arbeidsliv (trepartssamarbeidet) så har dette vært starten på et samfunn som har endret seg stort. Vi har bygget på fra den første pilaren og skapt oss en velferdsmodell som virker simpelt forklart som et bygg totalt støttet av 3 pilarer, og for at vi videre skal nyte velferden av at det fortsetter å stå må vi som et samfunn gjøre det vi kan for at det ikke skal falle sammen. Før vi går videre er det greit å vite kort fortalt så lever den nordiske modellen vi har idag på grunn av at arbeidsstyrken (de i samfunnet vårt som arbeider) går på jobb, får en inntekt, og progressivt skattes for hvor stor inntekten er. Den andre inntekten som kommer inn til velferdsmodellen er via avgifter som vi pålegger samfunnet vi lever i, for eksempel siden det er en kostnad tilknyttet å kjøpe tobakk så legges det på en avgift som indirekte hjelper personen med helseutgifter ikke nå, men i fremtiden når han eksempelvis får lungekreft. Videre gjennom økonomisk styring bestemmer vi hvordan pengene skal fordeles gjennom subsidier til markedene som opplever størst svikt på grunn av at markedene selv ikke klarer finne likevekt, eller er lite hensiktsmessig å investere i et cetera. (Skriv bedre)
 
 # Utfordring 1.1 Familiepolitikk
 
 ## Empiriske kjønnsforskjeller i valg av arbeidstimer for menn og kvinner
 
-Familiepolitikken er viktig for fremtiden til den nordiske modellen, og de to viktigste punktene er hvordan vi som et samfunn skal klare å produsere nok barn, men samtidig klare passe på våre barn mens vi raskest mulig kommer tilbake ut i arbeidslivet.
+Familiepolitikken er viktig for fremtiden til den nordiske modellen, og de to viktigste punktene er hvordan vi som et samfunn skal klare å produsere nok barn, men samtidig klare passe på våre barn mens vi er ute i arbeidslivet.
 
 I tabell 04544 ser vi forskjellen mellom en gjennomsnittlig arbeidsuke for kvinner og menn fra 1996 til 2022. Som figuren viser så har vi på denne tiden klart å redusere forskjellen mellom menn og kvinners arbeidsuke fra 9.4 timer i 1996, ned til kun 4.3 timers forskjell i 2022. Det man også kan tolke er at kvinners gjennomsnittlige arbeidsuker egentlig ikke har økt særlig mye på denne tiden, opp ca 1 time i gjennomsnitt, men at arbeidstiden til menn har gått betraktelig mer ned.
 
@@ -236,7 +235,7 @@ df_plot %>%
 
 Mulige årsaker til endringen på disse 27 årene er gjennom subsidier til barnepass og subsidiert permisjon for å ta vare på barnet. Ved å se på figuren vil man kanskje intuitivt tenke at noe har skjedd på den mannlige siden av disse subsidiene siden det er her det er størst endring i gjennomsnittlig arbeidstimer per uke. Så før vi går gjennom den grafiske analysen skal vi kjapt se litt på hva som kan ha vært en grunn til dette. En kjapp titt på SSB sine sider forteller meg at 1. april 1993 ble det innført en fedrekvote i foreldrepermisjon som sa at totalt kunne fedre få$\frac{42 uker} {210 dager} = 0.2 = 20 dager$ foreldrepermisjon ved 100 prosent dekningsgrad [@ssbdekning]. Videre kan man også se at dette har blitt utvidet ytterligere i årene etter.
 
-Ble nysgjerrig angående hvordan fedrekvoten så ut mot foreldrepermisjonen generelt i OECD land og ville lage en oppdatert figur for 2022.
+Dette gjorde meg nysgjerrig angående hvordan fedrekvoten så ut mot foreldrepermisjonen generelt i OECD land og jeg laget en oppdatert figur for siste år med data som var i 2022.
 
 ```{r}
 # I got curious so I had to look at maternity and paternity leave for 2022
@@ -283,15 +282,15 @@ df_maternity <-df_maternity %>%
 df_maternity%>%
   filter(country != "Spain") %>%
   ggplot(aes(x=maternity_weeks, y=pat_leave,label=country))+
-  geom_point(size=1, alpha=0.5, color="cornflowerblue")+
+  geom_point(size=2, alpha=0.5, color="cornflowerblue")+
   labs(x="Omsorgspermisjon mødre i uker", y="Omsorgspermisjon i dager for fedre", 
        title="Omsorgspemisjon mødre (uker) mot fedre (dager) 2022",
        caption= "Kilde: OECD")+
   theme_minimal()+
-  geom_text_repel(size=1.5)
+  geom_text_repel(size=2.5)
 ```
 
-Spania er fjernet da fedre har rett til like mye permisjon som mødre der, så foreldre-permisjonsretten endte opp med over 112 dager, som blir en ekstrem observasjon. Det man kan prøve å vise en sammenheng er at vi prøver å endre på ansvaret i hjemmet for både kvinner og menn hvor menn får mer ansvar ovenfor barnet. Noe som gir et mer egalitært delt ansvar av familieansvar i hjemmet. @barr betyr også at kvinner får større muligheter i arbeidslivet, hvor de har muligheter å få mer opplæring og ansvar uten at arbeidsgiver skal frykte at kvinnen forsvinner lengre perioder eller permanent på grunn av barneomsorg. Helt mot origo kan man se Trym sitt favorittland, USA, som har null omsorgspermisjon for hverken kvinner eller menn.
+Spania er fjernet da fedre har rett til like mye permisjon som mødre, så foreldre-permisjonsretten endte opp med over 112 dager, som blir en ekstrem observasjon. Det man kan prøve å vise en sammenheng er at vi prøver å endre på ansvaret i hjemmet for både kvinner og menn hvor menn får mer ansvar ovenfor barnet. Noe som gir et mer egalitært delt ansvar av familieansvar i hjemmet, @barr . Dette betyr også at kvinner får større muligheter i arbeidslivet, hvor de har muligheter å få mer opplæring og ansvar uten at arbeidsgiver skal frykte at kvinnen forsvinner lengre perioder eller permanent på grunn av barneomsorg. Helt mot origo kan man se USA, som har null omsorgspermisjon for hverken kvinner eller menn.
 
 Grafisk illustrert kan vi tenke oss at om begge foreldre må jobbe må de betale for barnepass, og om en forelder er hjemme trenger de ikke å betale siden den ene forelderen da har ansvaret som hjemmeværende. Vi antar at moren har hovedansvar for barnet eller flere barn. Dette kan vi sette opp som en Cobb-Douglas nyttefunksjon. Det vi skal se på her er hvordan en subsidie fra staten kan påvirke foreldrenes valg om å være hjemme med barnet eller dra på arbeid. Vi går ikke veldig dypt inn i matematikken her men ser mer på hvordan dette kan vises grafisk.
 
@@ -309,7 +308,7 @@ Som økonom er man glad i å forkorte ting så for å få en forståelse for hva
 
 -   $Fc = faste\:kostnader$
 
-For å få en forståelse for forklaringen til figurene er det greit å ha lest over hva de forskjellige variablene betyr. I figuren under kan man se et individs tre indifferens-kurver som er definert via tre forskjellige nyttenivåer for konsum og antall timer fritid. Vi antar at individet har en arbeidsfri inntekt - som vil si at om det kommer inn en inntekt som er definert ovenfor kalt $m$ , dette kan man se i den stiplede linjen og er bare et helt tilfeldig tall.
+For å få en forståelse for forklaringen til figurene er det greit å ha lest over hva de forskjellige variablene betyr. I figuren under kan man se et individs tre indifferenskurver som er definert via tre forskjellige nyttenivåer for konsum og antall timer fritid. Vi antar at individet har en arbeidsfri inntekt - som vil si at det kommer inn en inntekt som er definert ovenfor kalt $m$ , denne kan man se i den stiplede linjen.
 
 ```{r}
 # NB this code is taken from mappeoppgave 2 in SOK-1004 last year
@@ -366,7 +365,7 @@ figur_1
 
 Ser man på hvor $m$ treffer budsjettlinjen har individet ikke nok inntekt for å kunne maksimere sin nytte av konsum og fritid og vil derfor velge å gå på arbeid for å kunne komme nærmere til optimale tilpasning som er definert i punkt $A$.
 
-Velger individet da å få barn uten å gå ut i arbeidet blir budsjettbetingelsen skjøvet nedover siden med barn kommer det med ekstra faste kostnader $Fc$ og avstanden blir den kostnaden. Dette gjør at nytten $u_0$ blir lavere en nytten hvis individet hadde vært hjemme, og blir kalt punkt $E$ . Derfor velger dette individet å ikke arbeide. Men la oss se på hvis det blir innført en subsidie.
+Velger individet da å få barn uten å gå ut i arbeidet blir budsjettbetingelsen skjøvet nedover siden med barn kommer det med ekstra faste kostnader $Fc$ og avstanden blir den kostnaden. Dette gjør at nytten $u_0$ blir lavere en nytten hvis individet hadde vært hjemme, og blir kalt punkt $E$. Derfor velger dette individet å ikke arbeide. Men la oss se på hvis det blir innført en subsidie.
 
 ```{r}
 bud_2 <- function(x) 8500-0.8*x+700
@@ -380,7 +379,7 @@ figur_2 <- figur_1+
 figur_2
 ```
 
-Med innføringen av en subsidie blir budsjettlinjen til individet $-w_1$ og er den lyseblå budsjettlinjen i figuren. Det kan matematisk skrives $Fc-s$ altså faste kostnader - subsidien og det optimale valget her blir $B$ , og individet får høyere nytte av å gå ut å arbeide enn å være hjemme. Det man må huske på her er at jo lengre til venstre individet kommer på x-aksen så vil individet få mindre fritid, siden $l$ er fritid. Det vi kan se er at før individet får barn i punkt $A$ så får individet høyere nytte av å jobbe enn å være hjemme.
+Med innføringen av en subsidie blir budsjettlinjen til individet $-w_1$ og er den lyseblå budsjettlinjen i figuren. Det kan matematisk skrives $Fc-s$ altså faste kostnader - subsidien og det optimale valget her blir $B$, og individet får høyere nytte av å gå ut å arbeide enn å være hjemme. Det man må huske på her er at jo lengre til venstre individet kommer på x-aksen så vil individet få mindre fritid, siden $l$ er fritid. Det vi kan se er at før individet får barn i punkt $A$ så får individet høyere nytte av å jobbe enn å være hjemme.
 
 ```{r}
 # Defining budget line, again
@@ -402,7 +401,7 @@ figur_3 <- figur_2+
 figur_3
 ```
 
-Avslutningsvis ser vi at arbeidstilbudet etter at individet fikk subsidiert barnepass er større fordi $h_1 > h_2$ der individet blir å tilbringe mer tid på arbeid, dette kan virke ulogisk men om du tenker at venstre på $x-aksen = > = større = bedre$, så gir det mening.
+Avslutningsvis ser vi at arbeidstilbudet etter at individet fikk subsidiert barnepass er større fordi $h_1 > h_2$ der individet blir å tilbringe mer tid på arbeid, dette kan virke ulogisk men om du tenker at venstre på $x-aksen = > = bedre$, så gir det mening.
 
 ## Sammenhengen mellom lengde på betalt foreldrepermisjon og yrkesdeltakelse blant kvinner
 
@@ -462,7 +461,7 @@ women %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
 
-Ser man på arbeids-raten (prosenten) så er det Ungarn som har færrest kvinner ansatt med yngre barn og Litauen som har flest.
+Ser man på ansettelsesprosenten så er det Ungarn som har færrest kvinner ansatt med barn mellom 0-2 år og Litauen som har flest.
 
 ```{r}
 # Making a plot to show the employment rate of women with children 6-14
@@ -483,22 +482,22 @@ women %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
 
-På lengre sikt er det de nordiske landene som har best ansettelsesprosent med Danmark og Finland på toppen, de begge ligger henholdsvis med en 100% foreldrepermisjon mellom 25-40 uker.
+På lengre sikt er det de nordiske landene som har best ansettelseprosent med Danmark og Finland på toppen, de begge ligger henholdsvis med en 100% foreldrepermisjon mellom 25-40 uker.
 
 ## Hvorfor høy yrkesdeltakelse blant norske kvinner og høye barnetall er viktig for den nordiske modellen
 
-For at den nordiske modellen skal kunne fortsette trenger vi høy yrkesdeltakelse blant kvinner slik at vi fortsetter å få inn skattbar inntekt som hovedsakelig brukes til å finansiere alle godene som vi får tilbake av den. For eksempel pensjon, trygd når man havner utenfor arbeidsstyrken, subsidiert utdanning, eldreomsorg, og subsidierte helsetjenester for å nevne noen eksempler.
+For at den nordiske modellen skal kunne overleve trenger vi høy yrkesdeltakelse blant kvinner slik at vi fortsetter å få inn skattbar inntekt som hovedsakelig brukes til å finansiere alle godene som vi får tilbake av den. For eksempel pensjon, trygd når man havner utenfor arbeidsstyrken, subsidiert utdanning, eldreomsorg, og subsidierte helsetjenester for å nevne noen eksempler.
 
 Barnetall er også veldig viktig for den nordiske modellen, for om vi får en skjevhet i befolknings-pyramiden hvor vi får et flertall av eldre mennesker i Norge enn nyfødte barn og mennesker i arbeidsstyrken så vil samfunnet slite med å finansiere godene som modellen gir oss. Hvis antall fødsler per 2 voksne er mindre enn 2 vil befolkningen på sikt minke.
 
-Som man kan se i befolkningspyramiden under så er det flere eldre mennesker i 2023 enn det var for 20 år siden i Norge.
+Som man kan se i befolknings-pyramiden under så er det flere eldre mennesker i 2023 enn det var for 20 år siden i Norge.
 
 ```{r}
 # Fixing just a big K on Kjønn
 df_pop<-df_pop %>%
   rename(Kjønn = kjønn)
 
-# Fixing so it is possible to arrange the age groups correctly 
+# Fixing so it is possible to arrange the age groups correctly, ChatGPT helped
 df_pop$alder <- gsub("år", "", df_pop$alder)
 df_pop$alder <- gsub("100 år eller eldre", "100+", df_pop$alder)
 df_pop$alder <- gsub(" ", "", df_pop$alder)
@@ -539,8 +538,8 @@ pop_pyramide <- pyramide_2003 +
   ) +
   coord_flip() +
   theme_minimal() +
-  labs(x="", y="", title="Befolkningspyramide for Norge", 
-       subtitle="2003, hele søyler. 2023, gjennomsiktige")
+  labs(x="", y="", title="Utviklingen av mennesker i Norge over 20 år", 
+       subtitle="2003, helfargede søyler. 2023, gjennomsiktige")
 
 pop_pyramide
 ```
@@ -579,11 +578,16 @@ euro_wide <- eurostat %>%
 ```
 
 ```{r}
-#| output: false
-#| 
 # Looking for correlation with a linear regression model
-lm( gov ~ house, euro_wide)
+model <-lm(gov ~ house, euro_wide)
+
+# We are still taking the statisctics course but as far as I know
+# with my limited statistics knowledge a higher R-squared value means a stronger
+# correlation
+summary(model)
 ```
+
+I følge @kristensen regnes $R^2 = \frac{Srr}{Syy} = 0.9159$, hvor $Srr$ er den lineære sammenhengen mens $Syy$ er totalvariasjonen. I dette tilfellet blir R-kvadrert 0.9159 som kan tolkes som at 91.59% av variasjonen i helsetjenesteforbruket pr. innbygger kan forklares ut fra den lineære modellen. Som jeg forstår det så betyr dette at det er en multilineær sammenheng mellom andelen av egenbetalinger og helsetjenesteforbruk pr. innbygger. Enklere forklart så betyr det at det er en korrelasjon mellom variablene, men dette trenger ikke bety at det er årsakssammenheng.
 
 ```{r}
 # Plotting the correlation and the linear regression model
@@ -591,15 +595,246 @@ euro_wide%>%
   filter(unit == 'Purchasing power standard (PPS) per inhabitant') %>%
   ggplot(aes(x=house, y=gov,label=country))+
   geom_point(size=2.5, alpha=0.5, color="cornflowerblue")+
-  geom_smooth(method = lm, se=FALSE, colour="palevioletred")+
+  geom_smooth(method = lm, se= FALSE, color="palevioletred")+
   labs(x="Husholdningen selv", y="Myndighetens helsetjenesteforuk", 
        title="Korrelasjonen mellom egenbetalinger og helsetjenesteforbruk",
        caption= "Kilde: Eurostat", subtitle="Purchasing power standard (PPS) justert per innbygger")+
   theme_minimal()+
-  geom_text_repel(size=2.5)
+    geom_text_repel(size=2.5)
 ```
 
+Som jeg selv vil tolke figuren kan man se to virkninger av hva som skjer. Når myndighetene subsidierer mesteparten av helsetjenestene til husholdningene virker det som at det er flere som benytter seg av tilbudet, og det samme motsatt, hvis myndighetene ikke tar en stor del av helsetjenesteforbruket så er det mindre forbuk av det i husholdningen. Så svaret her virker til å være en plass i mellom.
+
 ## Hvordan økt egenbetaling påvirker helsetjenesteforbruk og øker effektiviteten
+
+For å forstå hvordan økt egenbetaling kan påvirke helsetjenestebruk er det mest sentrale punktet som man kan ta fra økonomisk teori atferdsrisikoen. Det refererer til at hvis individet har null helseforsikring vil de konsumere inntil marginal-nytten er større enn marginalkostnader. Og hvis individet har full helseforsikring konsumere til marginal-nytten er positiv, dette kan føre til en adferdsrisiko hvor individet tar mer risiko enn normalt på grunn av for stor subsidiering.
+
+```{python}
+# This code is taken from the lecture in Microeconomics last year, written
+# by Derek J. Clark and modified by me for the third assignment in SOK-1006
+import sympy as sp
+import numpy as np
+import matplotlib.pyplot as plt
+
+def demand(x):
+    return 75
+
+def supply(x):
+    return (200-x)/1.2
+
+x = sp.symbols('x', real=True, positive=True)
+eq = sp.Eq(demand(x), supply(x))
+
+x_eq = sp.solve(eq, x)
+x_eq = float(x_eq[0])
+
+p_eq = demand(x_eq)
+```
+
+```{python}
+# The code is a bit messy since Rstudios IDE isnt really meant to code in python
+# it is not possible to use different code blocks to continue work on the
+# same figure, so I had to write the code from scratch each time and continue upon it
+x_n = np.linspace(0.1, 500, 100)
+q= np.linspace(0,x_eq,100)
+
+# Creating the axa for plotting
+def create_ax():
+    fig, ax = plt.subplots()
+    ax.set_ylabel('Pris per enhet', loc='top')
+    ax.set_xlabel('Helsetjenester per år', loc='left')
+    ax.set(xlim=(0, 200))
+    ax.set(ylim=(0, 200))
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    
+    return fig, ax
+
+# Startibg fig
+fig, ax = create_ax()
+
+# Plotting demand and supply
+ax.plot(x_n, [demand(x) for x in x_n], label='Tilbud')
+ax.plot(x_n, [supply(x) for x in x_n], label='Etterspørsel')
+
+# Draw lines for the new equilibrium
+ax.vlines(x_eq, 0, p_eq, linestyles='dashed', color='black')
+ax.hlines(p_eq, 0, x_eq, linestyles='dashed', color='black')
+
+# Title
+ax.set_title('Egenandel og overforbruk av helsetjenester')
+
+
+q_adjusted = np.linspace(0, x_eq, 100)
+# Filling the area below the vertical line (from y=0 to y=p_eq)
+ax.fill_betweenx([0, p_eq], 0, x_eq, color='brown', alpha=0.5)
+
+# Adding text for M_o at the 110-x axis
+ax.text(x_eq, -10, '$M_0$', horizontalalignment='center', fontsize=12)
+# Adding text for P_o at the y axis
+ax.text(-10, p_eq, '$P_0$', verticalalignment='center', fontsize=12)
+
+# Adding a text in the fill between area saying "Opprinnelige helseutgifter" før innføring av helseforsikring"
+ax.text(6, 50, 'Opprinnelige helseutgifter', fontsize=12)
+ax.text(6, 40, 'før innføring av helseforsikring', fontsize=12)
+
+# Show legend
+ax.legend(bbox_to_anchor=(1, 0.6))
+
+plt.show()
+```
+
+I figuren ovenfor kan man se i de stiplede linjen hvor et individ blir å tilpasse seg mellom $M_0$ og $P_0$ i den opprinnelige markedslikevekten før et subsidie blir lagt til.
+
+```{python}
+# Starting fig
+fig, ax = create_ax()
+
+# Plotting demand and supply
+ax.plot(x_n, [demand(x) for x in x_n], label='Tilbud')
+ax.plot(x_n, [supply(x) for x in x_n], label='Etterspørsel')
+
+# Draw lines for the new equilibrium
+ax.vlines(x_eq, 0, p_eq, linestyles='dashed', color='black')
+ax.hlines(p_eq, 0, x_eq, linestyles='dashed', color='black')
+
+# Title
+ax.set_title('Egenandel og overforbruk av helsetjenester')
+
+
+q_adjusted = np.linspace(0, x_eq, 100)
+# Filling the area below the vertical line (from y=0 to y=p_eq)
+ax.fill_betweenx([0, p_eq], 0, x_eq, color='brown', alpha=0.3)
+
+# Adding text for M_o at the 110-x axis
+ax.text(x_eq, -10, '$M_0$', horizontalalignment='center', fontsize=12)
+# Adding text for P_o at the y axis
+ax.text(-10, p_eq, '$P_0$', verticalalignment='center', fontsize=12)
+
+# Adding a text in the fill between area saying "Opprinnelige helseutgifter" før innføring av helseforsikring"
+ax.text(6, 50, 'Opprinnelige helseutgifter', fontsize=12)
+ax.text(6, 40, 'før innføring av helseforsikring', fontsize=12)
+
+# Show legend
+ax.legend(bbox_to_anchor=(1, 0.6))
+
+# New vline
+ax.vlines(200, 0, p_eq, linestyles='dashed', color='black')
+
+# Adding text for M_2 at the 181-x axis
+ax.text(181, -10, '$M_2$', horizontalalignment='center', fontsize=12)
+
+# Filling the deadweight loss area which is the area between the new vline and the supply curve but do not include the above area
+ax.fill_betweenx([0, supply(x_eq)], x_eq, 200, color='palevioletred', alpha=0.3)
+
+# Filling the deadweight loss area, which is the code I ended up taking from ChatGPT
+x_values_for_fill = np.linspace(x_eq, 200, 100)
+y_values_supply_for_fill = supply(x_values_for_fill)
+ax.fill_between(x_values_for_fill, y_values_supply_for_fill, p_eq, color='blue', alpha=0.3, label='Deadweight Loss')
+
+# Adding text for deadweight loss
+ax.text(150, 55, 'Dødvektstap', fontsize=12)
+
+# Making the new demand for a person with health insurance
+demand_2 = lambda x: 15
+ax.plot(x_n, [demand_2(x) for x in x_n], label='Tilbud med helseforsikring', color='#1f77b4')
+
+# Adding text for the new P_1
+ax.text(-22, 15, '$.15P_0$', verticalalignment='center', fontsize=12)
+
+# Adding text for 0
+ax.text(-10, 0, '$0$', verticalalignment='center', fontsize=12)
+
+plt.show()
+```
+
+Slik som vi har det i omtrent i Norge idag subsidieres det slik at vi omtrent betaler 15% av utgiftene i egenbetalinger og tilpasningen til subsidiene blir da ved $.15P_0$ , det man kan se på figuren nå er at prisen per enhet går ned, mens den nye likevekten blir $M2$ som betyr at med subsidien konsumeres det mer helsetjenester per år. I tillegg blir det en kile mellom pris per enhet og helsetjenester per år . Dette er dødvektstapet som helsetjenester per år og pris per enhet mister når subsidien blir innført. Dette blir det samfunnsøkonomiske tapet.
+
+```{python}
+# Starting fig
+fig, ax = create_ax()
+
+# Plotting demand and supply
+ax.plot(x_n, [demand(x) for x in x_n], label='Tilbud')
+ax.plot(x_n, [supply(x) for x in x_n], label='Etterspørsel')
+
+# Draw lines for the new equilibrium
+ax.vlines(x_eq, 0, p_eq, linestyles='dashed', color='black')
+ax.hlines(p_eq, 0, x_eq, linestyles='dashed', color='black')
+
+# Title
+ax.set_title('Egenandel og overforbruk av helsetjenester')
+
+
+q_adjusted = np.linspace(0, x_eq, 100)
+# Filling the area below the vertical line (from y=0 to y=p_eq)
+ax.fill_betweenx([0, p_eq], 0, x_eq, color='brown', alpha=0.3)
+
+# Adding text for M_o at the 110-x axis
+ax.text(x_eq, -10, '$M_0$', horizontalalignment='center', fontsize=12)
+# Adding text for P_o at the y axis
+ax.text(-10, p_eq, '$P_0$', verticalalignment='center', fontsize=12)
+
+# Adding a text in the fill between area saying "Opprinnelige helseutgifter" før innføring av helseforsikring"
+ax.text(6, 50, 'Opprinnelige helseutgifter', fontsize=12)
+ax.text(6, 40, 'før innføring av helseforsikring', fontsize=12)
+
+# Show legend
+ax.legend(bbox_to_anchor=(1, 0.6))
+
+# New vline
+ax.vlines(200, 0, p_eq, linestyles='dashed', color='black')
+
+# Adding text for M_1 at the 110-x axis
+ax.text(200, -10, '$M_1$', horizontalalignment='center', fontsize=12)
+
+# Filling the deadweight loss area which is the area between the new vline and the supply curve but do not include the above area
+ax.fill_betweenx([0, supply(x_eq)], x_eq, 200, color='palevioletred', alpha=0.3)
+
+# Filling the deadweight loss area, which is the code I ended up taking from ChatGPT
+x_values_for_fill = np.linspace(x_eq, 200, 100)
+y_values_supply_for_fill = supply(x_values_for_fill)
+ax.fill_between(x_values_for_fill, y_values_supply_for_fill, p_eq, color='blue', alpha=0.3, label='Deadweight Loss')
+
+# Adding text for deadweight loss
+ax.text(150, 55, 'Dødvektstap', fontsize=12)
+
+# Making the new demand for a person with health insurance
+demand_2 = lambda x: 15
+ax.plot(x_n, [demand_2(x) for x in x_n], label='Tilbud med helseforsikring', color='#1f77b4')
+
+# Adding text for the new P_1
+ax.text(-20, 15, '$.15P_0$', verticalalignment='center', fontsize=12)
+
+# Making the new demand for a person with health insurance
+demand_2 = lambda x: 15
+ax.plot(x_n, [demand_2(x) for x in x_n], label='Tilbud med helseforsikring', color='#1f77b4')
+
+# Adding text for the new P_1
+ax.text(-20, 15, '$.15P_0$', verticalalignment='center', fontsize=12)
+
+# New vline at the new equilibrium
+ax.vlines(181, 0, 75, linestyles='dashed', color='black')
+
+# Adding text for M_2 at the 181-x axis
+ax.text(181, -10, '$M_2$', horizontalalignment='center', fontsize=12)
+
+# Fill_between the M_0 and M_2 up to p_0
+ax.fill_betweenx([0, 75], 110, 181, color='brown', alpha=1)
+
+# Fill_between the M_0 and M_2 up to p_0
+x_values_for_fill_2 = np.linspace(x_eq, 181, 100)
+y_values_supply_for_fill_2 = supply(x_values_for_fill_2)
+ax.fill_between(x_values_for_fill_2, y_values_supply_for_fill_2, p_eq, color='blue', alpha=1, label='Deadweight Loss')
+fig
+plt.show()
+```
+
+Gratis forbruk kan føre til overforbruk, og blir en samfunnsøkonomisk ineffektiv ressursbruk, dette er hvis pris per enhet er 0 og da blir likevekten ved $M_1$. @mikko_youtube (Eventuelt skrive noe mer her..)
+
+I figuren under kan man se husholdningens egenandel mot statens subsidiering av helsetjenester for diverse OECD-land.
 
 ```{r}
 # Adding the colours I want 
@@ -622,7 +857,7 @@ eurostat %>%
                          'Euro area - 12 countries (2001-2006)'),
          spending %in% c('Government schemes and compulsory contributory health care financing schemes', 'Household out-of-pocket payment'),
          unit == 'Percentual share of total current health expenditure (CHE)') %>%
-  ggplot(aes(x=country, y=val, fill=spending)) +
+  ggplot(aes(x=reorder(country, val), y=val, fill=spending)) +
   theme_minimal()+
   geom_col(alpha=0.9) +
   theme(legend.position = "top") +
@@ -635,7 +870,11 @@ eurostat %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
 
+Her ser man at totalt sett så bruker Norge mest på helsetjenestekostnader, og velferdsstaten vår betaler for mesteparten av kostnaden. Dette kan også forklare hvorfor vi som et land kan ha problemer med et overforbruk av helsetjenester, personlig erfaringsvis har vi et helsevesen som sliter med et stort trykk både på sykehusene med lange ventetider og lange ventetider for fastlege-time. Dette er observasjoner man kan ta ut ifra denne figuren - uten at det trenger å direkte være noen årsakssammenheng.
+
 ## Fordelingseffekter av økte egenandeler
+
+Skrive noe epic her.
 
 # Appendix
 
@@ -648,5 +887,7 @@ eurostat %>%
 [ChatGPT hjalp med å finne ut å bruke ggrepel for bedre plassering av labels](https://chat.openai.com/c/322b78da-a14d-4f8b-bea1-ba1e1adf4bd5) (Endte opp med å bruke pakken og endre funksjonen til geom_text_repel() heller)
 
 [ChatGPT hjalp med problem med character variabler](https://chat.openai.com/share/def3406c-22cc-4c2b-80a0-b51df59ed7e2) (Endte opp med å bruke gsub funksjon for å fjerne komma så det kunne konverteres til integer)
+
+[ChatGPT hjalp litt med fill_between i python](https://chat.openai.com/share/bc81f997-fcac-483f-8f50-8c0bbf870a9d) (Endte opp med å bruke den kodelinjen som er kommentert i koden)
 
 # Referanser
