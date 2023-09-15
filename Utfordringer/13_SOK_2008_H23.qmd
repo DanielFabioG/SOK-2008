@@ -4,13 +4,16 @@ subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
 date: last-modified
 date-format: "DD-MM-YYYY"
 author: "Kandidatnummer 13, SOK-2008, Høst 2023"
-format: html
+format: pdf
 echo: false
 toc: true
 toc-title: "Innholdsliste"
 code-tools: true
 warning: false
 bibliography: referanse.bib
+csl: norsk-apa-manual.csl
+nocite: |
+  @*
 ---
 
 ```{r}
@@ -280,15 +283,15 @@ df_maternity <-df_maternity %>%
 df_maternity%>%
   filter(country != "Spain") %>%
   ggplot(aes(x=maternity_weeks, y=pat_leave,label=country))+
-  geom_point(size=2.5, alpha=0.5, color="cornflowerblue")+
+  geom_point(size=1, alpha=0.5, color="cornflowerblue")+
   labs(x="Omsorgspermisjon mødre i uker", y="Omsorgspermisjon i dager for fedre", 
-       title="Omsorgspemisjon mødre (uker) mot omsorgspermisjon fedre (dager) 2022",
+       title="Omsorgspemisjon mødre (uker) mot fedre (dager) 2022",
        caption= "Kilde: OECD")+
   theme_minimal()+
-  geom_text_repel(size=2)
+  geom_text_repel(size=1.5)
 ```
 
-Spania er fjernet da fedre har rett til like mye permisjon som mødre der, så foreldre-permisjonsretten endte opp med over 112 dager, som blir en ekstrem observasjon. Det man kan prøve å vise en sammenheng er at vi prøver å endre på ansvaret i hjemmet for både kvinner og menn hvor menn får mer ansvar ovenfor barnet. Noe som gir et mer egalitært delt ansvar av familieansvar i hjemmet. Det betyr også at kvinner får større muligheter i arbeidslivet, hvor de har muligheter å få mer opplæring og ansvar uten at arbeidsgiver skal frykte at kvinnen forsvinner lengre perioder eller permanent på grunn av barneomsorg. Helt mot origo kan man se Trym sitt favorittland, USA, som har null omsorgspermisjon for hverken kvinner eller menn.
+Spania er fjernet da fedre har rett til like mye permisjon som mødre der, så foreldre-permisjonsretten endte opp med over 112 dager, som blir en ekstrem observasjon. Det man kan prøve å vise en sammenheng er at vi prøver å endre på ansvaret i hjemmet for både kvinner og menn hvor menn får mer ansvar ovenfor barnet. Noe som gir et mer egalitært delt ansvar av familieansvar i hjemmet. @barr betyr også at kvinner får større muligheter i arbeidslivet, hvor de har muligheter å få mer opplæring og ansvar uten at arbeidsgiver skal frykte at kvinnen forsvinner lengre perioder eller permanent på grunn av barneomsorg. Helt mot origo kan man se Trym sitt favorittland, USA, som har null omsorgspermisjon for hverken kvinner eller menn.
 
 Grafisk illustrert kan vi tenke oss at om begge foreldre må jobbe må de betale for barnepass, og om en forelder er hjemme trenger de ikke å betale siden den ene forelderen da har ansvaret som hjemmeværende. Vi antar at moren har hovedansvar for barnet eller flere barn. Dette kan vi sette opp som en Cobb-Douglas nyttefunksjon. Det vi skal se på her er hvordan en subsidie fra staten kan påvirke foreldrenes valg om å være hjemme med barnet eller dra på arbeid. Vi går ikke veldig dypt inn i matematikken her men ser mer på hvordan dette kan vises grafisk.
 
@@ -370,8 +373,9 @@ bud_2 <- function(x) 8500-0.8*x+700
 
 figur_2 <- figur_1+
   stat_function(df,fun=bud_2, mapping = aes(), color="palevioletred")+
-  annotate("text", x=320, y=9300, color="palevioletred", label="Fc")
-
+  annotate("text", x=320, y=9300, color="palevioletred", label="Fc")+
+  annotate("text", x=9300, y=4700, color="limegreen", label="E")+
+  geom_point(x=9000, y=4700, color="limegreen")
 
 figur_2
 ```
@@ -388,8 +392,6 @@ figur_3 <- figur_2+
   annotate("text",x=1000,y=10100, label="-w1", color="cornflowerblue")+
   geom_point(x=4150, y=7200, color="cornflowerblue")+
   annotate("text", x=4300, y=7400, color="cornflowerblue", label="B")+
-  annotate("text", x=9300, y=4700, color="limegreen", label="E")+
-  geom_point(x=9000, y=4700, color="limegreen")+
   geom_segment(aes(x=4150,xend=4150,y=2500,yend=7150), 
                linewidth=0.1, linetype="dashed", color="black")+
   geom_segment(aes(x=4900,xend=4900,y=2500,yend=8100), 
@@ -397,17 +399,44 @@ figur_3 <- figur_2+
   annotate("text", x=5400, y=2800, label="h1")+
   annotate("text", x=3700, y=2800, label="h2")
   
-
 figur_3
 ```
 
-Avslutningsvis ser vi at arbeidstilbudet etter at individet fikk subsidiert barnepass er større fordi $h_1 > h_2$ der individet blir å tilbringe mer tid på arbeid, dette kan virke ulogisk men om du tenker at venstre på x-aksen = \>, så gir det mening.
+Avslutningsvis ser vi at arbeidstilbudet etter at individet fikk subsidiert barnepass er større fordi $h_1 > h_2$ der individet blir å tilbringe mer tid på arbeid, dette kan virke ulogisk men om du tenker at venstre på $x-aksen = > = større = bedre$, så gir det mening.
 
 ## Sammenhengen mellom lengde på betalt foreldrepermisjon og yrkesdeltakelse blant kvinner
 
-Bruk datasettet til å lage to diagrammer som viser sammenhengen mellom lengde på betalt foreldrepermisjon og yrkesdeltakelse blant kvinner. I det ene diagrammet skal du bruke data som beskriver sysselsetting blant kvinner med barn i alderen 0-2 år (fem_emp_rate_0_2), og det andre skal du bruke data på kvinner med barn i alderen 6-14 år (fem_emp_rate_6_14).
-
 Diskuter, basert på disse diagrammene og økonomisk teori, følgende påstand: «Gunstige permisjonsordninger ved fødsel sikrer høy yrkesdeltakelse blant kvinner på lang sikt»
+
+Det kan antas intuitivt at det er en liten årsakssammenheng at gunstige pensjonsordninger gjør slik at kvinner er mer hjemme med yngre barn i land som har høyt antall uker med 100% støtte, men det man også kan se på lengre sikt er at de går tilbake til arbeid. Det kan også antas at en gylden middelvei ligger et sted mellom 20-40 uker med permisjon, der landene som ligger mellom disse ukene har et stabilt ansettelsesforhold på både kort og lang sikt.
+
+```{r}
+# Creating a point diagram to look for correlation between full rate equivelents
+# and women with children working between 0-2
+women %>%
+  ggplot(aes(x=tot_full_rate, y=fem_emp_rate_0_2, label=country))+
+  geom_point(color="cornflowerblue")+
+  geom_text_repel(size=2.5)+
+  scale_y_continuous(labels = scales::percent_format(scale = 1),
+                     limits = c(0, 100), expand= c(0,0))+
+  labs(y="Ansettelsesprosent", x="Antall uker med 100% støtte")+
+  theme_minimal()
+```
+
+Empiriske studier sier at foreldrepermisjon som gir foreldre rett til å beholde jobben har en positiv effekt på foreldrenes sysselsettingsnivå. Men kan også ha en negativ effekt på lønnen i de landene som har mer uker med 100% støtte. (Skriv mer her)
+
+```{r}
+# Creating a point diagram to look for correlation between full rate equivelents
+# and women with children working between 6-14
+women %>%
+  ggplot(aes(x=tot_full_rate, y=fem_emp_rate_6_14, label=country))+
+  geom_point(color="cornflowerblue")+
+  geom_text_repel(size=2.5)+
+  scale_y_continuous(labels = scales::percent_format(scale = 1),
+                     limits = c(0, 100), expand=c(0,0))+
+  labs(y="Ansettelsesprosent", x="Antall uker med 100% støtte")+
+  theme_minimal()
+```
 
 ```{r}
 colours_country <- c("palevioletred", "palevioletred","palevioletred", "palevioletred","cornflowerblue", "palevioletred","cornflowerblue", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred")
@@ -423,14 +452,17 @@ women %>%
   theme(legend.position = "none")+
   labs(title="Kvinnelig arbeidsrate i 24 OECD land", 
        subtitle="Med barn mellom 0-2 år.", 
-       y="Usikker på hva y-verdien viser lmao", 
+       y="Ansettelsesprosent", 
        x="", 
        caption = "Kilde: OECD",
        color=""
        )+
   scale_x_discrete(guide = guide_axis(angle=45))+
-  scale_fill_manual(values = colours_country_named)
+  scale_fill_manual(values = colours_country_named)+
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
+
+Ser man på arbeids-raten (prosenten) så er det Ungarn som har færrest kvinner ansatt med yngre barn og Litauen som har flest.
 
 ```{r}
 # Making a plot to show the employment rate of women with children 6-14
@@ -441,14 +473,17 @@ women %>%
   theme(legend.position = "none")+
   labs(title="Kvinnelig arbeidsrate i 24 OECD land", 
        subtitle="Med barn mellom 6-14 år.", 
-       y="Usikker på hva y-verdien viser lmao", 
+       y="Ansettelsesprosent", 
        x="", 
        caption = "Kilde: OECD",
        color=""
        )+
   scale_x_discrete(guide = guide_axis(angle=45))+
-  scale_fill_manual(values = colours_country_named)
+  scale_fill_manual(values = colours_country_named)+
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
+
+På lengre sikt er det de nordiske landene som har best ansettelsesprosent med Danmark og Finland på toppen, de begge ligger henholdsvis med en 100% foreldrepermisjon mellom 25-40 uker.
 
 ## Hvorfor høy yrkesdeltakelse blant norske kvinner og høye barnetall er viktig for den nordiske modellen
 
