@@ -191,22 +191,6 @@ Familiepolitikken er viktig for fremtiden til den nordiske modellen, og de to vi
 I tabell 04544 ser vi forskjellen mellom en gjennomsnittlig arbeidsuke for kvinner og menn fra 1996 til 2022. Som figuren viser så har vi på denne tiden klart å redusere forskjellen mellom menn og kvinners arbeidsuke fra 9.4 timer i 1996, ned til kun 4.3 timers forskjell i 2022. Det man også kan tolke er at kvinners gjennomsnittlige arbeidsuker egentlig ikke har økt særlig mye på denne tiden, opp ca 1 time i gjennomsnitt, men at arbeidstiden til menn har gått betraktelig mer ned.
 
 ```{r}
-colours <- c("Kvinner" = "palevioletred", "Menn" = "cornflowerblue")
-
-# Dont mind this figure its just for showing that the other data is useless
-df_1 %>%
-  ggplot(aes(x=as.numeric(år), y=value, color=kjønn))+
-  geom_line(linewidth=1.1)+
-  facet_wrap(~statistikkvariabel, scales = "free")+
-  theme_minimal()+
-  theme(legend.position = "bottom")+
-  labs(x="", y="", color="")+
-  scale_colour_manual(values = colours)
-```
-
-Som vi ser i denne figuren så har den kun en viktig variabel, vent, kun en viktig variabel, glem denne og la oss heller zoome inn på det som faktisk er viktig.
-
-```{r}
 # Saving some colors to use for the plot
 colours <- c("Kvinner" = "palevioletred", "Menn" = "cornflowerblue")
 
