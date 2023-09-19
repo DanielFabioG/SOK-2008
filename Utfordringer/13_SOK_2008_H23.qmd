@@ -8,7 +8,6 @@ format: pdf
 echo: false
 toc: true
 toc-title: "Innholdsliste"
-code-tools: true
 warning: false
 bibliography: referanse.bib
 csl: norsk-apa-manual.csl
@@ -182,7 +181,7 @@ Gjennom det siste århundret har samfunnet vi lever i gått gjennom store forand
 
 Spol frem 100 år og etter vi etablerte organisert arbeidsliv (trepartssamarbeidet) så har dette vært starten på et samfunn som har endret seg stort. Vi har bygget på fra den første pilaren og skapt oss en velferdsmodell som virker simpelt forklart som et bygg totalt støttet av 3 pilarer, og for at vi videre skal nyte velferden av at det fortsetter å stå må vi som et samfunn gjøre det vi kan for at det ikke skal falle sammen. Før vi går videre er det greit å vite kort fortalt så lever den nordiske modellen vi har idag på grunn av at arbeidsstyrken (de i samfunnet vårt som arbeider) går på jobb, får en inntekt, og progressivt skattes for størrelsen på inntekten. Den andre inntekten som kommer inn til velferdsmodellen er via avgifter som vi pålegger samfunnet, for eksempel siden det er en fremtidlig kostnad tilknyttet å kjøpe tobakk så legges det på en avgift som indirekte hjelper individet med helseutgifter i fremtiden når det trenger helsehjelp. Videre gjennom økonomisk styring bestemmer vi hvordan pengene skal fordeles gjennom subsidier til markedene som opplever størst svikt på grunn av at markedene selv ikke klarer finne likevekt, eller er lite hensiktsmessig å investere i et cetera. (Skriv bedre)
 
-# Utfordring 1.1 Familiepolitikk
+# Utfordring 1.1 Individets arbeidstilbud
 
 ## Empiriske kjønnsforskjeller i valg av arbeidstimer for menn og kvinner
 
@@ -202,7 +201,7 @@ df_plot %>%
   theme_minimal()+
   theme(legend.position = "bottom")+
   labs(title="Gjennomsnittlig arbeidstimer per uke i Norge", 
-       subtitle="Kvinner mot Menn. 1996-2022.", 
+       subtitle="Kvinner mot menn. 1996-2022.", 
        y="Arbeidstimer per uke", 
        x="", 
        caption = "Kilde: SSB tabell 04544",
@@ -394,6 +393,12 @@ Diskuter, basert på disse diagrammene og økonomisk teori, følgende påstand: 
 Det kan antas intuitivt at det er en liten årsakssammenheng at gunstige pensjonsordninger gjør slik at kvinner er mer hjemme med yngre barn i land som har høyt antall uker med 100% støtte, men det man også kan se på lengre sikt er at de går tilbake til arbeid. Det kan også antas at en gylden middelvei ligger et sted mellom 20-40 uker med permisjon, der landene som ligger mellom disse ukene har et stabilt ansettelsesforhold på både kort og lang sikt.
 
 ```{r}
+#| output: FALSE
+
+lm(tot_full_rate~fem_emp_rate_0_2, women)
+```
+
+```{r}
 # Creating a point diagram to look for correlation between full rate equivelents
 # and women with children working between 0-2
 women %>%
@@ -403,10 +408,17 @@ women %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1),
                      limits = c(0, 100), expand= c(0,0))+
   labs(y="Ansettelsesprosent", x="Antall uker med 100% støtte")+
-  theme_minimal()
+  theme_minimal()+
+  geom_smooth(method = lm, se = FALSE)
 ```
 
 Empiriske studier sier at foreldrepermisjon som gir foreldre rett til å beholde jobben har en positiv effekt på foreldrenes sysselsettingsnivå. Men kan også ha en negativ effekt på lønnen i de landene som har mer uker med 100% støtte. (Skriv mer her)
+
+```{r}
+#| output: FALSE
+
+lm(tot_full_rate~fem_emp_rate_6_14, women)
+```
 
 ```{r}
 # Creating a point diagram to look for correlation between full rate equivelents
@@ -418,10 +430,14 @@ women %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1),
                      limits = c(0, 100), expand=c(0,0))+
   labs(y="Ansettelsesprosent", x="Antall uker med 100% støtte")+
-  theme_minimal()
+  theme_minimal()+
+  geom_smooth(method = lm, se = FALSE)
 ```
 
 ```{r}
+#| output: FALSE
+#| removing this since it is not really relevant for the task
+
 colours_country <- c("palevioletred", "palevioletred","palevioletred", "palevioletred","cornflowerblue", "palevioletred","cornflowerblue", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred","palevioletred", "palevioletred")
 
 # Create a named vector for colors
@@ -445,9 +461,9 @@ women %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
 
-Ser man på ansettelsesprosenten så er det Ungarn som har færrest kvinner ansatt med barn mellom 0-2 år og Litauen som har flest.
-
 ```{r}
+#| output: FALSE
+#| removing this since it is not really relevant for the task
 # Making a plot to show the employment rate of women with children 6-14
 women %>%
   ggplot(aes(x = reorder(country, +fem_emp_rate_6_14), y=fem_emp_rate_6_14))+
@@ -465,8 +481,6 @@ women %>%
   scale_fill_manual(values = colours_country_named)+
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
-
-På lengre sikt er det de nordiske landene som har best ansettelseprosent med Danmark og Finland på toppen, de begge ligger henholdsvis med en 100% foreldrepermisjon mellom 25-40 uker.
 
 ## Hvorfor høy yrkesdeltakelse blant norske kvinner og høye barnetall er viktig for den nordiske modellen
 
@@ -571,18 +585,18 @@ model <-lm(gov ~ house, euro_wide)
 summary(model)
 ```
 
-I følge @kristensen regnes $R^2 = \frac{Srr}{Syy} = 0.9159$, hvor $Srr$ er den lineære sammenhengen mens $Syy$ er totalvariasjonen. I dette tilfellet blir R-kvadrert 0.9159 som kan tolkes som at 91.59% av variasjonen i helsetjenesteforbruket pr. innbygger kan forklares ut fra den lineære modellen. Som jeg forstår det så betyr dette at det er en multilineær sammenheng mellom andelen av egenbetalinger og helsetjenesteforbruk pr. innbygger. Enklere forklart så betyr det at det er en korrelasjon mellom variablene, men dette trenger ikke bety at det er årsakssammenheng.
+I følge @kristensen regnes $R^2 = \frac{Srr}{Syy} = 0.9159$, hvor $Srr$ er den lineære sammenhengen mens $Syy$ er totalvariasjonen. I dette tilfellet blir R-kvadrert = 0.9159 som kan tolkes som at 91.59% av variasjonen i helsetjenesteforbruket pr. innbygger kan forklares ut fra den lineære modellen. Som jeg forstår så betyr dette at det er en multilineær sammenheng mellom andelen av egenbetalinger og helsetjenesteforbruk pr. innbygger. Enklere forklart så betyr det at det er en korrelasjon mellom variablene, men dette trenger ikke bety at det er årsakssammenheng.
 
 ```{r}
 # Plotting the correlation and the linear regression model
 euro_wide%>%
-  filter(unit == 'Purchasing power standard (PPS) per inhabitant') %>%
+  filter(unit == 'Percentual share of total current health expenditure (CHE)') %>%
   ggplot(aes(x=house, y=gov,label=country))+
   geom_point(size=2.5, alpha=0.5, color="cornflowerblue")+
   geom_smooth(method = lm, se= FALSE, color="palevioletred")+
   labs(x="Husholdningen selv", y="Myndighetens helsetjenesteforuk", 
-       title="Korrelasjonen mellom egenbetalinger og helsetjenesteforbruk",
-       caption= "Kilde: Eurostat", subtitle="Purchasing power standard (PPS) justert per innbygger")+
+       title="Korrelasjonen mellom egenbetalinger og %andel av total helsetjenesteforbruk",
+       caption= "Kilde: Eurostat", subtitle="Percentual share of total current health expenditure justert per innbygger")+
   theme_minimal()+
     geom_text_repel(size=2.5)
 ```
@@ -860,7 +874,9 @@ Her ser man at totalt sett så bruker Norge mest på helsetjenestekostnader, og 
 
 Skrive noe epic her.
 
-# Appendix
+# Appendiks
+
+Bruk av KI: ChatGPT 4 inkludert advanced data analysis.
 
 [ChatGPT forespørsel om endring av farger til søyler](https://chat.openai.com/share/37e54a43-9162-4396-a50c-90e3a005110b) (Endte opp med å bruke colours_country_named \<- setNames(colours_country, sort(unique(women\$country))) )
 
