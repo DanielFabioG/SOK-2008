@@ -293,96 +293,18 @@ Som økonom er man glad i å forkorte ting så for å få en forståelse for hva
 
 For å få en forståelse for forklaringen til figurene er det greit å ha lest over hva de forskjellige variablene betyr. I figuren under kan man se et individs tre indifferenskurver som er definert via tre forskjellige nyttenivåer for konsum og antall timer fritid. Vi antar at individet har en arbeidsfri inntekt - som vil si at det kommer inn en inntekt som er definert ovenfor kalt $m$ , denne kan man se i den stiplede linjen.
 
-```{r}
-# NB this code is taken from mappeoppgave 2 in SOK-1004 last year
-# A lot of this code is written by D. J. Clark and modifications is made by me
-# to illustrate a subsidy of child care
-x <- seq(0, 4000, by = 1)
-df <- data.frame(x)
+```{python}
 
-# Defining some indifference curves
-u_0 <- function(x) (4000^(5/3))/x^(2/3)+2000
-u_1 <- function(x) (4741^(5/3))/x^(2/3)+2000
-u_2 <- function(x) (5500^(5/3))/x^(2/3)+2000
-
-# Defining plot settings
-plot_settings <- theme(axis.title = element_text(size = 20),
-                       plot.title = element_text(size = 20),
-                       panel.background = element_blank(),
-                       axis.line = element_line(colour = "black"),
-                       axis.text.y=element_blank(),
-                       axis.text.x=element_blank(),
-                      legend.position = "none")
-
-bud_0 <- function(x) 8500-0.8*x+3400
-
-
-figur_1 <- ggplot(df, aes(x)) +
-  geom_segment(aes(x = 0, y = bud_0(0), xend = 9000, yend = bud_0(9000)),
-               color = "black") +
-  annotate("text",x=300,y=11400, label="-w")+
-  annotate("text",x=300,y=5200, label="m", color="black")+
-  geom_segment(aes(x=0,xend=9000,y=4700,yend=4700), 
-               linewidth=0.1, linetype="dashed", color="black")+
-  geom_segment(aes(x=9000,xend=9000,y=2500,yend=4700), 
-               linewidth=0.1, linetype="dashed", color="black")+
-  annotate("text", x=5000, y=8400, color="black", label="A")+
-  geom_point(x=4900, y=8000, color="black")+
-  annotate("text", x=8700, y=2750, color="black", label="l0")+
-           labs(title="", x="l", y="c") +
-           plot_settings +
-           coord_fixed(ratio = 1) +
-           scale_x_continuous(limits = c(0, 10500), expand = c(0, 0)) +
-           scale_y_continuous(limits = c(2500, 12400), expand = c(0, 0))
-
-
-
-for (func_name in c("u_0", "u_1", "u_2")) {
-  func <- get(func_name)
-  figur_1 <- figur_1 + 
-    stat_function(fun = func, aes()) +
-    annotate("text", x = 10000, y = func(10000), label = func_name)
-}
-figur_1
 ```
 
 Ser man på hvor $m$ treffer budsjettlinjen har individet ikke nok inntekt for å kunne maksimere sin nytte av konsum og fritid og vil derfor velge å gå på arbeid for å kunne komme nærmere til optimale tilpasning som er definert i punkt $A$.
 
 Velger individet da å få barn uten å gå ut i arbeidet blir budsjettbetingelsen skjøvet nedover siden med barn kommer det med ekstra faste kostnader $Fc$ og avstanden blir den kostnaden. Dette gjør at nytten $u_0$ blir lavere en nytten hvis individet hadde vært hjemme, og blir kalt punkt $E$. Derfor velger dette individet å ikke arbeide. Men la oss se på hvis det blir innført en subsidie.
 
-```{r}
-bud_2 <- function(x) 8500-0.8*x+700
-
-figur_2 <- figur_1+
-  stat_function(df,fun=bud_2, mapping = aes(), color="palevioletred")+
-  annotate("text", x=320, y=9300, color="palevioletred", label="Fc")+
-  annotate("text", x=9300, y=4700, color="limegreen", label="E")+
-  geom_point(x=9000, y=4700, color="limegreen")
-
-figur_2
+```{python}
 ```
 
 Med innføringen av en subsidie blir budsjettlinjen til individet $-w_1$ og er den lyseblå budsjettlinjen i figuren. Det kan matematisk skrives $Fc-s$ altså faste kostnader - subsidien og det optimale valget her blir $B$, og individet får høyere nytte av å gå ut å arbeide enn å være hjemme. Det man må huske på her er at jo lengre til venstre individet kommer på x-aksen så vil individet få mindre fritid, siden $l$ er fritid. Det vi kan se er at før individet får barn i punkt $A$ så får individet høyere nytte av å jobbe enn å være hjemme.
-
-```{r}
-# Defining budget line, again
-bud_1 <- function(x) 8500-0.8*x+2000
-
-figur_3 <- figur_2+
-    geom_segment(aes(x = 0, y = bud_1(0), xend = 9000, yend = bud_1(9000)),
-               color = "cornflowerblue") +
-  annotate("text",x=1000,y=10100, label="-w1", color="cornflowerblue")+
-  geom_point(x=4150, y=7200, color="cornflowerblue")+
-  annotate("text", x=4300, y=7400, color="cornflowerblue", label="B")+
-  geom_segment(aes(x=4150,xend=4150,y=2500,yend=7150), 
-               linewidth=0.1, linetype="dashed", color="black")+
-  geom_segment(aes(x=4900,xend=4900,y=2500,yend=8100), 
-               linewidth=0.1, linetype="dashed", color="black")+
-  annotate("text", x=5400, y=2800, label="h1")+
-  annotate("text", x=3700, y=2800, label="h2")
-  
-figur_3
-```
 
 Avslutningsvis ser vi at arbeidstilbudet etter at individet fikk subsidiert barnepass er større fordi $h_1 > h_2$ der individet blir å tilbringe mer tid på arbeid, dette kan virke ulogisk men om du tenker at venstre på $x-aksen = > = bedre$, så gir det mening.
 
