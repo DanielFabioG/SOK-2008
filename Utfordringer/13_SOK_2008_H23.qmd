@@ -177,9 +177,15 @@ df_plot<-df_1 %>%
 
 # Innledning
 
-Gjennom det siste århundret har samfunnet vi lever i gått gjennom store forandringer. Vi har gått fra et samfunn som for 100 år siden akkurat hadde opplevd den første store verdenskrigen, paripolitikk, deflasjon og andre store endringer. Fagforeninger ble etablert og man levde i et samfunn hvor kvinnens rolle var å være hjemme, mens mannen dro ut for å fiske eller jobbe i fabrikk et cetera. Det er også her den første delen av den nordiske modellen blir etablert som heter trepartssamarbeidet. Direkte forklart er dette samarbeidet mellom arbeidsgiver, arbeidstaker, fagforeninger og staten, hvor disse forhandler lønnsvilkår og eventuelt streik hvis de blir uenige.
+(Du kan gjerne hoppe over denne om du holder på å sovne)
 
-Spol frem 100 år og etter vi etablerte organisert arbeidsliv (trepartssamarbeidet) så har dette vært starten på et samfunn som har endret seg stort. Vi har bygget på fra den første pilaren og skapt oss en velferdsmodell som virker simpelt forklart som et bygg totalt støttet av 3 pilarer, og for at vi videre skal nyte velferden av at det fortsetter å stå må vi som et samfunn gjøre det vi kan for at det ikke skal falle sammen. Før vi går videre er det greit å vite kort fortalt så lever den nordiske modellen vi har idag på grunn av at arbeidsstyrken (de i samfunnet vårt som arbeider) går på jobb, får en inntekt, og progressivt skattes for størrelsen på inntekten. Den andre inntekten som kommer inn til velferdsmodellen er via avgifter som vi pålegger samfunnet, for eksempel siden det er en fremtidlig kostnad tilknyttet å kjøpe tobakk så legges det på en avgift som indirekte hjelper individet med helseutgifter i fremtiden når det trenger helsehjelp. Videre gjennom økonomisk styring bestemmer vi hvordan pengene skal fordeles gjennom subsidier til markedene som opplever størst svikt på grunn av at markedene selv ikke klarer finne likevekt, eller er lite hensiktsmessig å investere i et cetera. (Skriv bedre)
+Gjennom det siste århundret har menneskets samfunn gått gjennom store forandringer. Mennesket har nettopp gått gjennom den første store verdenskrig, den industrielle revolusjon er i full effekt og fagforeninger ser dagens lys. Kvinnens rolle er å være hjemme, mens mannen drar ut for å fiske eller eksempelsvis er fabrikkarbeider. Det er også her den første delen av den nordiske modellen blir etablert som heter trepartssamarbeidet. Direkte forklart er dette samarbeidet mellom arbeidsgiver, arbeidstaker, fagforeninger og staten, hvor disse forhandler lønnsvilkår og eventuelt streik hvis de blir uenige.
+
+Etter organisert arbeidsliv (trepartssamarbeidet) så dagens lys har det skjedd noen endringer som har påvirket hvordan vårt moderne samfunn fungerer. Det finnes nå en velferdsmodell som virker gjennom organisert arbeidsliv, økonomisk styring og offentlig velferd, og for at den skal fortsette må samfunnet forhindre at den ikke faller sammen.
+
+Den nordiske modellen vi har idag går rundt fordi arbeidsstyrken får en inntekt, og progressivt skattes for størrelsen på inntekten. Den andre inntekten er avgifter som vi pålegger samfunnet, for eksempel siden det er en fremtidlig kostnad tilknyttet å kjøpe tobakk så legges det på en avgift som indirekte hjelper individet med helseutgifter i fremtiden når det trenger helsehjelp.
+
+Ved hjelp av økonomisk styring kan man allokere ressurser mer effektivt ved å tildele subsidier til markeder som opplever svikt. Dette er nødvendig når markedene selv ikke klarer å oppnå likevekt, eller når det ikke er lønnsomt å investere i dem. Økonomisk styring søker dermed å korrigere de ineffektivitetene og ubalansene som kan oppstå i et åpent marked.
 
 # Utfordring 1.1 Individets arbeidstilbud
 
@@ -187,7 +193,7 @@ Spol frem 100 år og etter vi etablerte organisert arbeidsliv (trepartssamarbeid
 
 Familiepolitikken er viktig for fremtiden til den nordiske modellen, og de to viktigste punktene er hvordan vi som et samfunn skal klare å produsere nok barn, men samtidig klare passe på våre barn mens vi er ute i arbeidslivet.
 
-I tabell 04544 ser vi forskjellen mellom en gjennomsnittlig arbeidsuke for kvinner og menn fra 1996 til 2022. Som figuren viser så har vi på denne tiden klart å redusere forskjellen mellom menn og kvinners arbeidsuke fra 9.4 timer i 1996, ned til kun 4.3 timers forskjell i 2022. Det man også kan tolke er at kvinners gjennomsnittlige arbeidsuker egentlig ikke har økt særlig mye på denne tiden, opp ca 1 time i gjennomsnitt, men at arbeidstiden til menn har gått betraktelig mer ned.
+I tabell 04544 fra SSB ser man forskjellen mellom en gjennomsnittlig arbeidsuke for kvinner og menn fra 1996 til 2022. Som figuren viser så har man på denne tiden klart å redusere forskjellen mellom menn og kvinners arbeidsuke fra 9.4 timer i 1996, ned til kun 4.3 timers forskjell i 2022. Det man også kan tolke er at kvinners gjennomsnittlige arbeidsuker egentlig ikke har økt særlig mye på denne tiden, opp ca 1 time i gjennomsnitt, men at arbeidstiden til menn har gått betraktelig mer ned.
 
 ```{r}
 # Saving some colors to use for the plot
@@ -216,7 +222,7 @@ df_plot %>%
                show.legend = FALSE, arrow = arrow(length=unit(.5, 'cm')))
 ```
 
-Mulige årsaker til endringen på disse 27 årene er gjennom subsidier til barnepass og subsidiert permisjon for å ta vare på barnet. Ved å se på figuren vil man kanskje intuitivt tenke at noe har skjedd på den mannlige siden av disse subsidiene siden det er her det er størst endring i gjennomsnittlig arbeidstimer per uke. Så før vi går gjennom den grafiske analysen skal vi kjapt se litt på hva som kan ha vært en grunn til dette. En kjapp titt på SSB sine sider forteller meg at 1. april 1993 ble det innført en fedrekvote i foreldrepermisjon som sa at totalt kunne fedre få$\frac{42 uker} {210 dager} = 0.2 = 20 dager$ foreldrepermisjon ved 100 prosent dekningsgrad [@ssbdekning]. Videre kan man også se at dette har blitt utvidet ytterligere i årene etter.
+Mulige årsaker til endringen på disse 27 årene kan være gjennom familiepolitikken. Ved å se på figuren vil man kanskje intuitivt tenke at noe har skjedd på den mannlige siden av disse subsidiene siden det er her det er størst endring i gjennomsnittlig arbeidstimer per uke. En kjapp titt på SSB sine sider forteller [@ssbdekning] meg at 1. april 1993 ble det innført en fedrekvote i foreldrepermisjon som sa at totalt kunne fedre få$\frac{42 uker} {210 dager} = 0.2 = 20 dager$ foreldrepermisjon ved 100 prosent dekningsgrad. Videre kan man også se at dette har blitt utvidet ytterligere i årene etter.
 
 Dette gjorde meg nysgjerrig angående hvordan fedrekvoten så ut mot foreldrepermisjonen generelt i OECD land og jeg laget en oppdatert figur for siste år med data som var i 2022.
 
@@ -273,7 +279,7 @@ df_maternity%>%
   geom_text_repel(size=2.5)
 ```
 
-Spania er fjernet da fedre har rett til like mye permisjon som mødre, så foreldre-permisjonsretten endte opp med over 112 dager, som blir en ekstrem observasjon. Det man kan prøve å vise en sammenheng er at vi prøver å endre på ansvaret i hjemmet for både kvinner og menn hvor menn får mer ansvar ovenfor barnet. Noe som gir et mer egalitært delt ansvar av familieansvar i hjemmet, @barr . Dette betyr også at kvinner får større muligheter i arbeidslivet, hvor de har muligheter å få mer opplæring og ansvar uten at arbeidsgiver skal frykte at kvinnen forsvinner lengre perioder eller permanent på grunn av barneomsorg. Helt mot origo kan man se USA, som har null omsorgspermisjon for hverken kvinner eller menn.
+Spania er fjernet da fedre har rett til like mye permisjon som mødre, så foreldre-permisjonsretten endte opp med over 112 dager, som blir en ekstrem observasjon. Det man kan prøve å vise en sammenheng er at vi prøver å endre på ansvaret i hjemmet for både kvinner og menn hvor menn får mer ansvar ovenfor barnet. Noe som gir et mer egalitært delt ansvar av familieansvar i hjemmet ifølge @barr . Dette betyr også at kvinner får større muligheter i arbeidslivet, hvor de har muligheter å få mer opplæring og ansvar uten at arbeidsgiver skal frykte at kvinnen forsvinner lengre perioder eller permanent på grunn av barneomsorg. Helt mot origo kan man se USA, som har null omsorgspermisjon for hverken kvinner eller menn.
 
 Grafisk illustrert kan vi tenke oss at om begge foreldre må jobbe må de betale for barnepass, og om en forelder er hjemme trenger de ikke å betale siden den ene forelderen da har ansvaret som hjemmeværende. Vi antar at moren har hovedansvar for barnet eller flere barn. Dette kan vi sette opp som en Cobb-Douglas nyttefunksjon. Det vi skal se på her er hvordan en subsidie fra staten kan påvirke foreldrenes valg om å være hjemme med barnet eller dra på arbeid. Vi går ikke veldig dypt inn i matematikken her men ser mer på hvordan dette kan vises grafisk.
 
@@ -373,7 +379,8 @@ ax.text(27,74,'C', horizontalalignment='left', verticalalignment='bottom')
 # Setter inn h_ft som krysser U_ft fra x_1_num
 ax.text(26,-8,'$h_{ft}$', horizontalalignment='left', verticalalignment='bottom')
 
-ax.set_title('Invididets tilpasning til timer arbeid')
+ax.set_title('Invididets tilpasning til fulltid eller ikke deltakelse')
+
 
 ax.legend(bbox_to_anchor=(0.7,0.7))
 
@@ -522,9 +529,11 @@ women %>%
 
 For at den nordiske modellen skal kunne overleve trenger vi høy yrkesdeltakelse blant kvinner slik at vi fortsetter å få inn skattbar inntekt som hovedsakelig brukes til å finansiere alle godene som vi får tilbake av den. For eksempel pensjon, trygd når man havner utenfor arbeidsstyrken, subsidiert utdanning, eldreomsorg, og subsidierte helsetjenester for å nevne noen eksempler.
 
-Barnetall er også veldig viktig for den nordiske modellen, for om vi får en skjevhet i befolknings-pyramiden hvor vi får et flertall av eldre mennesker i Norge enn nyfødte barn og mennesker i arbeidsstyrken så vil samfunnet slite med å finansiere godene som modellen gir oss. Hvis antall fødsler per 2 voksne er mindre enn 2 vil befolkningen på sikt minke.
+Barnetall er også veldig viktig for den nordiske modellen, for om vi får en skjevhet i befolknings-pyramiden hvor vi får et flertall av eldre mennesker i Norge enn nyfødte barn og mennesker i arbeidsstyrken så vil samfunnet slite med å finansiere godene som modellen gir oss. Hvis antall fødsler per 2 voksne er mindre enn 2 vil befolkningen på sikt minke, fordi om 2 mennesker produserer $< 2$ barn blir befolkningen mindre. I følge @ssbfruktbar så var det rekordlav fruktbarhet i 2022 blant kvinner i Norge.
 
-Som man kan se i befolknings-pyramiden under så er det flere eldre mennesker i 2023 enn det var for 20 år siden i Norge.
+51500 barn ble født ifjor, som var en nedgang på 4500 fra 2021. I 2022 var fruktbarhetstallet i Norge 1.41 barn per kvinne, som er det laveste noen gang registrert.
+
+Som man kan se i befolknings-pyramiden under så er det flere eldre mennesker i 2023 enn det var for 20 år siden i Norge og at det ikke er flere barn mellom 0-9 år, og dette kan være bekymringsverdig for fremtiden til den nordiske modellen.
 
 ```{r}
 # Fixing just a big K on Kjønn
@@ -866,7 +875,7 @@ fig
 plt.show()
 ```
 
-Gratis forbruk kan føre til overforbruk, og blir en samfunnsøkonomisk ineffektiv ressursbruk, dette er hvis pris per enhet er 0 og da blir likevekten ved $M_1$. @mikko_youtube (Eventuelt skrive noe mer her..)
+Gratis forbruk kan føre til overforbruk, og blir en samfunnsøkonomisk ineffektiv ressursbruk, dette er hvis pris per enhet er 0 og da blir likevekten ved $M_1$ ifølge @mikko_youtube.
 
 I figuren under kan man se husholdningens egenandel mot statens subsidiering av helsetjenester for diverse OECD-land.
 
@@ -904,7 +913,7 @@ eurostat %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1))
 ```
 
-Her ser man at totalt sett så bruker Norge mest på helsetjenestekostnader, og velferdsstaten vår betaler for mesteparten av kostnaden. Dette kan også forklare hvorfor vi som et land kan ha problemer med et overforbruk av helsetjenester, personlig erfaringsvis har vi et helsevesen som sliter med et stort trykk både på sykehusene med lange ventetider og lange ventetider for fastlege-time. Dette er observasjoner man kan ta ut ifra denne figuren - uten at det trenger å direkte være noen årsakssammenheng.
+Her ser man at totalt sett så bruker Norge mest på helsetjenestekostnader, og velferdsstaten vår betaler for mesteparten av kostnaden. Dette kan også forklare hvorfor vi som et land kan ha problemer med et overforbruk av helsetjenester, erfaringsvis har vi et helsevesen som sliter med et stort trykk både på sykehusene med lange ventetider og lange ventetider generelt for helserelaterte tjenester.
 
 ## Fordelingseffekter av økte egenandeler
 
