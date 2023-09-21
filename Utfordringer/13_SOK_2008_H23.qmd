@@ -399,7 +399,7 @@ ax.text(70,25,'E', horizontalalignment='left', verticalalignment='bottom')
 ax.text(27,63,'A', horizontalalignment='left', verticalalignment='bottom')
 
 # tegn inn tilpasningen
-ax.vlines(x_1_num,0,x_2_num, color='black',ls='dashed', label='$x_1$')
+ax.vlines(x_1_num,0,x_2_num, color='black',ls='dashed')
 
 # legger til B
 ax.text(x_1_num,x_2_num,'B', horizontalalignment='left', verticalalignment='bottom')
