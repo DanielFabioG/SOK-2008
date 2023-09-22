@@ -177,11 +177,11 @@ df_plot<-df_1 %>%
 
 # Innledning
 
-(Du kan gjerne hoppe over denne om du holder på å sovne)
+## (Du kan gjerne hoppe over denne om du holder på å sovne)
 
-Gjennom det siste århundret har menneskets samfunn gått gjennom store forandringer. Mennesket har nettopp gått gjennom den første store verdenskrig, den industrielle revolusjon er i full effekt og fagforeninger ser dagens lys. Kvinnens rolle er å være hjemme, mens mannen drar ut for å fiske eller eksempelsvis er fabrikkarbeider. Det er også her den første delen av den nordiske modellen blir etablert som heter trepartssamarbeidet. Direkte forklart er dette samarbeidet mellom arbeidsgiver, arbeidstaker, fagforeninger og staten, hvor disse forhandler lønnsvilkår og eventuelt streik hvis de blir uenige.
+Gjennom det siste århundret har menneskets samfunn gått gjennom store forandringer. Mennesket har nettopp gått gjennom den første store verdenskrig, den industrielle revolusjon er i full effekt og fagforeninger ser dagens lys. Kvinnens rolle er å være hjemme, mens mannen drar ut for å fiske eller er fabrikkarbeider. Det er også her den første delen av den nordiske modellen blir etablert som heter trepartssamarbeidet. Direkte forklart er dette samarbeidet mellom arbeidsgiver, arbeidstaker, fagforeninger og staten, hvor disse forhandler lønnsvilkår og eventuelt streik hvis de blir uenige.
 
-Etter organisert arbeidsliv (trepartssamarbeidet) så dagens lys har det skjedd noen endringer som har påvirket hvordan vårt moderne samfunn fungerer. Det finnes nå en velferdsmodell som virker gjennom organisert arbeidsliv, økonomisk styring og offentlig velferd, og for at den skal fortsette må samfunnet forhindre at den ikke faller sammen.
+Etter organisert arbeidsliv (trepartssamarbeidet) så dagens lys har det skjedd noen endringer som har påvirket hvordan vårt moderne samfunn fungerer. Det finnes nå en velferdsmodell som virker gjennom organisert arbeidsliv, økonomisk styring og offentlig velferd, og for at den skal gå rundt må samfunnet forhindre at den ikke faller sammen.
 
 Den nordiske modellen vi har idag går rundt fordi arbeidsstyrken får en inntekt, og progressivt skattes for størrelsen på inntekten. Den andre inntekten er avgifter som vi pålegger samfunnet, for eksempel siden det er en fremtidlig kostnad tilknyttet å kjøpe tobakk så legges det på en avgift som indirekte hjelper individet med helseutgifter i fremtiden når det trenger helsehjelp.
 
@@ -191,7 +191,7 @@ Ved hjelp av økonomisk styring kan man allokere ressurser mer effektivt ved å 
 
 ## Empiriske kjønnsforskjeller i valg av arbeidstimer for menn og kvinner
 
-Familiepolitikken er viktig for fremtiden til den nordiske modellen, og de to viktigste punktene er hvordan vi som et samfunn skal klare å produsere nok barn, men samtidig klare passe på våre barn mens vi er ute i arbeidslivet.
+Familiepolitikken er viktig for fremtiden til den nordiske modellen, og to viktige punkter er hvordan vi som et samfunn skal klare å produsere nok barn, men samtidig klare passe på våre barn mens vi er ute i arbeidslivet.
 
 I tabell 04544 fra SSB ser man forskjellen mellom en gjennomsnittlig arbeidsuke for kvinner og menn fra 1996 til 2022. Som figuren viser så har man på denne tiden klart å redusere forskjellen mellom menn og kvinners arbeidsuke fra 9.4 timer i 1996, ned til kun 4.3 timers forskjell i 2022. Det man også kan tolke er at kvinners gjennomsnittlige arbeidsuker egentlig ikke har økt særlig mye på denne tiden, opp ca 1 time i gjennomsnitt, men at arbeidstiden til menn har gått betraktelig mer ned.
 
@@ -222,7 +222,7 @@ df_plot %>%
                show.legend = FALSE, arrow = arrow(length=unit(.5, 'cm')))
 ```
 
-Mulige årsaker til endringen på disse 27 årene kan være gjennom familiepolitikken. Ved å se på figuren vil man kanskje intuitivt tenke at noe har skjedd på den mannlige siden av disse subsidiene siden det er her det er størst endring i gjennomsnittlig arbeidstimer per uke. En kjapp titt på SSB sine sider forteller [@ssbdekning] meg at 1. april 1993 ble det innført en fedrekvote i foreldrepermisjon som sa at totalt kunne fedre få$\frac{42 uker} {210 dager} = 0.2 = 20 dager$ foreldrepermisjon ved 100 prosent dekningsgrad. Videre kan man også se at dette har blitt utvidet ytterligere i årene etter.
+Mulige årsaker til endringen på disse 27 årene kan være gjennom familiepolitikken. (Nå går jeg litt videre fra spørsmålet ved utfordringen så du kan gjerne hoppe over dette om du sovner.) Ved å se på figuren vil man kanskje intuitivt tenke at noe har skjedd på den mannlige siden av disse subsidiene siden det er her det er størst endring i gjennomsnittlig arbeidstimer per uke. Noen klikk senere på SSB sine sider forteller [@ssbdekning] at 1. april 1993 ble det innført en fedrekvote i foreldrepermisjon som sa at totalt kunne fedre få$\frac{42 uker} {210 dager} = 0.2 = 20 dager$ foreldrepermisjon ved 100 prosent dekningsgrad. Videre kan man også se at dette har blitt utvidet ytterligere i årene etter.
 
 Dette gjorde meg nysgjerrig angående hvordan fedrekvoten så ut mot foreldrepermisjonen generelt i OECD land og jeg laget en oppdatert figur for siste år med data som var i 2022.
 
@@ -279,9 +279,13 @@ df_maternity%>%
   geom_text_repel(size=2.5)
 ```
 
-Spania er fjernet da fedre har rett til like mye permisjon som mødre, så foreldre-permisjonsretten endte opp med over 112 dager, som blir en ekstrem observasjon. Det man kan prøve å vise en sammenheng er at vi prøver å endre på ansvaret i hjemmet for både kvinner og menn hvor menn får mer ansvar ovenfor barnet. Noe som gir et mer egalitært delt ansvar av familieansvar i hjemmet ifølge @barr . Dette betyr også at kvinner får større muligheter i arbeidslivet, hvor de har muligheter å få mer opplæring og ansvar uten at arbeidsgiver skal frykte at kvinnen forsvinner lengre perioder eller permanent på grunn av barneomsorg. Helt mot origo kan man se USA, som har null omsorgspermisjon for hverken kvinner eller menn.
+Spania er fjernet da fedre har rett til like mye permisjon som mødre, så foreldre-permisjonsretten endte opp med over 112 dager, som blir en ekstrem observasjon. I figuren kan man se at vi se at mange OECD-land har innført omsorgspermisjon for menn, hvor vi får et skift, slik at fedre får mer ansvar ovenfor barnet. Noe som gir et mer egalitært delt ansvar av familieansvar i hjemmet ifølge @barr . Dette betyr også at kvinner får større muligheter i arbeidslivet, hvor de har muligheter å få mer opplæring og ansvar uten at arbeidsgiver skal frykte at kvinnen forsvinner lengre perioder eller permanent på grunn av barneomsorg.
 
-Grafisk illustrert kan vi tenke oss at om begge foreldre må jobbe må de betale for barnepass, og om en forelder er hjemme trenger de ikke å betale siden den ene forelderen da har ansvaret som hjemmeværende. Vi antar at moren har hovedansvar for barnet eller flere barn. Dette kan vi sette opp som en Cobb-Douglas nyttefunksjon. Det vi skal se på her er hvordan en subsidie fra staten kan påvirke foreldrenes valg om å være hjemme med barnet eller dra på arbeid. Vi går ikke veldig dypt inn i matematikken her men ser mer på hvordan dette kan vises grafisk.
+### Effekten av deltidsarbeid og kvinners yrkesdeltakelse
+
+Deltidsarbeid i det moderne jobbsamfunnet har endret kvinners deltakelse i arbeidslivet. I følge empiriske studier gjort av @barr så har innføringen av deltid gjort slik at kvinner som kun hadde valget mellom fulltid eller ikke-deltakelse velger å arbeide allikevel og hvordan det har en positiv effekt på livskvaliteten, mens menn får en større positiv effekt av å jobbe fulltid.
+
+Grafisk illustrert kan vi tenke oss at kvinnen har to valg , enten å jobbe fulltid eller ikke delta i arbeidsmarkedet i det hele tatt.
 
 Som økonom er man glad i å forkorte ting så for å få en forståelse for hva som er på figurene så kommer en liten liste her:
 
@@ -291,7 +295,7 @@ Som økonom er man glad i å forkorte ting så for å få en forståelse for hva
 
 -   $l = antall\:timer\:fritid$
 
-For å få en forståelse for forklaringen til figurene er det greit å ha lest over hva de forskjellige variablene betyr. I figuren under kan man se et individs tre indifferens-kurver som er definert via tre forskjellige nyttenivåer for konsum og antall timer fritid. Vi antar at individet har en arbeidsfri inntekt - som vil si at det kommer inn en inntekt som er definert ovenfor kalt $m$ , denne kan man se i den stiplede linjen.
+Vi går ut ifra et fullkomment arbeidsmarked. I figuren under kan man se en kvinnes to indifferens-kurver som er definert via to nyttenivåer for konsum og antall timer fritid. Vi antar at individet har en reservasjonslønn, som er det laveste nivået av konsum på indifferenskurven som gjør at kvinnen ikke får mer nytte av å gå i arbeid.
 
 ```{python}
 # Code is modified from lecture 13 and some other parts of micro-lectures
@@ -336,9 +340,7 @@ x_1_num = x_1_eq.subs([(a,.4),(b,.35),(m,2500),(p_1,25),(p_2,30)])
 x_2_num = x_2_eq.subs([(a,.4),(b,.35),(m,2500),(p_1,25),(p_2,30)])
 ```
 
-Ser man på hvor $m$ treffer budsjettlinjen har individet ikke nok inntekt for å kunne maksimere sin nytte av konsum og fritid og vil derfor velge å gå på arbeid for å kunne komme nærmere til optimale tilpasning som er definert i punkt $A$.
-
-Velger individet da å få barn uten å gå ut i arbeidet blir budsjettbetingelsen skjøvet nedover siden med barn kommer det med ekstra faste kostnader $Fc$ og avstanden blir den kostnaden. Dette gjør at nytten $u_0$ blir lavere en nytten hvis individet hadde vært hjemme, og blir kalt punkt $E$. Derfor velger dette individet å ikke arbeide. Men la oss se på hvis det blir innført en subsidie.
+I figur a har kvinnen kun valg av å arbeide fulltid eller ikke delta i arbeidsmarkedet i det hele tatt. I punkt $h_ft$ velger kvinnen ikke å delta i arbeidsmarkedet fordi hun verdsetter fritiden sin mer i punkt $E$ som er hva som kalles reservasjonslønnen. Den refererer til den laveste lønnen kvinnen er villig til å akseptere for å være villig til å gå i arbeid. Reservasjonslønnen her er for høy for at kvinnen ønsker deltakelse i arbeidsmarkedet, fordi på iso utilitetskurvene så er punkt $U_ft < U_np$ .
 
 ```{python}
 x = np.linspace(0.1,70,100)
@@ -379,7 +381,7 @@ ax.text(27,74,'C', horizontalalignment='left', verticalalignment='bottom')
 # Setter inn h_ft som krysser U_ft fra x_1_num
 ax.text(26,-8,'$h_{ft}$', horizontalalignment='left', verticalalignment='bottom')
 
-ax.set_title('Invididets tilpasning til fulltid eller ikke deltakelse')
+ax.set_title('(a) Invididets tilpasning til fulltid eller ikke deltakelse')
 
 
 ax.legend(bbox_to_anchor=(0.7,0.7))
@@ -387,6 +389,8 @@ ax.legend(bbox_to_anchor=(0.7,0.7))
 plt.show()
 
 ```
+
+I figur b så ser man at når muligheten for deltid definert som $U_pt$ (part time), så velger kvinnen å gå i arbeid fordi hun får mer av både fritid og konsum hvor $h_pt$ treffer i punkt $B$ .
 
 ```{python}
 fig, ax = create_ax()
@@ -418,16 +422,14 @@ ax.text(26,-8,'$h_{ft}$', horizontalalignment='left', verticalalignment='bottom'
 # Setter inn h_pt som treffer budsjettlinjen i 
 ax.text(x_1_num-1,-8,'$h_{pt}$', horizontalalignment='left', verticalalignment='bottom')
 # tittel
-ax.set_title('Invididets tilpasning til timer arbeid med deltid')
+ax.set_title('(b) Invididets tilpasning til timer arbeid med deltid')
 
 ax.legend(bbox_to_anchor=(0.7,0.5))
 
 plt.show()
 ```
 
-Med innføringen av en subsidie blir budsjettlinjen til individet $-w_1$ og er den lyseblå budsjettlinjen i figuren. Det kan matematisk skrives $Fc-s$ altså faste kostnader - subsidien og det optimale valget her blir $B$, og individet får høyere nytte av å gå ut å arbeide enn å være hjemme. Det man må huske på her er at jo lengre til venstre individet kommer på x-aksen så vil individet få mindre fritid, siden $l$ er fritid. Det vi kan se er at før individet får barn i punkt $A$ så får individet høyere nytte av å jobbe enn å være hjemme.
-
-Avslutningsvis ser vi at arbeidstilbudet etter at individet fikk subsidiert barnepass er større fordi $h_1 > h_2$ der individet blir å tilbringe mer tid på arbeid, dette kan virke ulogisk men om du tenker at venstre på $x-aksen = > = bedre$, så gir det mening.
+Segmentet $B -> D$ måler hvor stor reduksjon i timebetalingen kvinnen er villig til å akseptere for å få en deltidsjobb, i stedet for å bli tvunget til å velge mellom å jobbe heltid eller ikke jobbe i det hele tatt ifølge @barr. Elastisiteten mellom konsum og fritid kan også forklare forskjellen mellom en persons preferanser, for eksempel hvor kvinner velger å ha større vekt på fritid, mens menn kan ha en større preferanse for konsum.
 
 ## Sammenhengen mellom lengde på betalt foreldrepermisjon og yrkesdeltakelse blant kvinner
 
@@ -438,7 +440,7 @@ Det kan antas intuitivt at det er en liten årsakssammenheng at gunstige pensjon
 ```{r}
 #| output: FALSE
 
-lm(tot_full_rate~fem_emp_rate_0_2, women)
+model<- lm(tot_full_rate~fem_emp_rate_0_2, women)
 ```
 
 ```{r}
@@ -455,12 +457,12 @@ women %>%
   geom_smooth(method = lm, se = FALSE)
 ```
 
-Empiriske studier sier at foreldrepermisjon som gir foreldre rett til å beholde jobben har en positiv effekt på foreldrenes sysselsettingsnivå. Men kan også ha en negativ effekt på lønnen i de landene som har mer uker med 100% støtte. (Skriv mer her)
+Empiriske studier sier at foreldrepermisjon som gir foreldre rett til å beholde jobben har en positiv effekt på foreldrenes sysselsettingsnivå. Men kan også ha en negativ effekt på lønnen i de landene som har mer uker med 100% støtte.
 
 ```{r}
-#| output: FALSE
+#| output: false
 
-lm(tot_full_rate~fem_emp_rate_6_14, women)
+model <-lm(tot_full_rate~fem_emp_rate_6_14, women)
 ```
 
 ```{r}
@@ -531,7 +533,7 @@ For at den nordiske modellen skal kunne overleve trenger vi høy yrkesdeltakelse
 
 Barnetall er også veldig viktig for den nordiske modellen, for om vi får en skjevhet i befolknings-pyramiden hvor vi får et flertall av eldre mennesker i Norge enn nyfødte barn og mennesker i arbeidsstyrken så vil samfunnet slite med å finansiere godene som modellen gir oss. Hvis antall fødsler per 2 voksne er mindre enn 2 vil befolkningen på sikt minke, fordi om 2 mennesker produserer $< 2$ barn blir befolkningen mindre. I følge @ssbfruktbar så var det rekordlav fruktbarhet i 2022 blant kvinner i Norge.
 
-51500 barn ble født ifjor, som var en nedgang på 4500 fra 2021. I 2022 var fruktbarhetstallet i Norge 1.41 barn per kvinne, som er det laveste noen gang registrert.
+51500 barn ble født ifjor, som var en nedgang på 4500 fra 2021. I 2022 var fruktbarthetstallet i Norge 1.41 barn per kvinne, som er det laveste noen gang registrert.
 
 Som man kan se i befolknings-pyramiden under så er det flere eldre mennesker i 2023 enn det var for 20 år siden i Norge og at det ikke er flere barn mellom 0-9 år, og dette kan være bekymringsverdig for fremtiden til den nordiske modellen.
 
@@ -635,8 +637,9 @@ I følge @kristensen regnes $R^2 = \frac{Srr}{Syy} = 0.9159$, hvor $Srr$ er den 
 ```{r}
 # Plotting the correlation and the linear regression model
 euro_wide%>%
-  filter(unit == 'Percentual share of total current health expenditure (CHE)') %>%
-  ggplot(aes(x=house, y=gov,label=country))+
+  filter(unit == 'Purchasing power standard (PPS) per inhabitant') %>%
+  mutate(prosent = (house/gov)*100) %>%
+  ggplot(aes(x=prosent, y=gov,label=country))+
   geom_point(size=2.5, alpha=0.5, color="cornflowerblue")+
   geom_smooth(method = lm, se= FALSE, color="palevioletred")+
   labs(x="Husholdningen selv", y="Myndighetens helsetjenesteforuk", 
@@ -646,7 +649,7 @@ euro_wide%>%
     geom_text_repel(size=2.5)
 ```
 
-Som jeg selv vil tolke figuren kan man se to virkninger av hva som skjer. Når myndighetene subsidierer mesteparten av helsetjenestene til husholdningene virker det som at det er flere som benytter seg av tilbudet, og det samme motsatt, hvis myndighetene ikke tar en stor del av helsetjenesteforbruket så er det mindre forbuk av det i husholdningen. Så svaret her virker til å være en plass i mellom.
+Som jeg selv vil tolke figuren kan man se to virkninger av hva som skjer. Når myndighetene subsidierer mesteparten av helsetjenestene til husholdningene virker det som at det er flere som benytter seg av tilbudet, og det samme motsatt, hvis myndighetene ikke tar en stor del av helsetjenesteforbruket så er det mindre forbruk av det i husholdningen. Så svaret her virker til å være en plass i mellom.
 
 ## Hvordan økt egenbetaling påvirker helsetjenesteforbruk og øker effektiviteten
 
@@ -917,7 +920,9 @@ Her ser man at totalt sett så bruker Norge mest på helsetjenestekostnader, og 
 
 ## Fordelingseffekter av økte egenandeler
 
-Skrive noe epic her.
+Økte egenandeler endrer etterspørselen av helsetjenester, og dette kan gjøre slik at individer som hadde råd ikke lengre har råd og da velger å ikke benytte seg av helsetjenester. Det kan også ha en effekt på ulikheten i samfunnet, hvor de som har størst inntekt blir å kunne ha større mulighet å bruke helsetjenester mens de som har mindre inntekt ikke benytter seg av de.
+
+Å finne den rette balansen mellom dette er derfor vanskelig men også viktig.
 
 # Appendiks
 
