@@ -23,7 +23,6 @@ rm(list = ls())
 library(tidyverse)
 library(rjstat)
 library(httr)
-library(readr)
 library(eurostat)
 library(countrycode) # not really needed but keeping for future reference
 options(scipen = 999)

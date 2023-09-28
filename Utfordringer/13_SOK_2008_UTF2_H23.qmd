@@ -1,0 +1,82 @@
+---
+title: "Utfordring 2.1 og 2.2"
+subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
+date: last-modified
+date-format: "DD-MM-YYYY"
+author: "Kandidatnummer 13, SOK-2008, Høst 2023"
+format: pdf
+echo: false
+toc: true
+toc-title: "Innholdsliste"
+warning: false
+bibliography: referanse2.bib
+csl: norsk-apa-manual.csl
+nocite: |
+  @*
+---
+
+```{r}
+#| output: false
+
+# Loading packages needed
+rm(list = ls())
+library(tidyverse)
+library(eurostat)
+```
+
+```{r}
+#| output: false
+# Using the package eurostat to download the data needed
+# Getting the data for minimum wage in percentage of mean wage
+eurostat_1 <- get_eurostat(id = "earn_mw_avgr2", 
+                     type = "label")
+# Getting employment
+eurostat_2 <- get_eurostat(id = "lfsi_emp_a", 
+                     type = "label")
+```
+
+```{r}
+
+```
+
+```{r}
+eurostat_1 <- eurostat_1 %>%
+  filter(indic_se == 'Monthly minimum wage as a proportion of the mean gross monthly earnings',
+         time == "2021-01-01",
+         nace_r2 == "Business economy",
+         !geo %in% c("Montenegro", "Albania"))
+
+eurostat_2 <- eurostat_2 %>%
+  filter(age == 'From 20 to 64 years',
+         time == "2021-01-01",
+         sex == "Total",
+         unit == 'Percentage of total population',
+         !geo %in% c('Euro area – 20 countries (from 2023)',
+                         'European Union - 27 countries (from 2020)',
+                         'Euro area – 20 countries (from 2023)',
+                         'European Union - 27 countries (from 2020)'),
+         indic_em == 'Persons in the labour force (former name: active persons)')
+
+
+unique_countries <- unique(eurostat_1$geo)
+
+check<-eurostat_2 %>%
+  filter(geo %in% unique_countries)
+
+#Merge the filtered dataframes
+merged_df <- merge(eurostat_1, eurostat_2, by=c("geo", "time"))
+
+```
+
+```{r}
+  ggplot()+
+  geom_point(data = eurostat_1, aes(x=))
+```
+
+# Innledning
+
+## 
+
+# Utfordring 2.1 Minstelønn
+
+# Utfordring 2.2 Fagforeninger
