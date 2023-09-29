@@ -17,7 +17,6 @@ nocite: |
 
 ```{r}
 #| output: false
-
 # Loading packages needed
 rm(list = ls())
 library(tidyverse)
@@ -39,13 +38,14 @@ eurostat_2 <- get_eurostat(id = "lfsi_emp_a",
 
 ```{r}
 # Filtering out what I dont want and letting what I want to look at remain
+# I have to remove montenegro and albania since they are not in the other data
 eurostat_1 <- eurostat_1 %>%
   filter(indic_se == 'Monthly minimum wage as a proportion of the mean gross monthly earnings',
          time == "2021-01-01",
          nace_r2 == "Business economy",
          !geo %in% c("Montenegro", "Albania"))
 
-# Same for eurostat_2
+# Same for eurostat_2, and removing some aggregated values for countries
 eurostat_2 <- eurostat_2 %>%
   filter(age == 'From 20 to 64 years',
          time == "2021-01-01",
@@ -58,7 +58,7 @@ eurostat_2 <- eurostat_2 %>%
          indic_em == 'Persons in the labour force (former name: active persons)')
 
 
-#Merging the filtered dataframes to one dataframe
+# Merging the filtered dataframes to one dataframe
 eurostat <- merge(eurostat_1, eurostat_2, by=c("geo", "time"))
 
 # Removing the old dataframes
@@ -72,27 +72,34 @@ OECD_gender <- get_dataset("MIG_NUP_RATES_GENDER")
 ```
 
 ```{r}
+# Fixing the year variable, filtering for 2018 and removing time and renaming
 OECD_tud <-OECD_tud %>%
   mutate(year = as.numeric(Time)) %>%
   filter(year == 2018) %>%
   select(-Time) %>%
   rename(COUNTRY = LOCATION)
 
+# Same here
 OECD_gender <-OECD_gender %>%
   mutate(year = as.numeric(Time)) %>%
   filter(year == 2018, GENDER == "TOT", RATE == "U_RATE") %>%
   select(-Time)
 
+# Filtering for the NB which is the data for people born in the country
 OECD_NB <- OECD_gender %>%
   filter(BIRTH == "NB", !COUNTRY == "SVK")
 
+# Filtering for the data for people that was born outside the country
 OECD_FB <- OECD_gender %>%
   filter(BIRTH == "FB")
 
+# Merging the datasets to use for ggplot
 OECD_finish <- merge(OECD_tud, OECD_FB, by=c("COUNTRY", "year"))
 
+# Merging the other datasets to use for ggplot
 OECD_finish_2 <- merge(OECD_tud, OECD_NB, by=c("COUNTRY", "year"))
 
+# Removing old datasets
 rm(OECD_NB, OECD_FB, OECD_gender, OECD_tud)
 ```
 
@@ -128,7 +135,8 @@ eurostat %>%
        title= "Dunno yet")+
   theme_minimal()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
-  scale_x_continuous(labels = scales::percent_format(scale = 1))
+  scale_x_continuous(labels = scales::percent_format(scale = 1))+
+  geom_smooth(method = lm, se= FALSE)
 ```
 
 ## Episk forklaring av den forholdsvis enkle grafen som vektlegges mer enn hva selve koden for å lage figuren tok.
