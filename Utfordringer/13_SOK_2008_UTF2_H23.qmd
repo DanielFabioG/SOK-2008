@@ -23,6 +23,7 @@ rm(list = ls())
 library(tidyverse)
 library(eurostat)
 library(ggrepel)
+library(OECD)
 ```
 
 ```{r}
@@ -64,9 +65,52 @@ eurostat <- merge(eurostat_1, eurostat_2, by=c("geo", "time"))
 rm(eurostat_1, eurostat_2)
 ```
 
+```{r}
+# Using the OECD package to download the datasets
+OECD_tud <-get_dataset("TUD")
+OECD_gender <- get_dataset("MIG_NUP_RATES_GENDER")
+```
+
+```{r}
+OECD_tud <-OECD_tud %>%
+  mutate(year = as.numeric(Time)) %>%
+  filter(year == 2018) %>%
+  select(-Time) %>%
+  rename(COUNTRY = LOCATION)
+
+OECD_gender <-OECD_gender %>%
+  mutate(year = as.numeric(Time)) %>%
+  filter(year == 2018, GENDER == "TOT", RATE == "U_RATE") %>%
+  select(-Time)
+
+OECD_NB <- OECD_gender %>%
+  filter(BIRTH == "NB", !COUNTRY == "SVK")
+
+OECD_FB <- OECD_gender %>%
+  filter(BIRTH == "FB")
+
+OECD_finish <- merge(OECD_tud, OECD_FB, by=c("COUNTRY", "year"))
+
+OECD_finish_2 <- merge(OECD_tud, OECD_NB, by=c("COUNTRY", "year"))
+
+rm(OECD_NB, OECD_FB, OECD_gender, OECD_tud)
+```
+
 # Innledning
 
 # Utfordring 2.1 Minstelønn
+
+1.  Bruk økonomisk teori og grafisk analyse til å gi intuisjon til begge disse påstandene:
+
+    -   «Minstelønninger fører til **økt** fattigdom».
+
+    -   «Minstelønninger fører til **mindre** fattigdom».
+
+```{r}
+# Tegne noen pene python figurer
+```
+
+Forklare og skrive latex matte her
 
 ```{r}
 #| output: FALSE
@@ -74,21 +118,65 @@ rm(eurostat_1, eurostat_2)
 model<- lm(values.y~values.x, eurostat)
 ```
 
+theme_minimal()+
+
+scale_y_continuous(labels = scales::percent_format(scale = 1))+
+
+scale_x_continuous(labels = scales::percent_format(scale = 1))
+
 ```{r}
 eurostat %>%
   ggplot(aes(x=values.y, y=values.x, label=geo))+
   geom_point(color = "palevioletred")+
   geom_text_repel()+
-  labs(y="Minstelønninger i % av gjennomsnittlig bruttoinntekt", x="Sysselsetingsprosent for alder 20-64",
+  labs(y="Minstelønninger av gjennomsnittlig bruttoinntekt", x="Sysselsetting for alder 20-64",
        caption= "Source: Eurostat",
        title= "Dunno yet")+
   theme_minimal()+
-  geom_smooth(method = lm, se = FALSE, color = "cornflowerblue")
+  scale_y_continuous(labels = scales::percent_format(scale = 1))+
+  scale_x_continuous(labels = scales::percent_format(scale = 1))
 ```
 
-Episk forklaring av den forholdsvis enkle grafen som vektlegges mer enn hva selve koden for å lage figuren tok.
+## Episk forklaring av den forholdsvis enkle grafen som vektlegges mer enn hva selve koden for å lage figuren tok.
+
+## Diskuter sammenhengen mellom nivået på minstelønn og arbeidsledighetsraten.
 
 # Utfordring 2.2 Fagforeninger
+
+## 2.2.1 Økonomisk teori og grafisk analyse til å gi intuisjon til påstanden «Sterke fagforeninger reduserer velferden».
+
+```{r}
+# Python kode for grafisk analyse
+
+```
+
+latex matte her lmao
+
+## 2.2.2 Arbeidsledighetrate og fagforeninger
+
+```{r}
+OECD_finish_2 %>%
+  ggplot(aes(x=as.numeric(ObsValue.x), y=as.numeric(ObsValue.y), label=COUNTRY))+
+  geom_point(color="cornflowerblue")+
+  geom_smooth(method =lm, se= FALSE)+
+  labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten", title= "Innenlandsfødte")+
+  theme_minimal()+
+  scale_y_continuous(labels = scales::percent_format(scale = 1))+
+  scale_x_continuous(labels = scales::percent_format(scale = 1))+
+  geom_text_repel()
+```
+
+```{r}
+OECD_finish %>%
+  ggplot(aes(x=as.numeric(ObsValue.x), y=as.numeric(ObsValue.y), label=COUNTRY))+
+  geom_point(color="cornflowerblue")+
+  geom_smooth(method =lm, se= FALSE)+
+  labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten", title="Utenlandsfødte")+
+  theme_minimal()+
+  scale_y_continuous(labels = scales::percent_format(scale = 1))+
+  scale_x_continuous(labels = scales::percent_format(scale = 1))+
+  geom_text_repel()
+```
 
 # Appendiks
 
