@@ -22,6 +22,7 @@ nocite: |
 rm(list = ls())
 library(tidyverse)
 library(eurostat)
+library(ggrepel)
 ```
 
 ```{r}
@@ -30,22 +31,20 @@ library(eurostat)
 # Getting the data for minimum wage in percentage of mean wage
 eurostat_1 <- get_eurostat(id = "earn_mw_avgr2", 
                      type = "label")
-# Getting employment
+# Getting employment data
 eurostat_2 <- get_eurostat(id = "lfsi_emp_a", 
                      type = "label")
 ```
 
 ```{r}
-
-```
-
-```{r}
+# Filtering out what I dont want and letting what I want to look at remain
 eurostat_1 <- eurostat_1 %>%
   filter(indic_se == 'Monthly minimum wage as a proportion of the mean gross monthly earnings',
          time == "2021-01-01",
          nace_r2 == "Business economy",
          !geo %in% c("Montenegro", "Albania"))
 
+# Same for eurostat_2
 eurostat_2 <- eurostat_2 %>%
   filter(age == 'From 20 to 64 years',
          time == "2021-01-01",
@@ -58,25 +57,43 @@ eurostat_2 <- eurostat_2 %>%
          indic_em == 'Persons in the labour force (former name: active persons)')
 
 
-unique_countries <- unique(eurostat_1$geo)
+#Merging the filtered dataframes to one dataframe
+eurostat <- merge(eurostat_1, eurostat_2, by=c("geo", "time"))
 
-check<-eurostat_2 %>%
-  filter(geo %in% unique_countries)
-
-#Merge the filtered dataframes
-merged_df <- merge(eurostat_1, eurostat_2, by=c("geo", "time"))
-
-```
-
-```{r}
-  ggplot()+
-  geom_point(data = eurostat_1, aes(x=))
+# Removing the old dataframes
+rm(eurostat_1, eurostat_2)
 ```
 
 # Innledning
 
-## 
-
 # Utfordring 2.1 Minstelønn
 
+```{r}
+#| output: FALSE
+
+model<- lm(values.y~values.x, eurostat)
+```
+
+```{r}
+eurostat %>%
+  ggplot(aes(x=values.y, y=values.x, label=geo))+
+  geom_point(color = "palevioletred")+
+  geom_text_repel()+
+  labs(y="Minstelønninger i % av gjennomsnittlig bruttoinntekt", x="Sysselsetingsprosent for alder 20-64",
+       caption= "Source: Eurostat",
+       title= "Dunno yet")+
+  theme_minimal()+
+  geom_smooth(method = lm, se = FALSE, color = "cornflowerblue")
+```
+
+Episk forklaring av den forholdsvis enkle grafen som vektlegges mer enn hva selve koden for å lage figuren tok.
+
 # Utfordring 2.2 Fagforeninger
+
+# Appendiks
+
+Bruk av KI: ChatGPT 4 inkludert advanced data analysis.
+
+[ChatGPT forespørsel for å fikse datasett for første figur](https://chat.openai.com/share/26eade71-5a65-4eaf-9ea7-09ecf978cff6) (Endte opp med å bruke koden eurostat \<- merge(eurostat_1, eurostat_2, by=c("geo", "time")), og en annen bare for å se på hvilke land som var ikke var felles for begge datasett, denne fjernet jeg etter at jeg tok å filtrerte dem ut siden den ikke var relevant lengre)
+
+# Referanser
