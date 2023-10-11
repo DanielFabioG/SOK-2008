@@ -52,14 +52,16 @@ eurostat_2 <- eurostat_2 %>%
          sex == "Total",
          unit == 'Percentage of total population',
          !geo %in% c('Euro area – 20 countries (from 2023)',
-                         'European Union - 27 countries (from 2020)',
-                         'Euro area – 20 countries (from 2023)',
                          'European Union - 27 countries (from 2020)'),
          indic_em == 'Persons in the labour force (former name: active persons)')
 
 
 # Merging the filtered dataframes to one dataframe
 eurostat <- merge(eurostat_1, eurostat_2, by=c("geo", "time"))
+
+eurostat <- eurostat %>%
+  select(geo, values.x,values.y) %>%
+  rename(min_wage= values.x, syssel_rate = values.y)
 
 # Removing the old dataframes
 rm(eurostat_1, eurostat_2)
@@ -74,14 +76,14 @@ OECD_gender <- get_dataset("MIG_NUP_RATES_GENDER")
 ```{r}
 # Fixing the year variable, filtering for 2018 and removing time and renaming
 OECD_tud <-OECD_tud %>%
-  mutate(year = as.numeric(Time)) %>%
+  mutate(year = as.numeric(Time), org_rate = as.numeric(ObsValue)) %>%
   filter(year == 2018) %>%
   select(-Time) %>%
   rename(COUNTRY = LOCATION)
 
 # Same here
 OECD_gender <-OECD_gender %>%
-  mutate(year = as.numeric(Time)) %>%
+  mutate(year = as.numeric(Time), employ_rate = as.numeric(ObsValue)) %>%
   filter(year == 2018, GENDER == "TOT", RATE == "U_RATE") %>%
   select(-Time)
 
@@ -98,6 +100,14 @@ OECD_finish <- merge(OECD_tud, OECD_FB, by=c("COUNTRY", "year"))
 
 # Merging the other datasets to use for ggplot
 OECD_finish_2 <- merge(OECD_tud, OECD_NB, by=c("COUNTRY", "year"))
+
+# Removing variables I dont need anymore
+OECD_finish <-OECD_finish %>%
+  select(COUNTRY,employ_rate,org_rate)
+
+# Removing variables I dont need anymore
+OECD_finish_2 <-OECD_finish_2 %>%
+  select(COUNTRY,employ_rate,org_rate)
 
 # Removing old datasets
 rm(OECD_NB, OECD_FB, OECD_gender, OECD_tud)
@@ -121,23 +131,34 @@ Forklare og skrive latex matte her
 
 ```{r}
 #| output: FALSE
-
-model<- lm(values.y~values.x, eurostat)
+# Resultat av regresjonsanalysen
+model <- lm(syssel_rate ~ min_wage, eurostat)
+summary(model)
 ```
 
-```{r}
+```{r, warning=FALSE}
 eurostat %>%
-  ggplot(aes(x=values.y, y=values.x, label=geo))+
+  ggplot(aes(x=syssel_rate, y=min_wage, label=geo))+
   geom_point(color = "palevioletred")+
   geom_text_repel()+
-  labs(y="Minstelønninger av gjennomsnittlig bruttoinntekt", x="Sysselsetting for alder 20-64",
-       caption= "Source: Eurostat",
+  labs(y="Minstelønninger", x="Sysselsetting for alder 20-64",
+       caption= "Source: Eurostat, earn_mw_avgr2 og lfsi_emp_a",
        title= "Dunno yet")+
   theme_minimal()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
-  geom_smooth(method = lm, se= FALSE)
+  geom_smooth(method = lm, se= FALSE)+
+  geom_label(x = 83,
+           y = 53,
+           label = paste("R^2 == ", round(cor(eurostat$syssel_rate, eurostat$min_wage)^2, 2)),
+           hjust = 0,
+           vjust = 0,
+           parse = TRUE)
 ```
+
+Forklar hvorfor og hvordan variabler du tar og si at det er det man ser sammenhengen mellom på grafen, eventuelt ta å rydd og gjør datasettet penere, slik at det blir mer oversiktlig. Man kan ta med korrelasjonskoeffisienten og lime den inn i figuren, slik som Daniel gjorde i forrige utfordring :-). Gå litt tilbake og se på oppgave 1 og tilknytt eller støtter det erfaringene fra oppgave 1.1? Diskuter dette.
+
+Til slutt forklar hvordan en studie kan forklare effekten av minstelønn, bruk kursstoffer, boken er en veldig god hjelp. For variabelen indic_em ser vi på sysselsettingen i befolkningen.
 
 ## Episk forklaring av den forholdsvis enkle grafen som vektlegges mer enn hva selve koden for å lage figuren tok.
 
@@ -152,13 +173,20 @@ eurostat %>%
 
 ```
 
-latex matte her lmao
+Gå til den økonomiske teorien, finn en teori som kan gi støtte til påstanden, illustrer grafen og forklar dine påstander.
 
 ## 2.2.2 Arbeidsledighetrate og fagforeninger
 
 ```{r}
+#| output: FALSE
+# Resultat av regresjonsanalysen
+model <- lm(org_rate ~ employ_rate, OECD_finish_2)
+summary(model)
+```
+
+```{r, warning=FALSE}
 OECD_finish_2 %>%
-  ggplot(aes(x=as.numeric(ObsValue.x), y=as.numeric(ObsValue.y), label=COUNTRY))+
+  ggplot(aes(x=org_rate, y=employ_rate, label=COUNTRY))+
   geom_point(color="cornflowerblue")+
   geom_smooth(method =lm, se= FALSE)+
   labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten",
@@ -167,12 +195,33 @@ OECD_finish_2 %>%
   theme_minimal()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
-  geom_text_repel()
+  geom_text_repel()+
+  geom_label(x = 83,
+           y = 12,
+           label = paste("R^2 == ", round(cor(OECD_finish_2$org_rate, OECD_finish_2$employ_rate)^2, 2)),
+           hjust = 0,
+           vjust = 0,
+           parse = TRUE)
 ```
 
+I oecd så finnes det informasjon om arbeidsledighet i ulike grupper, se på data i 2018, kun fordi det er mest data der med begge kjønn. Jeg vil at dere skal se på innenlandsfødte og utenlandsfødte. Diskuter det man kan se utifra forhandling, og medlemsbasens sammensetting. Del diskusjonen i to deler, om vi ser en korrelasjon som gir støtte til et argument, eller som går imot det argumentet så at det ikke gir støtte så kan vi bruke teorien om forhandlinger for å forklare hva vi ser.
+
+I grafen til innenlandsfødte: bruk teorien om forhandling for å forklare hva vi ser.
+
+I grafen til utenlandsfødte mot innenlandsfødte: bruk teorien om medlemsbasens sammensetting og hva konsekvensene kan være av at fagforeningene har makt.
+
+The end.
+
 ```{r}
+#| output: FALSE
+# Resultat av regresjonsanalysen
+model <- lm(org_rate ~ employ_rate, OECD_finish)
+summary(model)
+```
+
+```{r, warning=FALSE}
 OECD_finish %>%
-  ggplot(aes(x=as.numeric(ObsValue.x), y=as.numeric(ObsValue.y), label=COUNTRY))+
+  ggplot(aes(x=org_rate, y=employ_rate,, label=COUNTRY))+
   geom_point(color="cornflowerblue")+
   geom_smooth(method =lm, se= FALSE)+
   labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten", 
@@ -181,7 +230,13 @@ OECD_finish %>%
   theme_minimal()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
-  geom_text_repel()
+  geom_text_repel()+
+  geom_label(x = 83,
+           y = 18,
+           label = paste("R^2 == ", round(cor(OECD_finish$org_rate, OECD_finish$employ_rate)^2, 2)),
+           hjust = 0,
+           vjust = 0,
+           parse = TRUE)
 ```
 
 # Appendiks
@@ -189,5 +244,7 @@ OECD_finish %>%
 Bruk av KI: ChatGPT 4 inkludert advanced data analysis.
 
 [ChatGPT forespørsel for å fikse datasett for første figur](https://chat.openai.com/share/26eade71-5a65-4eaf-9ea7-09ecf978cff6) (Endte opp med å bruke koden eurostat \<- merge(eurostat_1, eurostat_2, by=c("geo", "time")), og en annen bare for å se på hvilke land som var ikke var felles for begge datasett, denne fjernet jeg etter at jeg tok å filtrerte dem ut siden den ikke var relevant lengre)
+
+[Hjelp til å plassere R\^2 i tekst med en variabel](https://chat.openai.com/c/f06e45be-c889-49d7-be1b-aaf7fb769fba) (Brukte siste kodeblokk, men endret litt på den)
 
 # Referanser
