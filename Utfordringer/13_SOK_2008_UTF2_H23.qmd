@@ -15,6 +15,8 @@ nocite: |
   @*
 ---
 
+\newpage
+
 ```{r}
 #| output: false
 # Loading packages needed
@@ -42,7 +44,7 @@ eurostat_2 <- get_eurostat(id = "lfsi_emp_a",
 eurostat_1 <- eurostat_1 %>%
   filter(indic_se == 'Monthly minimum wage as a proportion of the mean gross monthly earnings',
          time == "2021-01-01",
-         nace_r2 == "Business economy",
+         nace_r2 == 'Industry, construction and services (except activities of households as employers and extra-territorial organisations and bodies)',
          !geo %in% c("Montenegro", "Albania"))
 
 # Same for eurostat_2, and removing some aggregated values for countries
@@ -59,6 +61,7 @@ eurostat_2 <- eurostat_2 %>%
 # Merging the filtered dataframes to one dataframe
 eurostat <- merge(eurostat_1, eurostat_2, by=c("geo", "time"))
 
+# Renaming the variables to know what they are
 eurostat <- eurostat %>%
   select(geo, values.x,values.y) %>%
   rename(min_wage= values.x, syssel_rate = values.y)
@@ -88,6 +91,7 @@ OECD_gender <-OECD_gender %>%
   select(-Time)
 
 # Filtering for the NB which is the data for people born in the country
+# Removing SVK since it is not in the other dataset
 OECD_NB <- OECD_gender %>%
   filter(BIRTH == "NB", !COUNTRY == "SVK")
 
@@ -101,11 +105,11 @@ OECD_finish <- merge(OECD_tud, OECD_FB, by=c("COUNTRY", "year"))
 # Merging the other datasets to use for ggplot
 OECD_finish_2 <- merge(OECD_tud, OECD_NB, by=c("COUNTRY", "year"))
 
-# Removing variables I dont need anymore
+# Selecting what to keep
 OECD_finish <-OECD_finish %>%
   select(COUNTRY,employ_rate,org_rate)
 
-# Removing variables I dont need anymore
+# Selecting what to keep
 OECD_finish_2 <-OECD_finish_2 %>%
   select(COUNTRY,employ_rate,org_rate)
 
@@ -123,11 +127,150 @@ rm(OECD_NB, OECD_FB, OECD_gender, OECD_tud)
 
     -   «Minstelønninger fører til **mindre** fattigdom».
 
-```{r}
-# Tegne noen pene python figurer
+For å kunne finne lønningen i en fullkommen konkurranse så setter vi opp to ligninger der $L^D$ er etterspørsel etter arbeidskraft(Labour Demand) og $L^S$ er tilbud av arbeidskraft(Labour supply).
+
+Da har vi ligningene
+
+$$L^D = \frac{\mathrm{E}}{\alpha} - \frac{1}{\alpha}w$$
+
+$$L^S = -\frac{T}{\beta}+\frac{1}{\beta}w$$
+
+Vi setter disse lik hverandre for å kunne løse for w for å finne lønningen
+
+$$\frac{\mathrm{E}}{\alpha} - \frac{1}{\alpha}w = -\frac{T}{\beta}+\frac{1}{\beta}w$$
+
+Og løser for w og da får vi lønnen
+
+$$w = \frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta}$$
+
+```{python}
+#| output: false
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
+from IPython.display import display, Math, Latex
+
+# Definerer symboler
+bta, E, alpha, T, w, L = sp.symbols('beta E alpha T w L')
+
+# Utledning matematisk av minstelønn under fullkomment arbeidsmarked og under monopsoni
+
+# Etterspørsel på arbeid
+def L_D(E,alpha,w):
+    return (E/alpha)-(1/alpha)*w
+
+# Tilbud av arbeid
+def L_S(T,bta,w):
+    return -(T/bta)+(1/bta)*w
+
+
+# Løser for etterspørsel og finner etterspørselskurven
+etterspørsel = sp.solve(sp.Eq(L, L_D(E,alpha,w)), w)
+
+# Definerer etterspørselskurven, bytter om på L og a men har lite betydning
+def e_p(E,L,a):
+    return E - a*L
+
+# Løser for w og finner tilbudskurven
+tilbud = sp.solve(sp.Eq(L_S(T,bta,w), L), w)
+
+# Definerer tilbudskurven, bytter litt om på variablene slik at det blir enklere
+def t_b(T,b,L):
+    return T + b*L 
+
+# betingelse for likevekt
+eq_cond=sp.Eq(L_D(E,alpha,w),L_S(T,bta,w))
+
+# Løser for w
+p_eq=sp.solve(eq_cond,w)
+
+# Definerer numeriske verdier for å plotte
+E_num = 250
+a = 0.5
+x = np.arange(0,550,1)
+b = 0.5
+T_num = 10
+
+# Løser likevekt for w
+w_eq_num = float(p_eq[0].subs({E: E_num, alpha: a, T: T_num, bta: b}))
+# Løser likevekt for L
+L_eq_num = float(L_D(E_num, a, w_eq_num))
 ```
 
-Forklare og skrive latex matte her
+```{python}
+# Plotter likevekt uten minstelønn under fullkommen konkurranse
+
+# Creating the ax for plotting
+def create_ax():
+    fig, ax = plt.subplots()
+    ax.set(xlim=(0, 600))
+    ax.set(ylim=(0, 320))
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    
+    return fig, ax
+
+# Starting fig
+fig, ax = create_ax()
+# Plotter tilbud
+ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
+# Plotter etterspørsel
+ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
+# Tegner en stiplet linje til likevekt
+ax.vlines(L_eq_num, 0, w_eq_num, linestyles='dashed', color="grey")
+ax.hlines(w_eq_num, 0, L_eq_num, linestyles='dashed', color="grey")
+# Lager L^FK som skal være rett atmed L_eq_num
+ax.annotate('$L^{FK}$', xy=(L_eq_num-5, -14), annotation_clip=False)
+# Lager w^FK
+ax.annotate('$W^{FK}$', xy=(-35, w_eq_num-5), annotation_clip=False)
+# Lager L^S
+ax.annotate('$L^S$', xy=(500, 270), size=12)
+# Lager L^D
+ax.annotate('$L^D$', xy=(500,10), size=12)
+plt.show()
+```
+
+```{python}
+# løser for minstelønn på 150 for Labour
+w_min = 150
+L_eq_num_min = float(L_D(E_num, b,w_min))
+
+# Starting fig
+fig, ax = create_ax()
+
+# Plotter tilbud
+ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
+# Plotter etterspørsel
+ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
+
+# Tegner en stiplet linje til likevekt
+ax.vlines(L_eq_num, 0, w_eq_num, linestyles='dashed', color="grey")
+ax.hlines(w_eq_num, 0, L_eq_num, linestyles='dashed', color="grey")
+
+# Lager L^FK som skal være rett atmed L_eq_num
+ax.annotate('$L^{FK}$', xy=(L_eq_num-5, -14), annotation_clip=False)
+# Lager w^FK
+ax.annotate('$W^{FK}$', xy=(-40, w_eq_num-5), annotation_clip=False)
+# Lager L^S
+ax.annotate('$L^S$', xy=(500, 270), size=12)
+# Ikke se på denne kodelinjen
+ax.fill_between(x, e_p(250, x, 0.5), t_b(10, x, 0.5), where=(x>L_eq_num_min) & (x<L_eq_num), color="grey", alpha=0.5)
+# Lager L^D
+ax.annotate('$L^D$', xy=(500,10), size=12)
+# Legger til en minstelønn på 150
+ax.hlines(w_min, 0, 500, linestyles='--', color="black")
+# Lager W^min
+ax.annotate('$W^{min}$', xy=(-40,145), annotation_clip=False)
+# Lager en ny linje til likevekten for L^min
+ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
+# Putter inn L^min
+ax.annotate('$L^{min}$', xy=(L_eq_num_min-5,-14), annotation_clip=False)
+# Lager en pil
+ax.annotate("", (L_eq_num_min,10), (L_eq_num, 10), arrowprops={"arrowstyle":"->", "color":"black", "lw":2})
+plt.show()
+```
 
 ```{r}
 #| output: FALSE
@@ -143,24 +286,29 @@ eurostat %>%
   geom_text_repel()+
   labs(y="Minstelønninger", x="Sysselsetting for alder 20-64",
        caption= "Source: Eurostat, earn_mw_avgr2 og lfsi_emp_a",
-       title= "Dunno yet")+
+       title= "Minstelønninger i prosent av gjennomsnittlig bruttoinntekt i 2021",
+       subtitle ="Næringshovedgrupper: Industri, konstruksjon og service (B-S)")+
   theme_minimal()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
   geom_smooth(method = lm, se= FALSE)+
   geom_label(x = 83,
-           y = 53,
+           y = 50,
            label = paste("R^2 == ", round(cor(eurostat$syssel_rate, eurostat$min_wage)^2, 2)),
            hjust = 0,
            vjust = 0,
            parse = TRUE)
 ```
 
-Forklar hvorfor og hvordan variabler du tar og si at det er det man ser sammenhengen mellom på grafen, eventuelt ta å rydd og gjør datasettet penere, slik at det blir mer oversiktlig. Man kan ta med korrelasjonskoeffisienten og lime den inn i figuren, slik som Daniel gjorde i forrige utfordring :-). Gå litt tilbake og se på oppgave 1 og tilknytt eller støtter det erfaringene fra oppgave 1.1? Diskuter dette.
+Det jeg har valgt å se på i oppgave 2.1.2 i figuren er sysselsetting for alder 20-64 som viser hvor høy prosentandel som arbeider i denne aldersgrupperingen. Den avhengige variabelen som er tatt med er minstelønninger i prosent av gjennomsnittlig bruttoinntekt og næringshovedgruppene som er tatt med er klassifisert fra B-S, SSB har en god forklaring på klassifiseringen [her.](https://www.ssb.no/klass/klassifikasjoner/6)
+
+På grafen kan man se noe epic.
+
+Forklar hvorfor og hvordan variabler du tar og si at det er det man ser sammenhengen mellom på grafen, eventuelt ta å rydd og gjør datasettet penere, slik at det blir mer oversiktlig. Gå litt tilbake og se på oppgave 1 og tilknytt eller støtter det erfaringene fra oppgave 1.1? Diskuter dette.
 
 Til slutt forklar hvordan en studie kan forklare effekten av minstelønn, bruk kursstoffer, boken er en veldig god hjelp. For variabelen indic_em ser vi på sysselsettingen i befolkningen.
 
-## Episk forklaring av den forholdsvis enkle grafen som vektlegges mer enn hva selve koden for å lage figuren tok.
+## Forklar den forholdsvis enkle grafen som vektlegges mer enn hva selve koden for å lage figuren tok.
 
 ## Diskuter sammenhengen mellom nivået på minstelønn og arbeidsledighetsraten.
 
@@ -196,7 +344,7 @@ OECD_finish_2 %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
   geom_text_repel()+
-  geom_label(x = 83,
+  geom_label(x = 75,
            y = 12,
            label = paste("R^2 == ", round(cor(OECD_finish_2$org_rate, OECD_finish_2$employ_rate)^2, 2)),
            hjust = 0,
@@ -231,7 +379,7 @@ OECD_finish %>%
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
   geom_text_repel()+
-  geom_label(x = 83,
+  geom_label(x = 75,
            y = 18,
            label = paste("R^2 == ", round(cor(OECD_finish$org_rate, OECD_finish$employ_rate)^2, 2)),
            hjust = 0,
