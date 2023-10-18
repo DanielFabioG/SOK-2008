@@ -90,13 +90,11 @@ tilbud = sp.solve(sp.Eq(L_S(T,bta,w), L), w)
 # Definerer tilbudskurven, bytter litt om på variablene slik at det blir enklere
 def t_b(T,b,L):
     return T + b*L 
-
-
 ```
 
 ```{python include=FALSE}
 # Plotter likevekt uten minstelonn under fullkommen konkurranse
-# Creating the axa for plotting
+# Creating the ax for plotting
 def create_ax():
     fig, ax = plt.subplots()
     ax.set(xlim=(0, 600))
