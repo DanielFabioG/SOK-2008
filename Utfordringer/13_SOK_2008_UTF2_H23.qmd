@@ -214,7 +214,7 @@ w_tilbud_num = w_tilbud.subs([(T, T_num), (bta, b)])
 #grenseinntekt = grensekostnad
 mlc = monop_tc_diff
 
-# Definerer den nye funksjonen for mlc
+# Definerer den nye funksjonen for margin labour cost
 def t_b_monopsoni(T,b,L):
     return 2*L*b+T
 ```
@@ -610,5 +610,11 @@ Bruk av KI: ChatGPT 4 inkludert advanced data analysis.
 [ChatGPT forespørsel for å fikse datasett for første figur](https://chat.openai.com/share/26eade71-5a65-4eaf-9ea7-09ecf978cff6) (Endte opp med å bruke koden eurostat \<- merge(eurostat_1, eurostat_2, by=c("geo", "time")), og en annen bare for å se på hvilke land som var ikke var felles for begge datasett, denne fjernet jeg etter at jeg tok å filtrerte dem ut siden den ikke var relevant lengre)
 
 [Hjelp til å plassere R\^2 i tekst med en variabel](https://chat.openai.com/c/f06e45be-c889-49d7-be1b-aaf7fb769fba) (Brukte siste kodeblokk, men endret litt på den)
+
+Får ikke lov å dele ChatGPT-samtaler hvor jeg har spurt den om å analysere bilder, derfor blir noen forespørsler skrevet inn manuelt:
+
+Spørsmål: how can i write in latex the integral of bottom L\^FK to upper L\^min
+
+Svar: \\int\_{L\^{FK}}\^{L\^{min}} f(L) \\, dL (Brukte dette)
 
 # Referanser
