@@ -146,7 +146,7 @@ Og løser for w og da får vi lønnen
 
 $$w = \frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta}$$
 
-```{python}
+```{python include=FALSE}
 #| output: false
 import numpy as np
 import sympy as sp
@@ -200,7 +200,7 @@ w_eq_num = float(p_eq[0].subs({E: E_num, alpha: a, T: T_num, bta: b}))
 L_eq_num = float(L_D(E_num, a, w_eq_num))
 ```
 
-```{python}
+```{python include=FALSE}
 # Plotter likevekt uten minstelonn under fullkommen konkurranse
 # Creating the axa for plotting
 def create_ax():
@@ -239,10 +239,10 @@ ax.fill_between(x_1, w_eq_num,e_p(E_num, x_1, b), color="forestgreen", alpha=0.5
 # Fyller inn overskudd igjen
 ax.fill_between(x_1, w_eq_num, t_b(T_num, a, x_1), color="palevioletred", alpha=0.5)
 
-plt.show()
+plt.savefig("figur1.png", dpi=300)
 ```
 
-```{python}
+```{python include=FALSE}
 # løser for minstelonn på 150 for Labour
 w_min = 150
 L_eq_num_min = float(L_D(E_num, b,w_min))
@@ -292,10 +292,10 @@ ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
 ax.annotate('$L^{min}$', xy=(L_eq_num_min-5,-14), annotation_clip=False)
 # Lager en pil
 ax.annotate("", (L_eq_num_min,10), (L_eq_num, 10), arrowprops={"arrowstyle":"->", "color":"black", "lw":2})
-plt.show()
+plt.savefig("figur2.png",dpi=300)
 ```
 
-```{python}
+```{python include=FALSE}
 # Starter utregningen for monopsoni
 
 FK_TC = w*L
@@ -327,7 +327,7 @@ def t_b_monopsoni(T,b,L):
     return 2*L*b+T
 ```
 
-```{python}
+```{python include=FALSE}
 # Plotter likevekt under monopsoni uten minstelonn
 
 # Starting fig
@@ -359,10 +359,10 @@ x_5 = np.arange(L_tilbud_num,L_eq_num+1,1).astype(float)
 
 ax.fill_between(x_5,e_p(E_num, x_5, b), t_b(T_num, a, x_5), color ="palevioletred", alpha =0.3)
 
-plt.show()
+plt.savefig("figur3.png", dpi=300)
 ```
 
-```{python}
+```{python include=FALSE}
 # Plotter likevekt med minstelonn under monopsoni
 
 # Starting fig
@@ -407,9 +407,47 @@ ax.fill_between(x_6,e_p(E_num, x_6, b), t_b(T_num, a, x_6), color="blue", alpha=
 # Lager en pil
 ax.annotate("", (L_tilbud_num,10), (L_eq_num_min, 10), arrowprops={"arrowstyle":"<-", "color":"black", "lw":2})
 ax.legend(loc="best")
-plt.show()
+plt.savefig("figur4.png",dpi=300)
 ```
 
+\clearpage
+
+```{=tex}
+\begin{figure}
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figur1.png}
+  \captionof{figure}{A figure}
+  \label{fig:test1}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figur2.png}
+  \captionof{figure}{Another figure}
+  \label{fig:test2}
+\end{minipage}
+\end{figure}
+```
+\clearpage
+
+```{=tex}
+\begin{figure}
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figur3.png}
+  \captionof{figure}{A figure}
+  \label{fig:test3}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figur4.png}
+  \captionof{figure}{Another figure}
+  \label{fig:test4}
+\end{minipage}
+\end{figure}
+```
 ```{r}
 #| output: FALSE
 # Resultat av regresjonsanalysen
