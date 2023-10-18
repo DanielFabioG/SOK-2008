@@ -6,7 +6,6 @@ date-format: "DD-MM-YYYY"
 author: "Kandidatnummer 13, SOK-2008, Høst 2023"
 format: pdf
 echo: false
-toc: true
 toc-title: "Innholdsliste"
 warning: false
 bibliography: referanse2.bib
@@ -15,7 +14,11 @@ nocite: |
   @*
 ---
 
+```{=tex}
 \newpage
+\tableofcontents
+```
+\clearpage
 
 ```{r}
 #| output: false
@@ -153,9 +156,9 @@ from IPython.display import display, Math, Latex
 # Definerer symboler
 bta, E, alpha, T, w, L = sp.symbols('beta E alpha T w L')
 
-# Utledning matematisk av minstelønn under fullkomment arbeidsmarked og under monopsoni
+# Utledning matematisk av minstelonn under fullkomment arbeidsmarked og under monopsoni
 
-# Etterspørsel på arbeid
+# Ettersporsel på arbeid
 def L_D(E,alpha,w):
     return (E/alpha)-(1/alpha)*w
 
@@ -164,17 +167,17 @@ def L_S(T,bta,w):
     return -(T/bta)+(1/bta)*w
 
 
-# Løser for etterspørsel og finner etterspørselskurven
+# Løser for ettersporsel og finner ettersporselskurven
 etterspørsel = sp.solve(sp.Eq(L, L_D(E,alpha,w)), w)
 
-# Definerer etterspørselskurven, bytter om på L og a men har lite betydning
+# Definerer ettersporselskurven, bytter om på L og a men har lite betydning
 def e_p(E,L,a):
     return E - a*L
 
 # Løser for w og finner tilbudskurven
 tilbud = sp.solve(sp.Eq(L_S(T,bta,w), L), w)
 
-# Definerer tilbudskurven, bytter litt om på variablene slik at det blir enklere
+# Definerer tilbudskurven, bytter litt om po variablene slik at det blir enklere
 def t_b(T,b,L):
     return T + b*L 
 
@@ -184,7 +187,7 @@ eq_cond=sp.Eq(L_D(E,alpha,w),L_S(T,bta,w))
 # Løser for w
 p_eq=sp.solve(eq_cond,w)
 
-# Definerer numeriske verdier for å plotte
+# Definerer numeriske verdier for o plotte
 E_num = 250
 a = 0.5
 x = np.arange(0,550,1)
@@ -198,9 +201,8 @@ L_eq_num = float(L_D(E_num, a, w_eq_num))
 ```
 
 ```{python}
-# Plotter likevekt uten minstelønn under fullkommen konkurranse
-
-# Creating the ax for plotting
+# Plotter likevekt uten minstelonn under fullkommen konkurranse
+# Creating the axa for plotting
 def create_ax():
     fig, ax = plt.subplots()
     ax.set(xlim=(0, 600))
@@ -216,12 +218,12 @@ def create_ax():
 fig, ax = create_ax()
 # Plotter tilbud
 ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
-# Plotter etterspørsel
+# Plotter ettersporsel
 ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
 # Tegner en stiplet linje til likevekt
 ax.vlines(L_eq_num, 0, w_eq_num, linestyles='dashed', color="grey")
 ax.hlines(w_eq_num, 0, L_eq_num, linestyles='dashed', color="grey")
-# Lager L^FK som skal være rett atmed L_eq_num
+# Lager L^FK som skal vaere rett atmed L_eq_num
 ax.annotate('$L^{FK}$', xy=(L_eq_num-5, -14), annotation_clip=False)
 # Lager w^FK
 ax.annotate('$W^{FK}$', xy=(-35, w_eq_num-5), annotation_clip=False)
@@ -229,11 +231,19 @@ ax.annotate('$W^{FK}$', xy=(-35, w_eq_num-5), annotation_clip=False)
 ax.annotate('$L^S$', xy=(500, 270), size=12)
 # Lager L^D
 ax.annotate('$L^D$', xy=(500,10), size=12)
+
+x_1 = np.arange(0,L_eq_num,1)
+# Fyller inn overskudd
+ax.fill_between(x_1, w_eq_num,e_p(E_num, x_1, b), color="forestgreen", alpha=0.5)
+
+# Fyller inn overskudd igjen
+ax.fill_between(x_1, w_eq_num, t_b(T_num, a, x_1), color="palevioletred", alpha=0.5)
+
 plt.show()
 ```
 
 ```{python}
-# løser for minstelønn på 150 for Labour
+# løser for minstelonn på 150 for Labour
 w_min = 150
 L_eq_num_min = float(L_D(E_num, b,w_min))
 
@@ -242,24 +252,37 @@ fig, ax = create_ax()
 
 # Plotter tilbud
 ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
-# Plotter etterspørsel
+# Plotter ettersporsel
 ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
 
 # Tegner en stiplet linje til likevekt
 ax.vlines(L_eq_num, 0, w_eq_num, linestyles='dashed', color="grey")
 ax.hlines(w_eq_num, 0, L_eq_num, linestyles='dashed', color="grey")
 
-# Lager L^FK som skal være rett atmed L_eq_num
+# Lager L^FK som skal vaere rett atmed L_eq_num
 ax.annotate('$L^{FK}$', xy=(L_eq_num-5, -14), annotation_clip=False)
 # Lager w^FK
 ax.annotate('$W^{FK}$', xy=(-40, w_eq_num-5), annotation_clip=False)
 # Lager L^S
 ax.annotate('$L^S$', xy=(500, 270), size=12)
-# Ikke se på denne kodelinjen
-ax.fill_between(x, e_p(250, x, 0.5), t_b(10, x, 0.5), where=(x>L_eq_num_min) & (x<L_eq_num), color="grey", alpha=0.5)
+
+# Definerer integralet for dodvektstapet
+x_2 = np.arange(0,L_eq_num_min+1,1)
+# Definerer en tredje x som brukes til o vite hvor jeg integrerer
+x_3 = np.arange(L_eq_num_min, L_eq_num+1,1).astype(float)
+
+# Fyller inn overskudd
+ax.fill_between(x_2, w_min,e_p(E_num, x_2, b), color="forestgreen", alpha=0.5)
+
+# Fyller inn overskudd igjen
+ax.fill_between(x_2, w_min, t_b(T_num, a, x_2), color="palevioletred", alpha=0.5)
+
+# Fyller inn dodvektstapet
+ax.fill_between(x_3, e_p(E_num, x_3, b), t_b(T_num, a, x_3), color="grey", alpha=0.5)
+
 # Lager L^D
 ax.annotate('$L^D$', xy=(500,10), size=12)
-# Legger til en minstelønn på 150
+# Legger til en minstelonn på 150
 ax.hlines(w_min, 0, 500, linestyles='--', color="black")
 # Lager W^min
 ax.annotate('$W^{min}$', xy=(-40,145), annotation_clip=False)
@@ -269,6 +292,121 @@ ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
 ax.annotate('$L^{min}$', xy=(L_eq_num_min-5,-14), annotation_clip=False)
 # Lager en pil
 ax.annotate("", (L_eq_num_min,10), (L_eq_num, 10), arrowprops={"arrowstyle":"->", "color":"black", "lw":2})
+plt.show()
+```
+
+```{python}
+# Starter utregningen for monopsoni
+
+FK_TC = w*L
+FK_TC_diff = sp.diff(FK_TC, L)
+
+#monop_TC= w(L)*L
+monop_tc=(T+bta*L) *L
+monop_tc_diff = sp.diff(monop_tc, L)
+monop_tc_diff #grensekostnad
+
+# E-alpha*L = MRP
+MRP = (E-alpha*L)
+
+betingelse = sp.Eq(monop_tc_diff, MRP)
+
+L_tilbud = sp.solve(betingelse, L)[0]
+
+L_tilbud_num = L_tilbud.subs([(E, E_num), (alpha, a), (T, T_num), (bta, b)])
+
+w_tilbud = T+bta*L_tilbud_num
+
+w_tilbud_num = w_tilbud.subs([(T, T_num), (bta, b)])
+
+#grenseinntekt = grensekostnad
+mlc = monop_tc_diff
+
+# Definerer den nye funksjonen for mlc
+def t_b_monopsoni(T,b,L):
+    return 2*L*b+T
+```
+
+```{python}
+# Plotter likevekt under monopsoni uten minstelonn
+
+# Starting fig
+fig, ax = create_ax()
+# Plotter tilbud
+ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
+# Plotter ettersporsel
+ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
+
+# Lager L^S
+ax.annotate('$L^S$', xy=(500, 270), size=12)
+# Lager L^D
+ax.annotate('$L^D$', xy=(500,10), size=12)
+
+# Legger til MLC
+ax.plot(x, t_b_monopsoni(T_num,b,x))
+
+# Tegner en stiplet linje til likevekt
+ax.vlines(L_tilbud_num, 0, t_b_monopsoni(T_num,b,L_tilbud_num), linestyles='dashed', color="grey")
+ax.hlines(w_tilbud_num, 0, L_tilbud_num, linestyles='dashed', color="grey")
+
+ax.annotate('$W^M$', xy=(-35, w_tilbud_num-5), annotation_clip=False)
+# Lager L^S
+ax.annotate('$MLC$', xy=(300, 300), size=12)
+# Lager L^D
+ax.annotate('$L^M$', xy=(L_tilbud_num-5,-14), size=12, annotation_clip=False)
+
+x_5 = np.arange(L_tilbud_num,L_eq_num+1,1).astype(float)
+
+ax.fill_between(x_5,e_p(E_num, x_5, b), t_b(T_num, a, x_5), color ="palevioletred", alpha =0.3)
+
+plt.show()
+```
+
+```{python}
+# Plotter likevekt med minstelonn under monopsoni
+
+# Starting fig
+fig, ax = create_ax()
+# Plotter tilbud
+ax.plot(x, t_b(T_num,b,x), color="cornflowerblue")
+# Plotter ettersporsel
+ax.plot(x,e_p(E_num,a,x), color="palevioletred")
+
+# Lager L^S
+ax.annotate('$L^S$', xy=(500, 270), size=12)
+# Lager L^D
+ax.annotate('$L^D$', xy=(500,10), size=12)
+
+# Legger til MLC
+ax.plot(x, t_b_monopsoni(T_num,b,x))
+
+# Tegner en stiplet linje til likevekt
+ax.vlines(L_tilbud_num, 0, t_b_monopsoni(T_num,b,L_tilbud_num), linestyles='dashed', color="grey")
+ax.hlines(w_tilbud_num, 0, L_tilbud_num, linestyles='dashed', color="grey")
+
+ax.annotate('$W^M$', xy=(-35, w_tilbud_num-5), annotation_clip=False)
+# Lager L^S
+ax.annotate('$MLC$', xy=(300, 300), size=12)
+# Lager L^D
+ax.annotate('$L^M$', xy=(L_tilbud_num-5,-14), size=12, annotation_clip=False)
+
+# Legger til en minstelonn på 150
+ax.hlines(w_min, 0, 500, linestyles='--', color="black")
+# Lager W^min
+ax.annotate('$W^{min}$', xy=(-40,145), annotation_clip=False)
+# Lager en ny linje til likevekten for L^min
+ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
+# Putter inn L^min
+ax.annotate('$L^{min}$', xy=(L_eq_num_min-5,-14), annotation_clip=False)
+# Fyller inn dodvektstapet
+ax.fill_between(x_3, e_p(E_num, x_3, b), t_b(T_num, a, x_3), color="grey", alpha=0.5, label="Dødvektstap")
+# fyller inn anti-dodvektstapet
+x_6 = np.arange(L_tilbud_num,L_eq_num_min+1,1).astype(float)
+# overskudd
+ax.fill_between(x_6,e_p(E_num, x_6, b), t_b(T_num, a, x_6), color="blue", alpha=0.5, label = "Reddet overskudd")
+# Lager en pil
+ax.annotate("", (L_tilbud_num,10), (L_eq_num_min, 10), arrowprops={"arrowstyle":"<-", "color":"black", "lw":2})
+ax.legend(loc="best")
 plt.show()
 ```
 
