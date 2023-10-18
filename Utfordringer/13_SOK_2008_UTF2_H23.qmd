@@ -4,21 +4,305 @@ subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
 date: last-modified
 date-format: "DD-MM-YYYY"
 author: "Kandidatnummer 13, SOK-2008, Høst 2023"
-format: pdf
+editor: visual
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - right=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
 echo: false
-toc-title: "Innholdsliste"
 warning: false
 bibliography: referanse2.bib
 csl: norsk-apa-manual.csl
 nocite: |
   @*
+header-includes:
+  - "\\usepackage{caption}"
+  - "\\captionsetup{font=small}"
+  - "\\usepackage{hyperref}"
+  - "\\renewcommand{\\figureautorefname}{Figur}"
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
 ---
 
 ```{=tex}
 \newpage
 \tableofcontents
+\listoffigures
+\newpage
 ```
-\clearpage
+```{python include=FALSE}
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
+
+# Definerer symboler
+bta, E, alpha, T, w, L = sp.symbols('beta E alpha T w L')
+
+# Utledning matematisk av minstelønn under fullkommen konkurranse
+
+# Labour demand (1)
+def L_D(E,alpha,w):
+    return (E/alpha)-(1/alpha)*w
+
+# Labour supply (2) 
+def L_S(T,bta,w):
+    return -(T/bta)+(1/bta)*w
+
+# Setter labour demand = labour supply (3)
+eq_cond=sp.Eq(L_D(E,alpha,w),L_S(T,bta,w))
+
+# Løser for w og finner lønnen under fullkommen konkurranse for w (4)
+w_eq=sp.solve(eq_cond,w)
+
+# Løser for L og finner labour under fullkommen konkurranse for L (5)
+L_eq=L_D(E,alpha,w_eq[0])
+
+# Definerer numeriske verdier for å plotte
+E_num = 250
+a = 0.5
+x = np.arange(0,550,1)
+b = 0.5
+T_num = 10
+
+# Løser likevekt for w (4) med tallverdier
+w_eq_num = float(w_eq[0].subs({E: E_num, alpha: a, T: T_num, bta: b}))
+# Løser likevekt for L (5) med tallverdier
+L_eq_num = float(L_D(E_num, a, w_eq_num))
+
+
+# Løser for etterspørsel og finner etterspørselskurven (6)
+etterspørsel = sp.solve(sp.Eq(L, L_D(E,alpha,w)), w)
+
+# Definerer etterspørselskurven, bytter om på L og a men har lite betydning
+def e_p(E,L,a):
+    return E - a*L
+
+# Løser for w og finner tilbudskurven
+tilbud = sp.solve(sp.Eq(L_S(T,bta,w), L), w)
+
+# Definerer tilbudskurven, bytter litt om på variablene slik at det blir enklere
+def t_b(T,b,L):
+    return T + b*L 
+
+
+```
+
+```{python include=FALSE}
+# Plotter likevekt uten minstelonn under fullkommen konkurranse
+# Creating the axa for plotting
+def create_ax():
+    fig, ax = plt.subplots()
+    ax.set(xlim=(0, 600))
+    ax.set(ylim=(0, 320))
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    
+    return fig, ax
+
+# Starting fig
+fig, ax = create_ax()
+# Plotter tilbud
+ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
+# Plotter ettersporsel
+ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
+# Tegner en stiplet linje til likevekt
+ax.vlines(L_eq_num, 0, w_eq_num, linestyles='dashed', color="grey")
+ax.hlines(w_eq_num, 0, L_eq_num, linestyles='dashed', color="grey")
+# Lager L^FK som skal vaere rett atmed L_eq_num
+ax.annotate('$L^{FK}$', xy=(L_eq_num-5, -40), annotation_clip=False, size=16)
+# Lager w^FK
+ax.annotate('$W^{FK}$', xy=(-85, w_eq_num-5), annotation_clip=False,size=16)
+# Lager L^S
+ax.annotate('$L^S$', xy=(500, 270), size=18)
+# Lager L^D
+ax.annotate('$L^D$', xy=(500,10), size=18)
+
+x_1 = np.arange(0,L_eq_num,1)
+# Fyller inn overskudd
+ax.fill_between(x_1, w_eq_num,e_p(E_num, x_1, b), color="forestgreen", alpha=0.5)
+
+# Fyller inn overskudd igjen
+ax.fill_between(x_1, w_eq_num, t_b(T_num, a, x_1), color="palevioletred", alpha=0.5)
+
+plt.savefig("figur1.png", dpi=300)
+```
+
+```{python include=FALSE}
+# løser for minstelonn på 150 for Labour
+w_min = 150
+L_eq_num_min = float(L_D(E_num, b,w_min))
+
+# Starting fig
+fig, ax = create_ax()
+
+# Plotter tilbud
+ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
+# Plotter ettersporsel
+ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
+
+# Tegner en stiplet linje til likevekt
+ax.vlines(L_eq_num, 0, w_eq_num, linestyles='dashed', color="grey")
+ax.hlines(w_eq_num, 0, L_eq_num, linestyles='dashed', color="grey")
+
+# Lager L^FK som skal vaere rett atmed L_eq_num
+ax.annotate('$L^{FK}$', xy=(L_eq_num-5, -40), annotation_clip=False, size=16)
+# Lager w^FK
+ax.annotate('$W^{FK}$', xy=(-85, w_eq_num-10), annotation_clip=False, size=16)
+# Lager L^S
+ax.annotate('$L^S$', xy=(500, 270), size=18)
+
+# Definerer integralet for dodvektstapet
+x_2 = np.arange(0,L_eq_num_min+1,1)
+# Definerer en tredje x som brukes til o vite hvor jeg integrerer
+x_3 = np.arange(L_eq_num_min, L_eq_num+1,1).astype(float)
+
+# Fyller inn overskudd
+ax.fill_between(x_2, w_min,e_p(E_num, x_2, b), color="forestgreen", alpha=0.5)
+
+# Fyller inn overskudd igjen
+ax.fill_between(x_2, w_min, t_b(T_num, a, x_2), color="palevioletred", alpha=0.5)
+
+# Fyller inn dodvektstapet
+ax.fill_between(x_3, e_p(E_num, x_3, b), t_b(T_num, a, x_3), color="grey", alpha=0.5)
+
+# Lager L^D
+ax.annotate('$L^D$', xy=(500,10), size=18)
+# Legger til en minstelonn på 150
+ax.hlines(w_min, 0, 500, linestyles='--', color="black")
+# Lager W^min
+ax.annotate('$W^{min}$', xy=(-85,145), annotation_clip=False, size=16)
+# Lager en ny linje til likevekten for L^min
+ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
+# Putter inn L^min
+ax.annotate('$L^{min}$', xy=(L_eq_num_min-20,-40), annotation_clip=False, size=16)
+# Lager en pil
+ax.annotate("", (L_eq_num_min,10), (L_eq_num, 10), arrowprops={"arrowstyle":"->", "color":"black", "lw":2})
+plt.savefig("figur2.png",dpi=300)
+```
+
+```{python include=FALSE}
+# Starter utregningen for monopsoni
+
+FK_TC = w*L
+FK_TC_diff = sp.diff(FK_TC, L)
+
+#monop_TC= w(L)*L
+monop_tc=(T+bta*L) *L
+monop_tc_diff = sp.diff(monop_tc, L)
+monop_tc_diff #grensekostnad
+
+# E-alpha*L = MRP
+MRP = (E-alpha*L)
+
+betingelse = sp.Eq(monop_tc_diff, MRP)
+
+L_tilbud = sp.solve(betingelse, L)[0]
+
+L_tilbud_num = L_tilbud.subs([(E, E_num), (alpha, a), (T, T_num), (bta, b)])
+
+w_tilbud = T+bta*L_tilbud_num
+
+w_tilbud_num = w_tilbud.subs([(T, T_num), (bta, b)])
+
+#grenseinntekt = grensekostnad
+mlc = monop_tc_diff
+
+# Definerer den nye funksjonen for mlc
+def t_b_monopsoni(T,b,L):
+    return 2*L*b+T
+```
+
+```{python include=FALSE}
+# Plotter likevekt under monopsoni uten minstelonn
+
+# Starting fig
+fig, ax = create_ax()
+# Plotter tilbud
+ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
+# Plotter ettersporsel
+ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
+
+# Lager L^S
+ax.annotate('$L^S$', xy=(500, 270), size=18)
+# Lager L^D
+ax.annotate('$L^D$', xy=(500,10), size=18)
+
+# Legger til MLC
+ax.plot(x, t_b_monopsoni(T_num,b,x))
+
+# Tegner en stiplet linje til likevekt
+ax.vlines(L_tilbud_num, 0, t_b_monopsoni(T_num,b,L_tilbud_num), linestyles='dashed', color="grey")
+ax.hlines(w_tilbud_num, 0, L_tilbud_num, linestyles='dashed', color="grey")
+
+ax.annotate('$W^M$', xy=(-75, w_tilbud_num-5), annotation_clip=False, size=16)
+# Lager L^S
+ax.annotate('$MLC$', xy=(320, 300), size=18)
+# Lager L^D
+ax.annotate('$L^M$', xy=(L_tilbud_num-5,-40), size=16, annotation_clip=False)
+
+x_5 = np.arange(L_tilbud_num,L_eq_num+1,1).astype(float)
+
+ax.fill_between(x_5,e_p(E_num, x_5, b), t_b(T_num, a, x_5), color ="palevioletred", alpha =0.3)
+
+plt.savefig("figur3.png", dpi=300)
+```
+
+```{python include=FALSE}
+# Plotter likevekt med minstelonn under monopsoni
+
+# Starting fig
+fig, ax = create_ax()
+# Plotter tilbud
+ax.plot(x, t_b(T_num,b,x), color="cornflowerblue")
+# Plotter ettersporsel
+ax.plot(x,e_p(E_num,a,x), color="palevioletred")
+
+# Lager L^S
+ax.annotate('$L^S$', xy=(500, 270), size=18)
+# Lager L^D
+ax.annotate('$L^D$', xy=(500,10), size=18)
+
+# Legger til MLC
+ax.plot(x, t_b_monopsoni(T_num,b,x))
+
+# Tegner en stiplet linje til likevekt
+ax.vlines(L_tilbud_num, 0, t_b_monopsoni(T_num,b,L_tilbud_num), linestyles='dashed', color="grey")
+ax.hlines(w_tilbud_num, 0, L_tilbud_num, linestyles='dashed', color="grey")
+
+ax.annotate('$W^M$', xy=(-75, w_tilbud_num-5), annotation_clip=False, size=16)
+# Lager L^S
+ax.annotate('$MLC$', xy=(320, 300), size=18)
+# Lager L^D
+ax.annotate('$L^M$', xy=(L_tilbud_num-5,-45), size=16, annotation_clip=False)
+
+# Legger til en minstelonn på 150
+ax.hlines(w_min, 0, 500, linestyles='--', color="black")
+# Lager W^min
+ax.annotate('$W^{min}$', xy=(-75,145), annotation_clip=False, size=16)
+# Lager en ny linje til likevekten for L^min
+ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
+# Putter inn L^min
+ax.annotate('$L^{min}$', xy=(L_eq_num_min-5,-45), annotation_clip=False, size=16)
+# Fyller inn dodvektstapet
+ax.fill_between(x_3, e_p(E_num, x_3, b), t_b(T_num, a, x_3), color="grey", alpha=0.5, label="Dødvektstap")
+# fyller inn anti-dodvektstapet
+x_6 = np.arange(L_tilbud_num,L_eq_num_min+1,1).astype(float)
+# overskudd
+ax.fill_between(x_6,e_p(E_num, x_6, b), t_b(T_num, a, x_6), color="blue", alpha=0.5, label = "Overskudd")
+# Lager en pil
+ax.annotate("", (L_tilbud_num,10), (L_eq_num_min, 10), arrowprops={"arrowstyle":"<-", "color":"black", "lw":2})
+ax.legend(loc="best")
+plt.savefig("figur4.png",dpi=300)
+```
 
 ```{r}
 #| output: false
@@ -130,287 +414,37 @@ rm(OECD_NB, OECD_FB, OECD_gender, OECD_tud)
 
     -   «Minstelønninger fører til **mindre** fattigdom».
 
-For å kunne finne lønningen i en fullkommen konkurranse så setter vi opp to ligninger der $L^D$ er etterspørsel etter arbeidskraft(Labour Demand) og $L^S$ er tilbud av arbeidskraft(Labour supply).
+For å kunne finne lønningen i en fullkommen konkurranse så setter vi opp to likninger der $L^D$ er etterspørsel etter arbeidskraft (Labour demand) og $L^S$ er tilbudet av arbeidskraft (Labour supply).
 
-Da har vi ligningene
+Da har vi likningene:
 
-$$L^D = \frac{\mathrm{E}}{\alpha} - \frac{1}{\alpha}w$$
+$$L^D = \frac{\mathrm{E}}{\alpha} - \frac{1}{\alpha}w \tag{1}$$
 
-$$L^S = -\frac{T}{\beta}+\frac{1}{\beta}w$$
+$$L^S = -\frac{T}{\beta}+\frac{1}{\beta}w \tag{2}$$
 
-Vi setter disse lik hverandre for å kunne løse for w for å finne lønningen
+Vi setter disse lik hverandre for å løse likningen for w for å finne lønningen:
 
-$$\frac{\mathrm{E}}{\alpha} - \frac{1}{\alpha}w = -\frac{T}{\beta}+\frac{1}{\beta}w$$
+$$\frac{\mathrm{E}}{\alpha} - \frac{1}{\alpha}w = -\frac{T}{\beta}+\frac{1}{\beta}w \tag{3}$$
 
-Og løser for w og da får vi lønnen
+Og løser for w og da får vi lønnen:
 
-$$w = \frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta}$$
+$$w^{FK} = \frac{T\alpha + \mathrm{E}\beta}{\alpha+\beta} \tag{4}$$
 
-```{python include=FALSE}
-#| output: false
-import numpy as np
-import sympy as sp
-import matplotlib.pyplot as plt
-from IPython.display import display, Math, Latex
+Videre for å løse for L så setter jeg likning (4) inn i likning (1) og finner likevektpunktet for L:
 
-# Definerer symboler
-bta, E, alpha, T, w, L = sp.symbols('beta E alpha T w L')
+$$L^{FK} = \frac{\mathrm{E}}{\alpha} - \frac{E\beta+T\alpha}{\alpha(\alpha+\beta)} \tag{5}$$
 
-# Utledning matematisk av minstelonn under fullkomment arbeidsmarked og under monopsoni
+For å kunne lage etterspørselkurven må likning (1) skrives om og løses slik at $w$ står på venstre side av likhetstegnet, og da får man at:
 
-# Ettersporsel på arbeid
-def L_D(E,alpha,w):
-    return (E/alpha)-(1/alpha)*w
+$$w^{FK} = E-L^D\alpha \tag{6}$$ Gjør det samme for tilbudskurven og skriver om likning (2) slik at $w$ står på venstre side av likhetstegnet og får da:
 
-# Tilbud av arbeid
-def L_S(T,bta,w):
-    return -(T/bta)+(1/bta)*w
+$$w^{FK} = T+\beta L^S \tag{7}$$
 
+For å plotte disse kurvene og løse for likevekten grafisk, må man gi de algebraiske uttrykkene tallverdier. Dette går jeg ikke dypere inn på i denne oppgaven. (For å se full utregning av den grafiske analysen matematisk videre så ligger dette i kode, og i appendiks i slutten av dokumentet).
 
-# Løser for ettersporsel og finner ettersporselskurven
-etterspørsel = sp.solve(sp.Eq(L, L_D(E,alpha,w)), w)
+I \autoref{fig:test1} ser man grafisk hvordan likevekten er før en minstelønn blir introdusert under fullkommen konkurranse. Den blå linjen $L^S$ er tilbudet av arbeidskraft mens den røde linjen $L^D$ er etterspørselen etter arbeidskraft.
 
-# Definerer ettersporselskurven, bytter om på L og a men har lite betydning
-def e_p(E,L,a):
-    return E - a*L
-
-# Løser for w og finner tilbudskurven
-tilbud = sp.solve(sp.Eq(L_S(T,bta,w), L), w)
-
-# Definerer tilbudskurven, bytter litt om po variablene slik at det blir enklere
-def t_b(T,b,L):
-    return T + b*L 
-
-# betingelse for likevekt
-eq_cond=sp.Eq(L_D(E,alpha,w),L_S(T,bta,w))
-
-# Løser for w
-p_eq=sp.solve(eq_cond,w)
-
-# Definerer numeriske verdier for o plotte
-E_num = 250
-a = 0.5
-x = np.arange(0,550,1)
-b = 0.5
-T_num = 10
-
-# Løser likevekt for w
-w_eq_num = float(p_eq[0].subs({E: E_num, alpha: a, T: T_num, bta: b}))
-# Løser likevekt for L
-L_eq_num = float(L_D(E_num, a, w_eq_num))
-```
-
-```{python include=FALSE}
-# Plotter likevekt uten minstelonn under fullkommen konkurranse
-# Creating the axa for plotting
-def create_ax():
-    fig, ax = plt.subplots()
-    ax.set(xlim=(0, 600))
-    ax.set(ylim=(0, 320))
-    ax.spines['top'].set_color('none')
-    ax.spines['right'].set_color('none')
-    ax.set_xticks([])
-    ax.set_yticks([])
-    
-    return fig, ax
-
-# Starting fig
-fig, ax = create_ax()
-# Plotter tilbud
-ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
-# Plotter ettersporsel
-ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
-# Tegner en stiplet linje til likevekt
-ax.vlines(L_eq_num, 0, w_eq_num, linestyles='dashed', color="grey")
-ax.hlines(w_eq_num, 0, L_eq_num, linestyles='dashed', color="grey")
-# Lager L^FK som skal vaere rett atmed L_eq_num
-ax.annotate('$L^{FK}$', xy=(L_eq_num-5, -14), annotation_clip=False)
-# Lager w^FK
-ax.annotate('$W^{FK}$', xy=(-35, w_eq_num-5), annotation_clip=False)
-# Lager L^S
-ax.annotate('$L^S$', xy=(500, 270), size=12)
-# Lager L^D
-ax.annotate('$L^D$', xy=(500,10), size=12)
-
-x_1 = np.arange(0,L_eq_num,1)
-# Fyller inn overskudd
-ax.fill_between(x_1, w_eq_num,e_p(E_num, x_1, b), color="forestgreen", alpha=0.5)
-
-# Fyller inn overskudd igjen
-ax.fill_between(x_1, w_eq_num, t_b(T_num, a, x_1), color="palevioletred", alpha=0.5)
-
-plt.savefig("figur1.png", dpi=300)
-```
-
-```{python include=FALSE}
-# løser for minstelonn på 150 for Labour
-w_min = 150
-L_eq_num_min = float(L_D(E_num, b,w_min))
-
-# Starting fig
-fig, ax = create_ax()
-
-# Plotter tilbud
-ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
-# Plotter ettersporsel
-ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
-
-# Tegner en stiplet linje til likevekt
-ax.vlines(L_eq_num, 0, w_eq_num, linestyles='dashed', color="grey")
-ax.hlines(w_eq_num, 0, L_eq_num, linestyles='dashed', color="grey")
-
-# Lager L^FK som skal vaere rett atmed L_eq_num
-ax.annotate('$L^{FK}$', xy=(L_eq_num-5, -14), annotation_clip=False)
-# Lager w^FK
-ax.annotate('$W^{FK}$', xy=(-40, w_eq_num-5), annotation_clip=False)
-# Lager L^S
-ax.annotate('$L^S$', xy=(500, 270), size=12)
-
-# Definerer integralet for dodvektstapet
-x_2 = np.arange(0,L_eq_num_min+1,1)
-# Definerer en tredje x som brukes til o vite hvor jeg integrerer
-x_3 = np.arange(L_eq_num_min, L_eq_num+1,1).astype(float)
-
-# Fyller inn overskudd
-ax.fill_between(x_2, w_min,e_p(E_num, x_2, b), color="forestgreen", alpha=0.5)
-
-# Fyller inn overskudd igjen
-ax.fill_between(x_2, w_min, t_b(T_num, a, x_2), color="palevioletred", alpha=0.5)
-
-# Fyller inn dodvektstapet
-ax.fill_between(x_3, e_p(E_num, x_3, b), t_b(T_num, a, x_3), color="grey", alpha=0.5)
-
-# Lager L^D
-ax.annotate('$L^D$', xy=(500,10), size=12)
-# Legger til en minstelonn på 150
-ax.hlines(w_min, 0, 500, linestyles='--', color="black")
-# Lager W^min
-ax.annotate('$W^{min}$', xy=(-40,145), annotation_clip=False)
-# Lager en ny linje til likevekten for L^min
-ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
-# Putter inn L^min
-ax.annotate('$L^{min}$', xy=(L_eq_num_min-5,-14), annotation_clip=False)
-# Lager en pil
-ax.annotate("", (L_eq_num_min,10), (L_eq_num, 10), arrowprops={"arrowstyle":"->", "color":"black", "lw":2})
-plt.savefig("figur2.png",dpi=300)
-```
-
-```{python include=FALSE}
-# Starter utregningen for monopsoni
-
-FK_TC = w*L
-FK_TC_diff = sp.diff(FK_TC, L)
-
-#monop_TC= w(L)*L
-monop_tc=(T+bta*L) *L
-monop_tc_diff = sp.diff(monop_tc, L)
-monop_tc_diff #grensekostnad
-
-# E-alpha*L = MRP
-MRP = (E-alpha*L)
-
-betingelse = sp.Eq(monop_tc_diff, MRP)
-
-L_tilbud = sp.solve(betingelse, L)[0]
-
-L_tilbud_num = L_tilbud.subs([(E, E_num), (alpha, a), (T, T_num), (bta, b)])
-
-w_tilbud = T+bta*L_tilbud_num
-
-w_tilbud_num = w_tilbud.subs([(T, T_num), (bta, b)])
-
-#grenseinntekt = grensekostnad
-mlc = monop_tc_diff
-
-# Definerer den nye funksjonen for mlc
-def t_b_monopsoni(T,b,L):
-    return 2*L*b+T
-```
-
-```{python include=FALSE}
-# Plotter likevekt under monopsoni uten minstelonn
-
-# Starting fig
-fig, ax = create_ax()
-# Plotter tilbud
-ax.plot(x, t_b(T_num,b,x), label='Tilbud', color="cornflowerblue")
-# Plotter ettersporsel
-ax.plot(x,e_p(E_num,a,x), label='Etterspørsel', color="palevioletred")
-
-# Lager L^S
-ax.annotate('$L^S$', xy=(500, 270), size=12)
-# Lager L^D
-ax.annotate('$L^D$', xy=(500,10), size=12)
-
-# Legger til MLC
-ax.plot(x, t_b_monopsoni(T_num,b,x))
-
-# Tegner en stiplet linje til likevekt
-ax.vlines(L_tilbud_num, 0, t_b_monopsoni(T_num,b,L_tilbud_num), linestyles='dashed', color="grey")
-ax.hlines(w_tilbud_num, 0, L_tilbud_num, linestyles='dashed', color="grey")
-
-ax.annotate('$W^M$', xy=(-35, w_tilbud_num-5), annotation_clip=False)
-# Lager L^S
-ax.annotate('$MLC$', xy=(300, 300), size=12)
-# Lager L^D
-ax.annotate('$L^M$', xy=(L_tilbud_num-5,-14), size=12, annotation_clip=False)
-
-x_5 = np.arange(L_tilbud_num,L_eq_num+1,1).astype(float)
-
-ax.fill_between(x_5,e_p(E_num, x_5, b), t_b(T_num, a, x_5), color ="palevioletred", alpha =0.3)
-
-plt.savefig("figur3.png", dpi=300)
-```
-
-```{python include=FALSE}
-# Plotter likevekt med minstelonn under monopsoni
-
-# Starting fig
-fig, ax = create_ax()
-# Plotter tilbud
-ax.plot(x, t_b(T_num,b,x), color="cornflowerblue")
-# Plotter ettersporsel
-ax.plot(x,e_p(E_num,a,x), color="palevioletred")
-
-# Lager L^S
-ax.annotate('$L^S$', xy=(500, 270), size=12)
-# Lager L^D
-ax.annotate('$L^D$', xy=(500,10), size=12)
-
-# Legger til MLC
-ax.plot(x, t_b_monopsoni(T_num,b,x))
-
-# Tegner en stiplet linje til likevekt
-ax.vlines(L_tilbud_num, 0, t_b_monopsoni(T_num,b,L_tilbud_num), linestyles='dashed', color="grey")
-ax.hlines(w_tilbud_num, 0, L_tilbud_num, linestyles='dashed', color="grey")
-
-ax.annotate('$W^M$', xy=(-35, w_tilbud_num-5), annotation_clip=False)
-# Lager L^S
-ax.annotate('$MLC$', xy=(300, 300), size=12)
-# Lager L^D
-ax.annotate('$L^M$', xy=(L_tilbud_num-5,-14), size=12, annotation_clip=False)
-
-# Legger til en minstelonn på 150
-ax.hlines(w_min, 0, 500, linestyles='--', color="black")
-# Lager W^min
-ax.annotate('$W^{min}$', xy=(-40,145), annotation_clip=False)
-# Lager en ny linje til likevekten for L^min
-ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
-# Putter inn L^min
-ax.annotate('$L^{min}$', xy=(L_eq_num_min-5,-14), annotation_clip=False)
-# Fyller inn dodvektstapet
-ax.fill_between(x_3, e_p(E_num, x_3, b), t_b(T_num, a, x_3), color="grey", alpha=0.5, label="Dødvektstap")
-# fyller inn anti-dodvektstapet
-x_6 = np.arange(L_tilbud_num,L_eq_num_min+1,1).astype(float)
-# overskudd
-ax.fill_between(x_6,e_p(E_num, x_6, b), t_b(T_num, a, x_6), color="blue", alpha=0.5, label = "Reddet overskudd")
-# Lager en pil
-ax.annotate("", (L_tilbud_num,10), (L_eq_num_min, 10), arrowprops={"arrowstyle":"<-", "color":"black", "lw":2})
-ax.legend(loc="best")
-plt.savefig("figur4.png",dpi=300)
-```
-
-\clearpage
+Når en minstelønn innføres blir det en ny likevekt som kan sees i \autoref{fig:test2} hvor arbeidstakere som tidligere var ansatt under $L^{FK}$ til en lavere minstelønn $W^{FK}$ blir presset ut av arbeidsmarkedet. Med innføringen av den nye likevekten $W^{min} = L^{min}$ kommer det nye arbeidstakere inn som nå blir villige til å arbeide for den nye minstelønnen.
 
 ```{=tex}
 \begin{figure}
@@ -418,17 +452,25 @@ plt.savefig("figur4.png",dpi=300)
 \begin{minipage}{.5\textwidth}
   \centering
   \includegraphics[width=\linewidth]{figur1.png}
-  \captionof{figure}{A figure}
+  \captionof{figure}{Likevekt uten minstelønn\\under fullkommen konkurranse}
   \label{fig:test1}
 \end{minipage}%
 \begin{minipage}{.5\textwidth}
   \centering
   \includegraphics[width=\linewidth]{figur2.png}
-  \captionof{figure}{Another figure}
+  \captionof{figure}{Likevekt med minstelønn\\under fullkommen konkurranse}
   \label{fig:test2}
 \end{minipage}
 \end{figure}
 ```
+Når man diskuterer påstanden «minstelønninger fører til **økt** fattigdom» kan man argumentere for at i \autoref{fig:test2} så ser man at når minstelønnen $L^{min}$ blir innført så skjer det et negativt skift i sysselsettingen fra $L^{FK}$ som under fullkommen konkurranse vil føre til totalt sett vil det bli mindre sysselsatte i arbeidsmarkedet enn det var før innføringen.
+
+En argumentasjon for at «minstelønninger fører til **mindre** fattigdom» kan man også se her ved at selv om det blir færre sysselsatte så får de som er sysselsatt i den nye likevekten en større lønn siden i dette markedet er $W^{min}  > W^{FK}$.
+
+Videre så kan man også se at når minstelønnen innføres så oppstår det et samfunnsøkonomisk tap, som defineres av integralet fra:$$\int_{L^{FK}}^{L^{min}} f(L) \, dL \tag{8}$$
+
+Dette er det grå fargelagte området i \autoref{fig:test2}, alle som tidligere var ansatt innenfor dette området blir nå presset ut med innføringen av minstelønnen.
+
 \clearpage
 
 ```{=tex}
@@ -437,13 +479,13 @@ plt.savefig("figur4.png",dpi=300)
 \begin{minipage}{.5\textwidth}
   \centering
   \includegraphics[width=\linewidth]{figur3.png}
-  \captionof{figure}{A figure}
+  \captionof{figure}{Likevekt uten minstelønn\\under monopsoni}
   \label{fig:test3}
 \end{minipage}%
 \begin{minipage}{.5\textwidth}
   \centering
   \includegraphics[width=\linewidth]{figur4.png}
-  \captionof{figure}{Another figure}
+  \captionof{figure}{Likevekt med minstelønn\\under monopsoni}
   \label{fig:test4}
 \end{minipage}
 \end{figure}
@@ -462,7 +504,7 @@ eurostat %>%
   geom_text_repel()+
   labs(y="Minstelønninger", x="Sysselsetting for alder 20-64",
        caption= "Source: Eurostat, earn_mw_avgr2 og lfsi_emp_a",
-       title= "Minstelønninger i prosent av gjennomsnittlig bruttoinntekt i 2021",
+       title= "Minstelønninger i prosent av gjennomsnittlig bruttoinntekt(2021)",
        subtitle ="Næringshovedgrupper: Industri, konstruksjon og service (B-S)")+
   theme_minimal()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
@@ -493,7 +535,7 @@ Til slutt forklar hvordan en studie kan forklare effekten av minstelønn, bruk k
 ## 2.2.1 Økonomisk teori og grafisk analyse til å gi intuisjon til påstanden «Sterke fagforeninger reduserer velferden».
 
 ```{r}
-# Python kode for grafisk analyse
+# tex kode for grafisk analyse med python kode ovenfor
 
 ```
 
