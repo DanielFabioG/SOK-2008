@@ -183,7 +183,7 @@ ax.annotate('$W^{min}$', xy=(-85,145), annotation_clip=False, size=16)
 # Lager en ny linje til likevekten for L^min
 ax.vlines(L_eq_num_min, 0, w_min, linestyles='dashed', color="grey")
 # Putter inn L^min
-ax.annotate('$L^{min}$', xy=(L_eq_num_min-20,-40), annotation_clip=False, size=16)
+ax.annotate('$L^{min}$', xy=(L_eq_num_min-25,-40), annotation_clip=False, size=16)
 # Lager en pil
 ax.annotate("", (L_eq_num_min,10), (L_eq_num, 10), arrowprops={"arrowstyle":"->", "color":"black", "lw":2})
 plt.savefig("figur2.png",dpi=300)
@@ -304,6 +304,82 @@ ax.legend(loc="best")
 plt.savefig("figur4.png",dpi=300)
 ```
 
+```{python include = FALSE}
+# Begynner på grafisk analyse av fagforeninger
+L =sp.symbols("L", real=True, positive=True)
+
+# Define a function that describes the market's labor demand
+Uf = ((800 - 0.08 * L) - 100) * L 
+
+L_derivert = sp.diff(Uf, L)
+
+# Finner L_max
+L_max = sp.solve(L_derivert, L)[0]
+
+w = 800 - 0.08 * L
+
+w_max = w.subs(L, L_max)
+
+nytte = (w_max - 100) * L_max
+```
+
+```{python include = FALSE}
+x8 = np.linspace(0.01, 10000, 100)
+x9 = np.linspace(float(L_max), 8670, 100)
+
+def wages(x8):
+    return 800 - 0.08 * x8
+
+nyttekurve = sp.solve(Uf - nytte, w)
+
+nyttekurve_func = sp.lambdify(L, nyttekurve[0])
+
+# Plotte show
+def create_ax():
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.set(xlim=(0, 12000))
+    ax.set(ylim=(0, 1200))
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    
+    return fig, ax
+
+fig, ax = create_ax()
+
+
+
+# Plotter labour demand
+ax.plot(x8, wages(x8), color = "cornflowerblue")
+
+# Plotter indif
+ax.plot(x8,nyttekurve_func(x8), color="palevioletred")
+
+# equlibrium
+ax.vlines(L_max,0, w_max, color='green', linestyle='dashed')
+ax.hlines(w_max,0,L_max, color="green", linestyles="dashed")
+
+# verdi for minstelønn som er 100
+ax.hlines(100,10000,0, color="black")
+
+# L^D
+ax.annotate('$L^D$', xy=(10000,40), size=14, color="cornflowerblue")
+
+# W^r
+ax.annotate('$W^r$', xy=(10000,90), size=14)
+# U0
+ax.annotate('$U_0$', xy=(10000, 250), size=14)
+# L^M
+ax.annotate('$L^M$', xy=(4050, 5), size=14)
+# W^M
+ax.annotate('$W^M$', xy=(50, 460), size=14)
+
+# filling between L_max to 9500
+ax.fill_between(x9, wages(x9),100)
+plt.savefig("figur8.png",dpi=300)
+```
+
 ```{r}
 #| output: false
 # Loading packages needed
@@ -406,6 +482,94 @@ OECD_finish_2 <-OECD_finish_2 %>%
 rm(OECD_NB, OECD_FB, OECD_gender, OECD_tud)
 ```
 
+```{r}
+#| output: FALSE
+# Resultat av regresjonsanalysen
+model <- lm(syssel_rate ~ min_wage, eurostat)
+summary(model)
+```
+
+```{r, warning=FALSE}
+fig_5<-eurostat %>%
+  ggplot(aes(x=syssel_rate, y=min_wage, label=geo))+
+  geom_point(color = "palevioletred")+
+  geom_text_repel()+
+  labs(y="Minstelønninger", x="Sysselsetting for alder 20-64",
+       caption= "Kilde: Eurostat, earn_mw_avgr2 og lfsi_emp_a",
+       subtitle ="Næringshovedgrupper: Industri, konstruksjon og service (B-S)")+
+  theme_bw()+
+  scale_y_continuous(labels = scales::percent_format(scale = 1))+
+  scale_x_continuous(labels = scales::percent_format(scale = 1))+
+  geom_smooth(method = lm, se= FALSE)+
+  geom_label(x = 83,
+           y = 50,
+           label = paste("R^2 == ", round(cor(eurostat$syssel_rate, eurostat$min_wage)^2, 2)),
+           hjust = 0,
+           vjust = 0,
+           parse = TRUE)
+ggsave("figur5.png",dpi=300, width = 7, height = 5)
+```
+
+```{r}
+#| output: FALSE
+# Resultat av regresjonsanalysen
+model <- lm(org_rate ~ employ_rate, OECD_finish_2)
+summary(model)
+```
+
+```{r, warning=FALSE}
+fig_6<-OECD_finish_2 %>%
+  ggplot(aes(x=org_rate, y=employ_rate, label=COUNTRY))+
+  geom_point(color="cornflowerblue")+
+  geom_smooth(method =lm, se= FALSE)+
+  labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten",
+       caption="Kilde: OECD")+
+  theme_bw()+
+  theme(text = element_text(size=18))+  
+  scale_y_continuous(labels = scales::percent_format(scale = 1),
+                     breaks = c(5,10,15,20),
+                     limits = c(0,21))+
+  scale_x_continuous(labels = scales::percent_format(scale = 1))+
+  geom_text_repel()+
+  geom_label(x = 75,
+           y = 18,
+           label = paste("R^2 == ", round(cor(OECD_finish_2$org_rate, OECD_finish_2$employ_rate)^2, 2)),
+           hjust = 0,
+           vjust = 0,
+           parse = TRUE,
+           size=7)
+ggsave("figur6.png", dpi = 300, height = 5, width = 7)
+```
+
+```{r}
+#| output: FALSE
+# Resultat av regresjonsanalysen
+model <- lm(org_rate ~ employ_rate, OECD_finish)
+summary(model)
+```
+
+```{r, warning=FALSE}
+fig_7<-OECD_finish %>%
+  ggplot(aes(x=org_rate, y=employ_rate,, label=COUNTRY))+
+  geom_point(color="cornflowerblue")+
+  geom_smooth(method =lm, se= FALSE)+
+  labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten",
+       caption="Kilde: OECD")+
+  theme_bw()+
+  theme(text = element_text(size=18))+
+  scale_y_continuous(labels = scales::percent_format(scale = 1))+
+  scale_x_continuous(labels = scales::percent_format(scale = 1))+
+  geom_text_repel()+
+  geom_label(x = 75,
+           y = 18,
+           label = paste("R^2 == ", round(cor(OECD_finish$org_rate, OECD_finish$employ_rate)^2, 2)),
+           hjust = 0,
+           vjust = 0,
+           parse = TRUE,
+           size=7)
+ggsave("figur7.png", dpi = 300, height = 5, width = 7)
+```
+
 # Utfordring 2.1 Minstelønn
 
 1.  Bruk økonomisk teori og grafisk analyse til å gi intuisjon til begge disse påstandene:
@@ -479,9 +643,11 @@ Dette er det grå fargelagte området i \autoref{fig:test2}, alle som tidligere 
 
 ## Grafisk analyse under monopsoni
 
-Markeder hvor det kun finnes en stor etterspørrer kalles for monopsoni. Når det er en monopsonistisk etterspørsel etter arbeidskraft innføres det også en marginal kostnad for hver enhet ekstra arbeidskraft, som betyr at kostnaden for den monopsonistiske etterspørreren blir den nye linjen $MLC$ i \autoref{fig:test3}.
+Markeder hvor det kun finnes en stor etterspørrer kalles for monopsoni. Når det er en monopsonistisk etterspørsel etter arbeidskraft må det også sees på den marginale kostnaden for en enhet ekstra arbeidskraft, som gjør at vi innfører grensekostnaden $MLC$ i \autoref{fig:test3}.
 
-Som man kan se betyr det at lønnskostnaden er hvor $MLC$ tangerer $L^S$ men at monopsonisten kun vil ansette arbeidskraft hvor $L^M = W^M$. For påstanden «minstelønninger fører til **økt** fattigdom» kan man argumentere for at uten en minstelønn i et monopsonistisk marked vil det ansettes mindre arbeidskraft enn hva markedet tilbyder og de som er arbeidstakere må ta en lavere lønn enn hva et fullkomment arbeidsmarked vil gi, som kan føre til økt fattigdom.
+Som man kan se vil en monopsonistisk arbeidsgiver profittmaksimere hvor grensekostnaden $MLC$ tangerer $L^D$ men vil samtidig kun ansette arbeidskraft og betale lønn hvor $L^M = W^M$. Det oppstår også et effektivitetstap som angis i det rosa området som er tapet på effektiviteten i arbeidsmarkedet mellom fullkommen konkurranse til monopsoni uten en minstelønn.
+
+For påstanden «minstelønninger fører til **økt** fattigdom» kan man argumentere for at uten en minstelønn i et monopsonistisk marked vil det ansettes mindre arbeidskraft enn hva markedet tilbyder og de som er arbeidstakere må ta en lavere lønn enn hva et fullkomment arbeidsmarked vil gi, som kan føre til økt fattigdom.
 
 ```{=tex}
 \begin{figure}
@@ -500,92 +666,86 @@ Som man kan se betyr det at lønnskostnaden er hvor $MLC$ tangerer $L^S$ men at 
 \end{minipage}
 \end{figure}
 ```
-I \autoref{fig:test4} så innføres det en minstelønn under monopsoni. Effekten av minstelønnen vil føre til at den monopsonistiske etterspørreren vil få et skift fra å kun ansette $L^M$ til å nå måtte ansette $L^{min}$ fordi minstelønnen $W^{min} > W^M$. Markedet vil da få en ny likevekt hvor $W^{min}$ tangerer $L^S$ siden den marginale kostnaden av å ansette flere arbeidere her ikke inntreffer fordi monopsonisten må betale $W^{min}$ allerede fra den første ansatte.
+I \autoref{fig:test4} så innføres det en minstelønn under monopsoni. Effekten av minstelønnen vil variere utifra hvor den blir plassert i forhold til lønnen under fullkommen konkurranse. Som man kan se her vil den føre til at den monopsonistiske etterspørreren vil få et skift fra å kun ansette $L^M$ til å nå måtte ansette $L^{min}$ fordi minstelønnen $W^{min} > W^M$. Markedet vil da få en ny likevekt hvor $W^{min}$ tangerer $L^D$ siden den marginale kostnaden av å ansette flere arbeidere her ikke inntreffer fordi monopsonisten må betale $W^{min}$ allerede fra den første ansatte.
 
-Derfor i et monopsonistisk marked med en minstelønn kan man argumentere for at «minstelønninger fører til **mindre** fattigdom» siden det har en positiv effekt som kan sees i det blå området i \autoref{fig:test4}, hvor minstelønnen blir å ha et positivt "overskudd" av arbeidskraft som gjør at flere enn tidligere blir med i arbeidsmarkedet til den samme minstelønnen.
+Derfor i et monopsonistisk marked med en minstelønn kan man argumentere for at «minstelønninger fører til **mindre** fattigdom» siden det har en positiv effekt som kan sees i det blå området i \autoref{fig:test4}, hvor minstelønnen blir å få et positivt "overskudd" av arbeidskraft som gjør at monopsonisten ansetter flere enn tidligere.
+
+Det kan også argumenteres for at hvis minstelønnen $W^{min}$ hadde vært plassert rett i underkant markedslikevekten for et fullkomment marked så ville en monopsonistisk arbeidsgiver ansatt arbeidskraft helt frem til $W{min}$ tangerer $L^S$ kurven, noe som ville innebært enda større sysselsetting under monopsoni, og det grå området ville blitt overskudd av arbeidskraft også.
 
 \clearpage
 
-```{r}
-#| output: FALSE
-# Resultat av regresjonsanalysen
-model <- lm(syssel_rate ~ min_wage, eurostat)
-summary(model)
+## Sammenhengen mellom nivået på minstelønn og arbeidsledighet
+
+Det jeg har valgt å se på i oppgave 2.1.2 er sysselsetting for alder 20-64 som viser hvor høy prosentandel som arbeider i denne alders-grupperingen. Den avhengige variabelen som er tatt med er minstelønninger i prosent av gjennomsnittlig bruttoinntekt og næringshovedgruppene som er tatt med er klassifisert fra B-S, SSB har en god forklaring på klassifiseringen [her.](https://www.ssb.no/klass/klassifikasjoner/6)
+
+I \autoref{fig:test5} kan man se hvordan den endogene variabelen minstelønninger korrelerer mot sysselsetting for alder 20-64, begge i prosenter. Øverst til høyre i figuren kan man se determinasjons-koeffisienten $R^2$ som sier at 0.12 eller 12% av variasjonen i minstelønninger kan forklares av sysselsettingen. En $R^2$ som er under 0.2 vil vanligvis bety at lite av variansen kan forklares av den eksogene variabelen, som betyr at det er en svak sammenheng.
+
+```{=tex}
+\begin{figure}
+\centering
+\begin{minipage}{\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figur5.png}
+  \captionof{figure}{Minstelønninger i prosent av gjennomsnittlig bruttoinntekt(2021)}
+  \label{fig:test5}
+\end{minipage}
+\end{figure}
 ```
+Videre kan man se fra regresjons-linjen en sammenheng i at for hver økning i sysselsetting så korrelerer det i en nedgang i minstelønnen. Som gir tilknytning tilbake til den tidligere oppgaven i diskusjonen om minstelønninger fører til mindre eller mer fattigdom, fordi det man kan se er at selv om lønnen kan være noe høyere i de landene som har høyere minstelønn så betyr det at de har lavere sysselsetting. Motsatt kan det også sies at lavere minstelønn gir høyere sysselsetting.
 
-```{r, warning=FALSE}
-fig_5<-eurostat %>%
-  ggplot(aes(x=syssel_rate, y=min_wage, label=geo))+
-  geom_point(color = "palevioletred")+
-  geom_text_repel()+
-  labs(y="Minstelønninger", x="Sysselsetting for alder 20-64",
-       caption= "Source: Eurostat, earn_mw_avgr2 og lfsi_emp_a",
-       title= "Minstelønninger i prosent av gjennomsnittlig bruttoinntekt(2021)",
-       subtitle ="Næringshovedgrupper: Industri, konstruksjon og service (B-S)")+
-  theme_bw()+
-  scale_y_continuous(labels = scales::percent_format(scale = 1))+
-  scale_x_continuous(labels = scales::percent_format(scale = 1))+
-  geom_smooth(method = lm, se= FALSE)+
-  geom_label(x = 83,
-           y = 50,
-           label = paste("R^2 == ", round(cor(eurostat$syssel_rate, eurostat$min_wage)^2, 2)),
-           hjust = 0,
-           vjust = 0,
-           parse = TRUE)
-ggsave("figur5.png",dpi=300, width = 7, height = 5)
-```
+Knyttet opp mot det man har sett på analytisk så gir dette mening, det kan være positive effekter slik som sett under monopsoni med en innført minstelønn (hvor den plasseres under $W^{FK}$), og det kan ha en negativ effekt på sysselsettingen i fullkommen konkurransemarkedet hvor mindre individer blir sysselsatt fordi effekten gjør slik at etterspørselen etter arbeidskraft blir lavere, dog lønnen høyere.
 
-## Sammenhengen mellom nivået på minstelønn og arbeidsledighetsraten
-
-Det jeg har valgt å se på i oppgave 2.1.2 i figuren er sysselsetting for alder 20-64 som viser hvor høy prosentandel som arbeider i denne alders-grupperingen. Den avhengige variabelen som er tatt med er minstelønninger i prosent av gjennomsnittlig bruttoinntekt og næringshovedgruppene som er tatt med er klassifisert fra B-S, SSB har en god forklaring på klassifiseringen [her.](https://www.ssb.no/klass/klassifikasjoner/6)
-
-På grafen kan man se noe epic.
-
-Forklar hvorfor og hvordan variabler du tar og si at det er det man ser sammenhengen mellom på grafen, eventuelt ta å rydd og gjør datasettet penere, slik at det blir mer oversiktlig. Gå litt tilbake og se på oppgave 1 og tilknytt eller støtter det erfaringene fra oppgave 1.1? Diskuter dette.
-
-Til slutt forklar hvordan en studie kan forklare effekten av minstelønn, bruk kursstoffer, boken er en veldig god hjelp. For variabelen indic_em ser vi på sysselsettingen i befolkningen.
+Til slutt vil jeg si at empiriske studier også finner forskjellige positive eller negative effekter av minstelønnen, og at 2 av 3 studier finner negative effekter av sysselsetting på minstelønn, mens det er i andre studier ikke finnes negative effekter i følge @andrea.
 
 # Utfordring 2.2 Fagforeninger
 
-## 2.2.1 Økonomisk teori og grafisk analyse til å gi intuisjon til påstanden «Sterke fagforeninger reduserer velferden».
+## Økonomisk teori og grafisk analyse til påstanden: «Sterke fagforeninger reduserer velferden».
 
-```{r}
-# tex kode for grafisk analyse med python kode ovenfor
-
+```{=tex}
+\begin{figure}
+\centering
+\begin{minipage}{\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figur8.png}
+  \captionof{figure}{Fagforeningsmonopol}
+  \label{fig:test8}
+\end{minipage}
+\end{figure}
 ```
-
 Gå til den økonomiske teorien, finn en teori som kan gi støtte til påstanden, illustrer grafen og forklar dine påstander.
 
-## 2.2.2 Arbeidsledighetrate og fagforeninger
+## Arbeidsledighetrate og fagforeninger
+
+Blabla
 
 ```{r}
-#| output: FALSE
-# Resultat av regresjonsanalysen
-model <- lm(org_rate ~ employ_rate, OECD_finish_2)
+# Resultat av multippel regresjonsanalyse
+OECD<- merge(OECD_finish, OECD_finish_2, by=c("COUNTRY", "org_rate"))
+OECD <-OECD %>%
+  rename('Native born' = "employ_rate.x", 
+         'Foreign born' = "employ_rate.y",
+         'Organisasjonsgrad' = "org_rate")
+model <- lm(`Organisasjonsgrad` ~ `Native born` + `Foreign born`, data = OECD)
 summary(model)
 ```
 
-```{r, warning=FALSE}
-fig_6<-OECD_finish_2 %>%
-  ggplot(aes(x=org_rate, y=employ_rate, label=COUNTRY))+
-  geom_point(color="cornflowerblue")+
-  geom_smooth(method =lm, se= FALSE)+
-  labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten",
-       title= "Innenlandsfødte",
-       source="OECD")+
-  theme_bw()+
-  scale_y_continuous(labels = scales::percent_format(scale = 1))+
-  scale_x_continuous(labels = scales::percent_format(scale = 1))+
-  geom_text_repel()+
-  geom_label(x = 75,
-           y = 12,
-           label = paste("R^2 == ", round(cor(OECD_finish_2$org_rate, OECD_finish_2$employ_rate)^2, 2)),
-           hjust = 0,
-           vjust = 0,
-           parse = TRUE)
-ggsave("figur6.png", dpi = 300, height = 5, width = 7)
+```{=tex}
+\begin{figure}
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figur6.png}
+  \captionof{figure}{Innenlandsfødte}
+  \label{fig:test6}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{figur7.png}
+  \captionof{figure}{Utenlandsfødte}
+  \label{fig:test7}
+\end{minipage}
+\end{figure}
 ```
-
 I oecd så finnes det informasjon om arbeidsledighet i ulike grupper, se på data i 2018, kun fordi det er mest data der med begge kjønn. Jeg vil at dere skal se på innenlandsfødte og utenlandsfødte. Diskuter det man kan se utifra forhandling, og medlemsbasens sammensetting. Del diskusjonen i to deler, om vi ser en korrelasjon som gir støtte til et argument, eller som går imot det argumentet så at det ikke gir støtte så kan vi bruke teorien om forhandlinger for å forklare hva vi ser.
 
 I grafen til innenlandsfødte: bruk teorien om forhandling for å forklare hva vi ser.
@@ -593,34 +753,6 @@ I grafen til innenlandsfødte: bruk teorien om forhandling for å forklare hva v
 I grafen til utenlandsfødte mot innenlandsfødte: bruk teorien om medlemsbasens sammensetting og hva konsekvensene kan være av at fagforeningene har makt.
 
 The end.
-
-```{r}
-#| output: FALSE
-# Resultat av regresjonsanalysen
-model <- lm(org_rate ~ employ_rate, OECD_finish)
-summary(model)
-```
-
-```{r, warning=FALSE}
-fig_7<-OECD_finish %>%
-  ggplot(aes(x=org_rate, y=employ_rate,, label=COUNTRY))+
-  geom_point(color="cornflowerblue")+
-  geom_smooth(method =lm, se= FALSE)+
-  labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten", 
-       title="Utenlandsfødte",
-       source="OECD")+
-  theme_bw()+
-  scale_y_continuous(labels = scales::percent_format(scale = 1))+
-  scale_x_continuous(labels = scales::percent_format(scale = 1))+
-  geom_text_repel()+
-  geom_label(x = 75,
-           y = 18,
-           label = paste("R^2 == ", round(cor(OECD_finish$org_rate, OECD_finish$employ_rate)^2, 2)),
-           hjust = 0,
-           vjust = 0,
-           parse = TRUE)
-ggsave("figur7.png", dpi = 300, height = 5, width = 7)
-```
 
 # Appendiks
 
