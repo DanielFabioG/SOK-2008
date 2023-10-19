@@ -41,6 +41,8 @@ crossref:
 import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
+import locale
+locale.setlocale(locale.LC_ALL, 'no_NO.utf8')
 
 # Definerer symboler
 bta, E, alpha, T, w, L = sp.symbols('beta E alpha T w L')
@@ -305,7 +307,9 @@ plt.savefig("figur4.png",dpi=300)
 ```{r}
 #| output: false
 # Loading packages needed
+# Fikser UTF-8 encoding siden python kode før resetter encoding
 rm(list = ls())
+options(encoding = "UTF-8")
 library(tidyverse)
 library(eurostat)
 library(ggrepel)
@@ -402,15 +406,15 @@ OECD_finish_2 <-OECD_finish_2 %>%
 rm(OECD_NB, OECD_FB, OECD_gender, OECD_tud)
 ```
 
-# Innledning
-
 # Utfordring 2.1 Minstelønn
 
 1.  Bruk økonomisk teori og grafisk analyse til å gi intuisjon til begge disse påstandene:
 
-    -   «Minstelønninger fører til **økt** fattigdom».
+    1.  «Minstelønninger fører til **økt** fattigdom».
 
-    -   «Minstelønninger fører til **mindre** fattigdom».
+    2.  «Minstelønninger fører til **mindre** fattigdom».
+
+## Matematisk utledning
 
 For å kunne finne lønningen i en fullkommen konkurranse så setter vi opp to likninger der $L^D$ er etterspørsel etter arbeidskraft (Labour demand) og $L^S$ er tilbudet av arbeidskraft (Labour supply).
 
@@ -438,11 +442,13 @@ $$w^{FK} = E-L^D\alpha \tag{6}$$ Gjør det samme for tilbudskurven og skriver om
 
 $$w^{FK} = T+\beta L^S \tag{7}$$
 
-For å plotte disse kurvene og løse for likevekten grafisk, må man gi de algebraiske uttrykkene tallverdier. Dette går jeg ikke dypere inn på i denne oppgaven. (For å se full utregning av den grafiske analysen matematisk videre så ligger dette i kode, og i appendiks i slutten av dokumentet).
+## Grafisk analyse under fullkommen konkurranse
 
-I \autoref{fig:test1} ser man grafisk hvordan likevekten er før en minstelønn blir introdusert under fullkommen konkurranse. Den blå linjen $L^S$ er tilbudet av arbeidskraft mens den røde linjen $L^D$ er etterspørselen etter arbeidskraft.
+For å plotte disse kurvene og løse for likevekten grafisk, må man gi de algebraiske uttrykkene tallverdier. Dette går jeg ikke dypere inn på i denne oppgaven. (For å se full utregning av den grafiske analysen matematisk videre så ligger dette i kode).
 
-Når en minstelønn innføres blir det en ny likevekt som kan sees i \autoref{fig:test2} hvor arbeidstakere som tidligere var ansatt under $L^{FK}$ til en lavere minstelønn $W^{FK}$ blir presset ut av arbeidsmarkedet. Med innføringen av den nye likevekten $W^{min} = L^{min}$ kommer det nye arbeidstakere inn som nå blir villige til å arbeide for den nye minstelønnen.
+I \autoref{fig:test1} ser man grafisk hvordan likevekten er før en minstelønn blir introdusert under fullkommen konkurranse. Den blå linjen $L^S$ er tilbudet av arbeidskraft mens den røde linjen $L^D$ er etterspørselen etter arbeidskraft. Her er ingen arbeidsledige siden alle som vil ha arbeid tar lønnen $W^{FK}$ og alle som tilbyr arbeidskraft til en høyere lønn deltar ikke på arbeidsmarkedet.
+
+Når en minstelønn innføres blir det en ny likevekt som kan sees i \autoref{fig:test2} hvor arbeidstakere som tidligere var ansatt under $L^{FK}$ til en lavere minstelønn $W^{FK}$ blir presset ut av arbeidsmarkedet. Med innføringen av den nye likevekten $W^{min} = L^{min}$ kommer det nye arbeidstakere inn som tidligere ikke var deltakere men nå blir villige til å arbeide for den nye minstelønnen.
 
 ```{=tex}
 \begin{figure}
@@ -463,13 +469,19 @@ Når en minstelønn innføres blir det en ny likevekt som kan sees i \autoref{fi
 ```
 Når man diskuterer påstanden «minstelønninger fører til **økt** fattigdom» kan man argumentere for at i \autoref{fig:test2} så ser man at når minstelønnen $L^{min}$ blir innført så skjer det et negativt skift i sysselsettingen fra $L^{FK}$ som under fullkommen konkurranse vil føre til totalt sett vil det bli mindre sysselsatte i arbeidsmarkedet enn det var før innføringen.
 
-En argumentasjon for at «minstelønninger fører til **mindre** fattigdom» kan man også se her ved at selv om det blir færre sysselsatte så får de som er sysselsatt i den nye likevekten en større lønn siden i dette markedet er $W^{min}  > W^{FK}$.
+En argumentasjon for at «minstelønninger fører til **mindre** fattigdom» kan man også se her ved at selv om det blir færre sysselsatte så får de som er sysselsatt i den nye likevekten en større lønn siden i dette markedet er $W^{min} > W^{FK}$.
 
 Videre så kan man også se at når minstelønnen innføres så oppstår det et samfunnsøkonomisk tap, som defineres av integralet fra:$$\int_{L^{FK}}^{L^{min}} f(L) \, dL \tag{8}$$
 
-Dette er det grå fargelagte området i \autoref{fig:test2}, alle som tidligere var ansatt innenfor dette området blir nå presset ut med innføringen av minstelønnen.
+Dette er det grå fargelagte området i \autoref{fig:test2}, alle som tidligere var ansatt innenfor dette området blir nå presset ut med innføringen av minstelønnen. Her er det marginale arbeidstakere mot marginale arbeidsgivere som krysser på punktene x og y som viser hva de er villige til å gå men som de ikke lengre ender opp med å få.
 
 \clearpage
+
+## Grafisk analyse under monopsoni
+
+Markeder hvor det kun finnes en stor etterspørrer kalles for monopsoni. Når det er en monopsonistisk etterspørsel etter arbeidskraft innføres det også en marginal kostnad for hver enhet ekstra arbeidskraft, som betyr at kostnaden for den monopsonistiske etterspørreren blir den nye linjen $MLC$ i \autoref{fig:test3}.
+
+Som man kan se betyr det at lønnskostnaden er hvor $MLC$ tangerer $L^S$ men at monopsonisten kun vil ansette arbeidskraft hvor $L^M = W^M$. For påstanden «minstelønninger fører til **økt** fattigdom» kan man argumentere for at uten en minstelønn i et monopsonistisk marked vil det ansettes mindre arbeidskraft enn hva markedet tilbyder og de som er arbeidstakere må ta en lavere lønn enn hva et fullkomment arbeidsmarked vil gi, som kan føre til økt fattigdom.
 
 ```{=tex}
 \begin{figure}
@@ -488,6 +500,12 @@ Dette er det grå fargelagte området i \autoref{fig:test2}, alle som tidligere 
 \end{minipage}
 \end{figure}
 ```
+I \autoref{fig:test4} så innføres det en minstelønn under monopsoni. Effekten av minstelønnen vil føre til at den monopsonistiske etterspørreren vil få et skift fra å kun ansette $L^M$ til å nå måtte ansette $L^{min}$ fordi minstelønnen $W^{min} > W^M$. Markedet vil da få en ny likevekt hvor $W^{min}$ tangerer $L^S$ siden den marginale kostnaden av å ansette flere arbeidere her ikke inntreffer fordi monopsonisten må betale $W^{min}$ allerede fra den første ansatte.
+
+Derfor i et monopsonistisk marked med en minstelønn kan man argumentere for at «minstelønninger fører til **mindre** fattigdom» siden det har en positiv effekt som kan sees i det blå området i \autoref{fig:test4}, hvor minstelønnen blir å ha et positivt "overskudd" av arbeidskraft som gjør at flere enn tidligere blir med i arbeidsmarkedet til den samme minstelønnen.
+
+\clearpage
+
 ```{r}
 #| output: FALSE
 # Resultat av regresjonsanalysen
@@ -496,7 +514,7 @@ summary(model)
 ```
 
 ```{r, warning=FALSE}
-eurostat %>%
+fig_5<-eurostat %>%
   ggplot(aes(x=syssel_rate, y=min_wage, label=geo))+
   geom_point(color = "palevioletred")+
   geom_text_repel()+
@@ -504,7 +522,7 @@ eurostat %>%
        caption= "Source: Eurostat, earn_mw_avgr2 og lfsi_emp_a",
        title= "Minstelønninger i prosent av gjennomsnittlig bruttoinntekt(2021)",
        subtitle ="Næringshovedgrupper: Industri, konstruksjon og service (B-S)")+
-  theme_minimal()+
+  theme_bw()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
   geom_smooth(method = lm, se= FALSE)+
@@ -514,19 +532,18 @@ eurostat %>%
            hjust = 0,
            vjust = 0,
            parse = TRUE)
+ggsave("figur5.png",dpi=300, width = 7, height = 5)
 ```
 
-Det jeg har valgt å se på i oppgave 2.1.2 i figuren er sysselsetting for alder 20-64 som viser hvor høy prosentandel som arbeider i denne aldersgrupperingen. Den avhengige variabelen som er tatt med er minstelønninger i prosent av gjennomsnittlig bruttoinntekt og næringshovedgruppene som er tatt med er klassifisert fra B-S, SSB har en god forklaring på klassifiseringen [her.](https://www.ssb.no/klass/klassifikasjoner/6)
+## Sammenhengen mellom nivået på minstelønn og arbeidsledighetsraten
+
+Det jeg har valgt å se på i oppgave 2.1.2 i figuren er sysselsetting for alder 20-64 som viser hvor høy prosentandel som arbeider i denne alders-grupperingen. Den avhengige variabelen som er tatt med er minstelønninger i prosent av gjennomsnittlig bruttoinntekt og næringshovedgruppene som er tatt med er klassifisert fra B-S, SSB har en god forklaring på klassifiseringen [her.](https://www.ssb.no/klass/klassifikasjoner/6)
 
 På grafen kan man se noe epic.
 
 Forklar hvorfor og hvordan variabler du tar og si at det er det man ser sammenhengen mellom på grafen, eventuelt ta å rydd og gjør datasettet penere, slik at det blir mer oversiktlig. Gå litt tilbake og se på oppgave 1 og tilknytt eller støtter det erfaringene fra oppgave 1.1? Diskuter dette.
 
 Til slutt forklar hvordan en studie kan forklare effekten av minstelønn, bruk kursstoffer, boken er en veldig god hjelp. For variabelen indic_em ser vi på sysselsettingen i befolkningen.
-
-## Forklar den forholdsvis enkle grafen som vektlegges mer enn hva selve koden for å lage figuren tok.
-
-## Diskuter sammenhengen mellom nivået på minstelønn og arbeidsledighetsraten.
 
 # Utfordring 2.2 Fagforeninger
 
@@ -549,14 +566,14 @@ summary(model)
 ```
 
 ```{r, warning=FALSE}
-OECD_finish_2 %>%
+fig_6<-OECD_finish_2 %>%
   ggplot(aes(x=org_rate, y=employ_rate, label=COUNTRY))+
   geom_point(color="cornflowerblue")+
   geom_smooth(method =lm, se= FALSE)+
   labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten",
        title= "Innenlandsfødte",
        source="OECD")+
-  theme_minimal()+
+  theme_bw()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
   geom_text_repel()+
@@ -566,6 +583,7 @@ OECD_finish_2 %>%
            hjust = 0,
            vjust = 0,
            parse = TRUE)
+ggsave("figur6.png", dpi = 300, height = 5, width = 7)
 ```
 
 I oecd så finnes det informasjon om arbeidsledighet i ulike grupper, se på data i 2018, kun fordi det er mest data der med begge kjønn. Jeg vil at dere skal se på innenlandsfødte og utenlandsfødte. Diskuter det man kan se utifra forhandling, og medlemsbasens sammensetting. Del diskusjonen i to deler, om vi ser en korrelasjon som gir støtte til et argument, eller som går imot det argumentet så at det ikke gir støtte så kan vi bruke teorien om forhandlinger for å forklare hva vi ser.
@@ -584,14 +602,14 @@ summary(model)
 ```
 
 ```{r, warning=FALSE}
-OECD_finish %>%
+fig_7<-OECD_finish %>%
   ggplot(aes(x=org_rate, y=employ_rate,, label=COUNTRY))+
   geom_point(color="cornflowerblue")+
   geom_smooth(method =lm, se= FALSE)+
   labs(x="Organisasjonsgrad", y="Arbeidsledighetsraten", 
        title="Utenlandsfødte",
        source="OECD")+
-  theme_minimal()+
+  theme_bw()+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   scale_x_continuous(labels = scales::percent_format(scale = 1))+
   geom_text_repel()+
@@ -601,6 +619,7 @@ OECD_finish %>%
            hjust = 0,
            vjust = 0,
            parse = TRUE)
+ggsave("figur7.png", dpi = 300, height = 5, width = 7)
 ```
 
 # Appendiks
