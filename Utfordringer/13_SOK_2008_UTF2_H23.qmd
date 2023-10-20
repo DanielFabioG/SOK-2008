@@ -719,7 +719,7 @@ Det blå fargelagte området blir det nye effektivitetstapet ved at fagforeninge
 
 I \autoref{fig:test6} og \autoref{fig:test7} ser vi på den avhengige variabelen arbeidsledighet korrelert mot organisasjonsgraden i 26 forskjellige OECD-land. Det som er forskjellen mellom de to forskjellige figurene er at \autoref{fig:test6} ser vi på innenlandsfødte og i \autoref{fig:test7} ser man på utenlandsfødte.
 
-$R^2$ sier at 4 prosent av arbeidsledigheten kan forklares av organisasjonsgraden innenlands og 7 prosent av arbeidsledigheten kan forklares av organisasjonsgraden for utenlandsfødte. Normalt betyr dette at det ikke finnes noen statistisk sammenheng mellom de to variablene, og at det ikke er noen sammenheng.
+$R^2$ sier at 4 prosent av arbeidsledigheten kan forklares av organisasjonsgraden innenlands og 7 prosent av arbeidsledigheten kan forklares av organisasjonsgraden for utenlandsfødte. Normalt betyr dette at det ikke finnes noen statistisk sammenheng mellom de to variablene.
 
 ```{=tex}
 \begin{figure}
@@ -755,7 +755,7 @@ model <- lm(`Organisasjonsgrad` ~ `Native born` + `Foreign born`, data = OECD)
 summary(model)
 ```
 
-Når man ser på organisasjonsgraden i en multippel lineær regresjonsanalyse kan man se enstørre korrelasjon hvor 41% av arbeidsledigheten kan forklares av organisasjonsgraden. Det man også kan se er at p-verdien til innenlandsfødte og utenlandsfødte er signifikant, som betyr at nullhypotesen ikke kan forkastes. Hvis det hadde vært 0 arbeidsledighet ville intercept forklart at det fortsatt er 24.6 prosent organisasjonsgrad.
+Når man ser på organisasjonsgraden i en multippel lineær regresjonsanalyse kan man se en større korrelasjon hvor 41% av arbeidsledigheten kan forklares av organisasjonsgraden. Det man også kan se er at p-verdien til innenlandsfødte og utenlandsfødte er signifikant, som betyr at nullhypotesen ikke kan forkastes. Hvis det hadde vært 0 arbeidsledighet ville intercept forklart at det fortsatt er 24.6 prosent organisasjonsgrad.
 
 # Appendiks
 
