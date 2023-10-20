@@ -360,7 +360,7 @@ ax.plot(x8,nyttekurve_func(x8), color="palevioletred")
 ax.vlines(L_max,0, w_max, color='green', linestyle='dashed')
 ax.hlines(w_max,0,L_max, color="green", linestyles="dashed")
 
-# verdi for minstelønn som er 100
+# verdi for reservasjonslønn som er 100
 ax.hlines(100,10000,0, color="black")
 
 # L^D
@@ -376,7 +376,8 @@ ax.annotate('$L^M$', xy=(4050, 5), size=14)
 ax.annotate('$W^M$', xy=(50, 460), size=14)
 
 # filling between L_max to 9500
-ax.fill_between(x9, wages(x9),100)
+ax.fill_between(x9, wages(x9),100, alpha=0.5, label="Effektivitetstap")
+ax.legend(loc="best")
 plt.savefig("figur8.png",dpi=300)
 ```
 
@@ -635,9 +636,9 @@ Når man diskuterer påstanden «minstelønninger fører til **økt** fattigdom�
 
 En argumentasjon for at «minstelønninger fører til **mindre** fattigdom» kan man også se her ved at selv om det blir færre sysselsatte så får de som er sysselsatt i den nye likevekten en større lønn siden i dette markedet er $W^{min} > W^{FK}$.
 
-Videre så kan man også se at når minstelønnen innføres så oppstår det et samfunnsøkonomisk tap, som defineres av integralet fra:$$\int_{L^{FK}}^{L^{min}} f(L) \, dL \tag{8}$$
+Videre så kan man også se at når minstelønnen innføres så oppstår det et samfunnsøkonomisk tap, som defineres av integralet fra:$$Effektivitetstap = \int_{L^{min}}^{L^{FK}} (E-\alpha L - (T+ \beta L))d L  \tag{8}$$
 
-Dette er det grå fargelagte området i \autoref{fig:test2}, alle som tidligere var ansatt innenfor dette området blir nå presset ut med innføringen av minstelønnen. Her er det marginale arbeidstakere mot marginale arbeidsgivere som krysser på punktene x og y som viser hva de er villige til å gå men som de ikke lengre ender opp med å få.
+Dette er det grå fargelagte området i \autoref{fig:test2}, alle som tidligere var ansatt innenfor dette området blir nå presset ut med innføringen av minstelønnen.
 
 \clearpage
 
@@ -683,12 +684,9 @@ I \autoref{fig:test5} kan man se hvordan den endogene variabelen minstelønninge
 ```{=tex}
 \begin{figure}
 \centering
-\begin{minipage}{\textwidth}
-  \centering
   \includegraphics[width=\linewidth]{figur5.png}
   \captionof{figure}{Minstelønninger i prosent av gjennomsnittlig bruttoinntekt(2021)}
   \label{fig:test5}
-\end{minipage}
 \end{figure}
 ```
 Videre kan man se fra regresjons-linjen en sammenheng i at for hver økning i sysselsetting så korrelerer det i en nedgang i minstelønnen. Som gir tilknytning tilbake til den tidligere oppgaven i diskusjonen om minstelønninger fører til mindre eller mer fattigdom, fordi det man kan se er at selv om lønnen kan være noe høyere i de landene som har høyere minstelønn så betyr det at de har lavere sysselsetting. Motsatt kan det også sies at lavere minstelønn gir høyere sysselsetting.
@@ -701,33 +699,27 @@ Til slutt vil jeg si at empiriske studier også finner forskjellige positive ell
 
 ## Økonomisk teori og grafisk analyse til påstanden: «Sterke fagforeninger reduserer velferden».
 
+Fagforeninger eksisterer for å maksimere nytten til alle sine medlemmer. Det gjenspeiles i at de prøver å få det best mulig for alle medlemmer, og samtidig høyest mulig lønn til alle sammen. Vi har noen hovedantakelser om at alle medlemmene kun har nytte av inntekt og konsum, at alle har lik produktivitet og alle har lik reservasjonslønn.
+
+Når en fagforening har monopolistisk makt betyr det at fagforeningen setter lønnen til medlemmene sine, men det påvirker også som vi kan se i \autoref{fig:test8} hvor mange arbeidere arbeidsgiver ansetter siden fagforeningen påvirker kun lønnen og ikke etterspørselen i markedet. Derfor må fagforeningen se på hvilke effekter som blir best å velge ettersom de ikke kan forhandle både lønn og ansettelsesforholdet.
+
 ```{=tex}
-\begin{figure}
+\begin{figure}[h]
 \centering
-\begin{minipage}{\textwidth}
-  \centering
   \includegraphics[width=\linewidth]{figur8.png}
-  \captionof{figure}{Fagforeningsmonopol}
+  \captionof{figure}{Effektivitetstap ved sterke fagforeninger}
   \label{fig:test8}
-\end{minipage}
 \end{figure}
 ```
-Gå til den økonomiske teorien, finn en teori som kan gi støtte til påstanden, illustrer grafen og forklar dine påstander.
+Videre så ser man i figuren at under et fullkommen marked ville likevekten og lønnen vært hvor reservasjonslønnen $W^r$ treffer etterspørselkurven. Men fagforeningen har markedsmakt blir dette punktet flyttet til hvor lønnen og ansettelsesforholdet får maks nytte, som er i punktet hvor $LM = WM$.
 
-## Arbeidsledighetrate og fagforeninger
+Det blå fargelagte området blir det nye effektivitetstapet ved at fagforeningen har monopolistisk makt, det betyr at hele dette området er arbeidere som ikke lengre får ansettelse i markedet frem til $L^M$ . Derfor kan det argumenteres for at sterke fagforeninger kan redusere velferden for de som ikke lengre får ansettelse i den nye likevekten.
 
-Blabla
+## Arbeidsledighet og organisasjonsgrad
 
-```{r}
-# Resultat av multippel regresjonsanalyse
-OECD<- merge(OECD_finish, OECD_finish_2, by=c("COUNTRY", "org_rate"))
-OECD <-OECD %>%
-  rename('Native born' = "employ_rate.x", 
-         'Foreign born' = "employ_rate.y",
-         'Organisasjonsgrad' = "org_rate")
-model <- lm(`Organisasjonsgrad` ~ `Native born` + `Foreign born`, data = OECD)
-summary(model)
-```
+I \autoref{fig:test6} og \autoref{fig:test7} ser vi på den avhengige variabelen arbeidsledighet korrelert mot organisasjonsgraden i 26 forskjellige OECD-land. Det som er forskjellen mellom de to forskjellige figurene er at \autoref{fig:test6} ser vi på innenlandsfødte og i \autoref{fig:test7} ser man på utenlandsfødte.
+
+$R^2$ sier at 4 prosent av arbeidsledigheten kan forklares av organisasjonsgraden innenlands og 7 prosent av arbeidsledigheten kan forklares av organisasjonsgraden for utenlandsfødte. Normalt betyr dette at det ikke finnes noen statistisk sammenheng mellom de to variablene, og at det ikke er noen sammenheng.
 
 ```{=tex}
 \begin{figure}
@@ -746,13 +738,24 @@ summary(model)
 \end{minipage}
 \end{figure}
 ```
-I oecd så finnes det informasjon om arbeidsledighet i ulike grupper, se på data i 2018, kun fordi det er mest data der med begge kjønn. Jeg vil at dere skal se på innenlandsfødte og utenlandsfødte. Diskuter det man kan se utifra forhandling, og medlemsbasens sammensetting. Del diskusjonen i to deler, om vi ser en korrelasjon som gir støtte til et argument, eller som går imot det argumentet så at det ikke gir støtte så kan vi bruke teorien om forhandlinger for å forklare hva vi ser.
+I \autoref{fig:test6} kan man se at når fagforeningene forhandler for de ansatte og har stor større dekningsgrad kan de utføre mer effektive forhandlinger. En rasjonell fagforening som har lyst å maksimere nytten til sine medlemmer vil tenke at de vil skaffe høyst mulig lønn til sine medlemmer, men kan også være med på å gå ned i lønn så lenge flere får ansettelsesforhold. Dette kan forklares i den noe svake korrelasjonen hvor arbeidsledigheten går ned når organisasjonsgraden går opp. Empirisk forskning sier også at det er vanskelig å studere effekten av fagforeninger på lønn, sysselsetting og arbeidsledighet, men det sier at om forhandlingene er bedre koordinert blir det lavere arbeidsledighet og høyere sysselsetting.
 
-I grafen til innenlandsfødte: bruk teorien om forhandling for å forklare hva vi ser.
+I \autoref{fig:test7} så kan som sett tidligere i grafisk analyse at den motsatte effekten kan oppstå ved for eksempel monopolmakt for fagforeninger. Her kan man se at høyere organisasjonsgrad gjør at arbeidsledigheten går opp, dette er også en noe svak korrelasjon. Noe av forklaringen til at høy organisasjonsgrad gir forskjellige resultater for innenlands og utenlandsfødte kan også være fordi utenlandsfødte arbeidstakere kan ha andre preferanser enn innenlandsfødte.
 
-I grafen til utenlandsfødte mot innenlandsfødte: bruk teorien om medlemsbasens sammensetting og hva konsekvensene kan være av at fagforeningene har makt.
+Resultat av en multippel lineær regresjonsanalyse:
 
-The end.
+```{r}
+# Resultat av multippel regresjonsanalyse
+OECD<- merge(OECD_finish, OECD_finish_2, by=c("COUNTRY", "org_rate"))
+OECD <-OECD %>%
+  rename('Native born' = "employ_rate.x", 
+         'Foreign born' = "employ_rate.y",
+         'Organisasjonsgrad' = "org_rate")
+model <- lm(`Organisasjonsgrad` ~ `Native born` + `Foreign born`, data = OECD)
+summary(model)
+```
+
+Når man ser på organisasjonsgraden i en multippel lineær regresjonsanalyse kan man se enstørre korrelasjon hvor 41% av arbeidsledigheten kan forklares av organisasjonsgraden. Det man også kan se er at p-verdien til innenlandsfødte og utenlandsfødte er signifikant, som betyr at nullhypotesen ikke kan forkastes. Hvis det hadde vært 0 arbeidsledighet ville intercept forklart at det fortsatt er 24.6 prosent organisasjonsgrad.
 
 # Appendiks
 
@@ -767,5 +770,7 @@ Får ikke lov å dele ChatGPT-samtaler hvor jeg har spurt den om å analysere bi
 Spørsmål: how can i write in latex the integral of bottom L\^FK to upper L\^min
 
 Svar: \\int\_{L\^{FK}}\^{L\^{min}} f(L) \\, dL (Brukte dette)
+
+[Spørsmål om hvordan matematisk vise integralet for effektivitetstap](https://chat.openai.com/share/e9b8f1bb-a1cd-496e-9d18-9473547f9b57) (Brukte uttrykket, det så rett og ble regnet rett ut)
 
 # Referanser
