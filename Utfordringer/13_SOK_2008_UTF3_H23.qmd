@@ -1,0 +1,145 @@
+---
+title: "Utfordring 3.1 og 3.2"
+subtitle: "Fakultet for biovitenskap, fiskeri og økonomi."
+date: last-modified
+date-format: "DD-MM-YYYY"
+author: "Kandidatnummer 13, SOK-2008, Høst 2023"
+editor: visual
+format: 
+  pdf:
+    geometry:
+      - top=20mm
+      - left=20mm
+      - right=20mm
+      - heightrounded
+    fontsize: 12pt
+    documentclass: scrartcl
+    papersize: a4
+echo: false
+warning: false
+bibliography: referanse2.bib
+csl: norsk-apa-manual.csl
+nocite: |
+  @*
+header-includes:
+  - "\\usepackage{caption}"
+  - "\\captionsetup{font=small}"
+  - "\\usepackage{hyperref}"
+  - "\\renewcommand{\\figureautorefname}{Figur}"
+crossref: 
+  lof-title: "Figurliste"
+  fig-title: "Figur"
+---
+
+```{r}
+#| output: False
+
+rm(list=ls())
+library(tidyverse)
+library(rjstat)
+library(httr)
+```
+
+# Utfordring 3.1.1
+
+## Matematisk utledning
+
+```{r}
+
+```
+
+# Utfordring 3.2.1
+
+```{r}
+url <- "https://data.ssb.no/api/v0/no/table/12441/"
+
+query <- '{
+  "query": [
+    {
+      "code": "Kjonn",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "0"
+        ]
+      }
+    },
+    {
+      "code": "NACE2007",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "10-33"
+        ]
+      }
+    },
+    {
+      "code": "Sykefraver2",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "E"
+        ]
+      }
+    },
+    {
+      "code": "Tid",
+      "selection": {
+        "filter": "item",
+        "values": [
+          "2002",
+          "2003",
+          "2004",
+          "2005",
+          "2006",
+          "2007",
+          "2008",
+          "2009",
+          "2010",
+          "2011",
+          "2012",
+          "2013",
+          "2014",
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020",
+          "2021",
+          "2022"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "format": "json-stat2"
+  }
+}'
+
+hent_indeks.tmp <- url %>%
+  POST(body = query, encode = "json")
+
+df <-  hent_indeks.tmp %>%
+  content("text") %>%
+  fromJSONstat() %>%
+  as_tibble()
+
+rm(hent_indeks.tmp, query, url)
+
+df<-df %>%
+  transmute(year = as.numeric(år),
+            verdi = as.numeric(value),
+            )
+```
+
+```{r}
+df %>%
+  ggplot(aes(x=year,y=verdi))+
+  geom_point(size=2,color="palevioletred")+
+  geom_smooth(method =lm, se=FALSE)+
+  scale_y_continuous(labels = scales::percent_format(scale = 1))+
+  labs(title="Utvikling av egenmeldinger", x="", y="", caption = "Kilde: SSB tabell 12441",
+       subtitle="I industri-næringen siden 2002")+
+  theme_bw()
+```
