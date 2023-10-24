@@ -137,7 +137,7 @@ df<-df %>%
 df %>%
   ggplot(aes(x=year,y=verdi))+
   geom_point(size=2,color="palevioletred")+
-  geom_smooth(method =lm, se=FALSE)+
+  geom_smooth(method ="lm", se=FALSE)+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
   labs(title="Utvikling av egenmeldinger", x="", y="", caption = "Kilde: SSB tabell 12441",
        subtitle="I industri-næringen siden 2002")+
