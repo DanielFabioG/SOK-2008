@@ -349,7 +349,6 @@ def create_ax():
 fig, ax = create_ax()
 
 
-
 # Plotter labour demand
 ax.plot(x8, wages(x8), color = "cornflowerblue")
 

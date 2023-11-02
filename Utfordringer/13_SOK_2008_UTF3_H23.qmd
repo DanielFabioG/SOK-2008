@@ -31,14 +31,6 @@ crossref:
   fig-title: "Figur"
 ---
 
-```{r}
-#| output: False
-rm(list=ls())
-library(tidyverse)
-library(rjstat)
-library(httr)
-```
-
 ```{=tex}
 \newpage
 \tableofcontents
@@ -49,17 +41,18 @@ library(httr)
 import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
-
+import locale
+locale.setlocale(locale.LC_ALL, 'no_NO.utf8')
 # Definerer symboler
-w, m, c, theta, l, U,s, l0 = sp.symbols('w m c theta l U s l0', real=True)
+w, m, c, theta, l, U,s, l0 = sp.symbols('w m c theta l U sigma l0', real=True)
 # Maks arbeid
 l0_num=60
 # Hvis jobb
 l_arbeid=40
 #Inntekt utenom arbeid
 m_num=100
-#S = stønad
-s_num=100
+#Sigma = stønad
+sigma_num=100
 # Tallverdi for theta
 theta_num = 0.5
 
@@ -70,7 +63,7 @@ nytte_func = c**theta * l**(1-theta)
 U_verdi = nytte_func.subs({c: m_num, l: l0_num, theta: theta_num})
 
 # Finner U når c = m_num og s_num altså 200 og l = 60 
-U_verdi_2 = nytte_func.subs({c: m_num+s_num, l: l0_num, theta: theta_num})
+U_verdi_2 = nytte_func.subs({c: m_num+sigma_num, l: l0_num, theta: theta_num})
 
 # Løser for c
 c_sol = sp.solve(sp.Eq(U, nytte_func), c)[0]
@@ -83,6 +76,7 @@ c_func_2 = sp.lambdify(l, c_sol.subs({U: U_verdi_2, theta: theta_num}))
 
 # Definer l-verdier fra 0.1 til 60
 l_values = np.linspace(0.1, l0_num, 500)
+
 
 ```
 
@@ -103,9 +97,9 @@ eq2 = sp.Eq(ikke_arb_2, arb)
 sol2 = sp.solve(eq2, w)[0]
 
 sol_1_num = sol1.subs({theta: theta_num, l0: l0_num, l:l_arbeid,m:m_num})
-sol_2_num = sol2.subs({theta: theta_num, l0: l0_num, l:l_arbeid,m:m_num, s:s_num})
+sol_2_num = sol2.subs({theta: theta_num, l0: l0_num, l:l_arbeid,m:m_num, s:sigma_num})
 
-# Setter opp reservasjonslønnen for med og uten stønad
+# Setter opp budsjettbettingelsen for med og uten stønad
 def wages(l_values):
     return m_num + sol_1_num * (l0_num-l_values)
 
@@ -131,7 +125,7 @@ fig, ax = create_ax()
 
 # Plotter indifferenskurver
 ax.plot(l_values, c_func(l_values), label=f'Nytte uten stønad')
-# Plotter reservlonn
+# Plotter budsjettbettingelser
 ax.plot(l_values, wages(l_values))
 # Viser arbeidsfri inntekt
 ax.hlines(m_num,0,l0_num, linestyles="dashed")
@@ -143,8 +137,7 @@ ax.text(x=21,y=320, s="A", fontsize=14)
 ax.text(x=20, y=-45, s='$L^{ft}$', size=12)
 ax.text(x=60, y=-45, s='$L^0$', size=12)
 ax.text(x=3, y=111, s="Arbeidsfri inntekt = m")
-ax.text(x=-2, y=400, s="$w$")
-#ax.text(x=3, y=211, s="Arbeidsfri inntekt + stønad = m + s")
+ax.text(x=-2, y=400, s="$w^r$")
 ax.scatter(x=20, y=m_num + sol_1_num * (l0_num-20), zorder=2)
 ax.vlines(l0_num-l_arbeid,0,m_num + sol_1_num * (l0_num-20), linestyles="dashed")
 ax.legend()
@@ -159,7 +152,6 @@ def create_ax():
     ax.set(ylim=(0, 1000))
     ax.spines['top'].set_color('none')
     ax.spines['right'].set_color('none')
-    # i want it in the top left
     plt.xlabel('Fritid (l)',loc="right")
     plt.ylabel('Konsum (c)', loc="bottom")
     ax.set_xticks([])
@@ -171,16 +163,16 @@ fig, ax = create_ax()
 # Plotter indifferenskurver
 ax.plot(l_values,c_func_2(l_values), label ="Nytte med stønad", color="palevioletred")
 ax.plot(l_values, c_func(l_values), label=f'Nytte uten stønad')
-# Plotter reservlonn
+# Plotter budsjettbettingelser
 ax.plot(l_values, wages(l_values))
 ax.plot(l_values, wages_2(l_values), linestyle="--")
 # Viser arbeidsfri inntekt
 ax.hlines(m_num,0,l0_num, linestyles="dashed")
-ax.hlines(m_num+s_num,0,l0_num, linestyles="dashed")
+ax.hlines(m_num+sigma_num,0,l0_num, linestyles="dashed")
 # Viser hvor personen går i arbeid
 ax.vlines(l0_num-l_arbeid,0,m_num + sol_2_num * (l0_num-20), linestyles="dashed")
 # Viser hvor personen ikke går i arbeid
-ax.vlines(l0_num,0,m_num+s_num, linestyles="dashed")
+ax.vlines(l0_num,0,m_num+sigma_num, linestyles="dashed")
 # Definerer noen punkter
 ax.text(x=61,y=100, s="$U^0$", fontsize=14)
 ax.text(x=61,y=200,s="$U^1$", fontsize=14)
@@ -189,17 +181,16 @@ ax.text(x=21, y=620, s="B", fontsize=14)
 # 
 ax.text(x=3, y=111, s="Arbeidsfri inntekt = m")
 #
-ax.text(x=3, y=211, s="Arbeidsfri inntekt + stønad = m + s")
+ax.text(x=3, y=211, s="Arbeidsfri inntekt + stønad = m + $\sigma$")
 #
 ax.text(x=20, y=-45, s='$L^{ft}$', size=12)
 ax.text(x=60, y=-45, s='$L^0$', size=12)
-ax.text(x=-2, y=400, s="$w$")
-ax.text(x=-2, y=825, s="$w^r$")
+ax.text(x=-2, y=400, s="$w^r$")
+ax.text(x=-2, y=825, s="$w^{rs}$")
 # Viser hvor personen ...?
 ax.scatter(x =20, y=m_num + sol_2_num * (l0_num-20), zorder=2, color="green")
 ax.scatter(x=20, y=m_num + sol_1_num * (l0_num-20), zorder=2)
 ax.legend()
-plt.savefig("figur2.png", dpi=300)
 ```
 
 ```{python include=FALSE}
@@ -211,7 +202,6 @@ def create_ax():
     ax.set(ylim=(0, 1000))
     ax.spines['top'].set_color('none')
     ax.spines['right'].set_color('none')
-    # i want it in the top left
     plt.xlabel('Fritid (l)',loc="right")
     plt.ylabel('Konsum (c)', loc="top")
     return fig, ax
@@ -221,16 +211,16 @@ fig, ax = create_ax()
 # Plotter indifferenskurver
 ax.plot(l_values,c_func_2(l_values), label ="Nytte med stønad", color="palevioletred")
 ax.plot(l_values, c_func(l_values), label=f'Nytte uten stønad')
-# Plotter reservlonn
+# Plotter budsjettbettingelser
 ax.plot(l_values, wages(l_values))
 ax.plot(l_values, wages_2(l_values), linestyle="--")
 # Viser arbeidsfri inntekt
 ax.hlines(m_num,0,l0_num, linestyles="dashed")
-ax.hlines(m_num+s_num,0,l0_num, linestyles="dashed")
+ax.hlines(m_num+sigma_num,0,l0_num, linestyles="dashed")
 # Viser hvor personen går i arbeid
 ax.vlines(l0_num-l_arbeid,0,1000, linestyles="dashed")
 # Viser hvor personen ikke går i arbeid
-ax.vlines(l0_num,0,m_num+s_num, linestyles="dashed")
+ax.vlines(l0_num,0,m_num+sigma_num, linestyles="dashed")
 # Definerer noen punkter
 ax.text(x=61,y=100, s="$U^0$", fontsize=14)
 ax.text(x=61,y=200,s="$U_1$", fontsize=14)
@@ -239,12 +229,12 @@ ax.text(x=21, y=620, s="B", fontsize=14)
 ax.text(x=3, y=111, s="Arbeidsfri inntekt = m")
 ax.scatter(x=20, y=m_num + sol_1_num * (l0_num-20), zorder=2)
 ax.scatter(x =20, y=m_num + sol_2_num * (l0_num-20), zorder=2, color="green")
-ax.text(x=3, y=211, s="Arbeidsfri inntekt + stønad = m + s")
+ax.text(x=3, y=211, s="Arbeidsfri inntekt + stønad = m + $\sigma$")
 ax.legend()
 plt.savefig("figur3.png", dpi=300)
 ```
 
-# Utfordring 3.1.1
+# Utfordring 3.1
 
 ## Matematisk utledning
 
@@ -281,36 +271,36 @@ $$
 Og løser for w for å finne hennes statiske reservasjonslønn:
 
 $$
-w = \frac{- m + \left(l_{0}^{1 - \theta} m^{\theta} \left(l_{0}-l\right)^{\theta - 1}\right)^{\frac{1}{\theta}}}{l} \tag{5}
+w^r = \frac{- m + \left(l_{0}^{1 - \theta} m^{\theta} \left(l_{0}-l\right)^{\theta - 1}\right)^{\frac{1}{\theta}}}{l} \tag{5}
 $$
 
 Ved å substituere inn tallverdier oppgitt ovenfor får vi at hennes statiske reservasjonslønn uten stønad blir 5 (i tiere).
 
-Ved å innføre en stønad $s$ på 100 får vi at om Tone ikke arbeider:
+Ved å innføre en stønad $\sigma$ på 100 får vi at om Tone ikke arbeider:
 
 $$
-(m+s)^{\theta}l_{0}^{1 - \theta} \tag{6}
+(m+\sigma)^{\theta}l_{0}^{1 - \theta} \tag{6}
 $$
 
 Og hvis Tone jobber blir hennes forbruk fortsatt det samme så vi setter disse lik:
 
 $$
-(m+s)^{\theta} l_{0}^{1 - \theta} = (m+wl)^{\theta} (l_{0}-l)^{1-\theta} \tag{7}
+(m+\sigma)^{\theta} l_{0}^{1 - \theta} = (m+wl)^{\theta} (l_{0}-l)^{1-\theta} \tag{7}
 $$
 
 Vi løser for w og finner ut at hennes statiske reservasjonslønn med stønad blir:
 
 $$
-w^{r} =\frac{- m + \left(l_{0}^{1 - \theta}\left(m + s\right)^{\theta} \left(l_{0}-l\right)^{\theta - 1} \right)^{\frac{1}{\theta}}}{l} \tag{8}
+w^{r\sigma} =\frac{- m + \left(l_{0}^{1 - \theta}\left(m + \sigma\right)^{\theta} \left(l_{0}-l\right)^{\theta - 1} \right)^{\frac{1}{\theta}}}{l} \tag{8}
 $$
 
 Ved å substituere inn tallverdier oppgitt ovenfor får vi at hennes statiske reservasjonslønn med stønad blir 12.5 (i tiere).
 
-Ved å endre på størrelsen på parameteren stønad $s$ kan man forandre hvilken reservasjonslønn som gjør at Tone går i arbeid.
-
-\clearpage
+Ved å endre på størrelsen på parameteren stønad $\sigma$ kan man forandre hvilken reservasjonslønn som gjør at Tone går i arbeid.
 
 ## Økonomisk intuisjon og grafisk analyse
+
+I et perfekt arbeidsmarked er det ingen arbeidsledighet fordi alle som vil ha arbeid tar arbeid, og alle som ikke har arbeid vil ikke gå inn i arbeidsmarkedet. I \autoref{fig:test1} ser man indifferenskurven til Tone hvor hun har en reservasjonslønn uten stønad. Reservasjonslønnen er den lønnen som gjør en arbeider indifferent mellom å jobbe eller ikke ifølge @kjelsrud. Tone har kun to valg, enten å jobbe i $L^{ft}$ eller å ikke jobbe i $L^0$ . Siden begge punktene treffer på indifferenskurven er hun derfor indifferent mellom å arbeide eller ikke.
 
 ```{=tex}
 \begin{figure}
@@ -320,32 +310,49 @@ Ved å endre på størrelsen på parameteren stønad $s$ kan man forandre hvilke
   \label{fig:test1}
 \end{figure}
 ```
+I \autoref{fig:test2} så innføres en reservasjonslønn med en ny nytte inkludert en stønad $\sigma$ . Med innføringen av trygden øker verdien av å ikke delta på arbeidsmarkedet. Derfor vil Tone her kreve en høyere lønn som man kan se på den nye indifferenskurven i punkt $B$. Her er reservasjonslønnen som blir innført $w^{rs}$ er 12.5. Derfor må $w^{rs} > 12.5$ for at Tone skal velge å gå i arbeid, ellers er hun indifferent.
+
 ```{=tex}
 \begin{figure}[h]
 \centering
-  \includegraphics[width=\linewidth]{figur2.png}
+  \includegraphics[width=0.8\linewidth]{figur2.png}
   \captionof{figure}{Tones reservasjonslønn uten og med stønad}
   \label{fig:test2}
 \end{figure}
 ```
+I \autoref{fig:test3} vises faktiske tallverdier innsatt av den matematiske utledningen for reservasjonslønnen $w^r$ som er 5 uten stønad og $w^{rs} =$ 12.5 med stønad.
+
 ```{=tex}
 \begin{figure}[h]
 \centering
-  \includegraphics[width=\linewidth]{figur3.png}
-  \captionof{figure}{Tones reservasjonslønn uten og med stønad numerisk}
-  \label{fig:test1}
+  \includegraphics[width=0.8\linewidth]{figur3.png}
+  \captionof{figure}{Tones reservasjonslønn uten og med stønad inkl. tallverdier}
+  \label{fig:test3}
 \end{figure}
 ```
+## Ufullkommen konkurranse
 
-# Utfordring 3.1.2
+Arbeidsmarkeder er sjeldent perfekte. Så hva skjer om arbeidsmarkedet er ufullkomment?
 
-Arbeidsmarkedet er sjelden perfekt. Forklar hvilke effekter trygd har på arbeidsmarkedet da arbeidsmarkedet er ufullkomment. Forklar 3 punkter. Forklare konsekvenser. hva som er relevant. bare ord. Trenger ikke matte, figurer osv. 3 effekter de er ute etter. Kan føre til økt arbeidsledighet, lengere tid i arbeidsledighet, økt sysselsetting/redusert sysselsetting. .
+Reservasjonslønnen endrer seg fra å være statisk til å bli dynamisk, hvor statisk er forskjellen på å være i jobb eller ikke i det hele tatt. Og dynamisk vil si den lønnen som gjør individet indifferens mellom å akseptere et tilbud på lønn og fortsette søke arbeid. Videre så kan man nevne noen andre effekter:
 
-Job search effect: Unemployment benefits increase the (dynamic) reservationwage ofUB recipients because theymake workersmore choosy when deciding on available job offers, reducing their search intensity and hence increasing the duration oftheir unemployment spells.
+1.  Jobb-søker effekten: En stønad øker den dynamiske reservasjonslønnen som gjør at en arbeidstaker blir mer kresen når det kommer til valg av arbeid fordi reservasjonslønnen går opp. Noe som gjør at individet blir å være lengre arbeidsledig.
 
-2.  Wage effect: UB improve the fallback option of workers, putting a higher floor in wage setting and increasing wage claims at the bar-gaining table or, in any event, the wages required to deter shirking.
+```{=html}
+<!-- -->
+```
+2.  Lønnseffekter: Stønad gjør slik at arbeideren og arbeidsgiver får en friksjon mellom hverandre, siden arbeidsgiver ikke enkelt finner ny arbeidstaker og det samme motsatt vei. Høyere stønad gir bedre forhandlingsposisjon til arbeidstaker, og høyere lønn og hvis arbeidstaker søker mindre intensivt blir det mindre verdi å ansette folk og kostnaden for å arbeidsgiver blir å øke.
 
-3.  Entitlement effect: UBinducemorepeopletoparticipate in thelabor market insofar as they increase the value ofemployment and unem-ployment over the value ofinactivity, at least for those not receiving the benefit.
+3.  Rettigetseffekter: Stønad gir incentiver for mer mennesker å delta i arbeidsmarkedet siden de øker verdien av ansettelse og arbeidsledighet over verdien av inaktivitet for de som ikke mottar stønaden.
+
+```{r}
+#| output: False
+rm(list=ls())
+library(tidyverse)
+library(rjstat)
+library(httr)
+options(encoding = "UTF-8")
+```
 
 ```{r}
 url <- "https://data.ssb.no/api/v0/no/table/12441/"
@@ -427,25 +434,45 @@ rm(hent_indeks.tmp, query, url)
 
 df<-df %>%
   transmute(year = as.numeric(år),
-            verdi = as.numeric(value),
-            )
+            verdi = as.numeric(value))
 ```
 
 ```{r}
-df %>%
+fig<-df %>%
   ggplot(aes(x=year,y=verdi))+
   geom_point(size=2,color="palevioletred")+
   geom_smooth(method ="lm", se=FALSE)+
   scale_y_continuous(labels = scales::percent_format(scale = 1))+
-  labs(title="Utvikling av egenmeldinger", x="", y="", caption = "Kilde: SSB tabell 12441",
+  labs(x="", y="", caption = "Kilde: SSB tabell 12441",
        subtitle="I industri-næringen siden 2002")+
   theme_bw()
+ggsave("figur4.png",dpi=300, width = 7, height = 5)
 ```
+
+# Utfordring 3.2
+
+## Utviklingen i egenmeldinger
 
 a\) Sangen handler om egenmelding. Bruk data for å vise utviklingen i egenmelding. (Har du noen bedre ide, se på det hvis du tror sangpersonen har jobbet) Når jeg skriver diskuter, ikke si en linje men utdyp og forklar ved bruk av økonomisk teori.
 
+```{=tex}
+\begin{figure}[h]
+\centering
+  \includegraphics[width=\linewidth]{figur4.png}
+  \captionof{figure}{Utvikling av egenmeldinger}
+  \label{fig:test4}
+\end{figure}
+```
 b\) Hva er disensentivproblemet i sangen? Bruk økonomisk intuisjon, hva skjer og hvorfor, hva er mekanismene? Tenk på mennesker når du svarer.
 
 c\) Bruk økonomisk teori og foreså et virkemiddel for å redusere disinsentiveffekten, bruk figur og husk å forklare økonomisk intuisjon. Foreslå virkemidler til den metoden du velger å bruke.
 
 # Appendiks
+
+Bruk av KI: ChatGPT 4 inkludert advanced data analysis.
+
+Punkt for KI her.
+
+Punkt for KI her.
+
+# Referanser
