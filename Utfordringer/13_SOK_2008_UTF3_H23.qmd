@@ -234,6 +234,220 @@ ax.legend()
 plt.savefig("figur3.png", dpi=300)
 ```
 
+```{python}
+from sympy import symbols, Eq, solve, diff
+
+# Starter på lagrange for å løse nyttefunksjonen
+
+def bud_wage(l_values):
+    return (700 - 10 *l_values)
+    
+def bud_wage_2(l_values):
+    return (500-0*10 *l_values)
+
+def bud_wage_3(l_values):
+    return (650- 0.75*10*l_values)
+
+# Define the variables and the Lagrange multiplier
+c, l, lam = symbols('c l lam', real=True, positive=True)
+
+# Define the utility function
+utility = c**(5/7) * l**(2/7)
+# Define the constraint
+constraint = Eq(700 - 10*l - c, 0)
+
+# Define the Lagrangian
+L = utility + lam * (700 - 10*l - c)
+
+# Take partial derivatives of the Lagrangian
+partial_c = diff(L, c)
+partial_l = diff(L, l)
+
+# Set the partial derivatives to zero to find the stationary points
+equation1 = Eq(partial_c, 0)
+equation2 = Eq(partial_l, 0)
+
+# Solve the equations
+solutions = solve((equation1, equation2, constraint), (c, l, lam))
+```
+
+```{python}
+# Define the constraint
+constraint = Eq(500 - 10*l - c, 0)
+
+# Define the Lagrangian
+L = utility + lam * (700 - 10*l - c)
+
+# Take partial derivatives of the Lagrangian
+partial_c = diff(L, c)
+partial_l = diff(L, l)
+
+# Set the partial derivatives to zero to find the stationary points
+equation1 = Eq(partial_c, 0)
+equation2 = Eq(partial_l, 0)
+
+# Solve the equations
+solutions = solve((equation1, equation2, constraint), (c, l, lam))
+```
+
+```{python}
+# Define the constraint
+constraint = Eq(650 - 0.75*10*l - c, 0)
+
+utility_2 = c**(0.4) * l**(0.6)
+
+# Define the Lagrangian
+L = utility_2 + lam * (650 - 7.5*l - c)
+
+# Take partial derivatives of the Lagrangian
+partial_c = diff(L, c)
+partial_l = diff(L, l)
+
+# Set the partial derivatives to zero to find the stationary points
+equation1 = Eq(partial_c, 0)
+equation2 = Eq(partial_l, 0)
+
+# Solve the equations
+solutions = solve((equation1, equation2, constraint), (c, l, lam))
+```
+
+```{python}
+alpha = sp.Symbol('alpha', real = True)
+# Definer nyttefunksjonen
+nytte = c**(1-alpha) * l**alpha
+
+alpha_num = 2/7
+alpha_num_2 = 0.6
+
+# Løser for c
+c_slag = sp.solve(sp.Eq(U, nytte), c)[0]
+# Finner U når c=100 og l=60
+nytte_verdi = nytte.subs({c: 500, l: 20, alpha: alpha_num})
+
+nytte_verdi_2 = nytte.subs({c: 357, l: 14, alpha: alpha_num})
+
+nytte_verdi_3 = nytte.subs({c: 260, l: 52})
+
+c_funk = sp.lambdify(l, c_slag.subs({U: nytte_verdi, alpha: alpha_num}))
+
+c_funk_2 = sp.lambdify(l, c_slag.subs({U: nytte_verdi_2, alpha: alpha_num_2}))
+
+c_funk_3 = sp.lambdify(l, c_slag.subs({U: nytte_verdi_3, alpha: alpha_num_2}))
+```
+
+```{python}
+l_verdier = np.linspace(20, 60, 1000)
+
+# Definerer en akse
+def create_ax():
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.set(xlim=(0, 70))
+    ax.set(ylim=(0, 1000))
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    plt.xlabel('Fritid (l)',loc="right")
+    plt.ylabel('Konsum (c)', loc="top")
+    return fig, ax
+
+fig, ax = create_ax()
+
+# Plotter indifferenskurver
+ax.plot(l_values, c_funk(l_values))
+# Plotter budsjettbettingelser
+ax.plot(l_values, bud_wage(l_values))
+ax.hlines(m_num,0,l0_num, linestyles="dashed")
+# Definerer noen punkter
+ax.text(x=61,y=300, s="$U^1$", fontsize=14)
+#ax.text(x=21,y=320, s="A", fontsize=14)
+ax.text(x=21, y=30, s='$L^{ht}$', size=12)
+ax.text(x=3, y=111, s="Arbeidsfri inntekt m")
+ax.text(x=-3, y=710, s="$w^r_{ht}$")
+ax.vlines(l0_num,0,m_num, linestyles="dashed")
+ax.vlines(l0_num-l_arbeid,0,700 - 10 *20, linestyles="dashed")
+plt.savefig("figur5.png", dpi = 300)
+```
+
+```{python}
+l_verdier_2 = np.linspace(0.1, 70, 1000)
+# Definerer en akse
+def create_ax():
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.set(xlim=(0, 75))
+    ax.set(ylim=(0, 1000))
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    plt.xlabel('Fritid (l)',loc="right")
+    plt.ylabel('Konsum (c)', loc="top")
+    return fig, ax
+
+fig, ax = create_ax()
+
+# Plotter indifferenskurver
+ax.plot(l_verdier_2, c_funk_2(l_verdier_2))
+# Plotter budsjettbettingelser
+ax.plot(l_verdier, bud_wage_2(l_verdier))
+# Plotter budsjettbettingelser
+ax.plot(l_values, bud_wage(l_values))
+# Viser arbeidsfri inntekt
+ax.hlines(m_num,0,l0_num, linestyles="dashed")
+# Viser hvor personen ikke går i arbeid
+ax.vlines(l0_num,0,500, linestyles="dashed")
+# Definerer noen punkter
+#ax.text(x=61,y=100, s="$U^0$", fontsize=14)
+ax.text(x=20, y=30, s='$L^{ht}$', size=12)
+#ax.text(x=60, y=-45, s='$L^0$', size=12)
+ax.text(x=3, y=111, s="Arbeidsfri inntekt m")
+ax.text(x=40, y=470, s="$-(w-1w)$")
+
+# Definerer noen punkter
+ax.text(x=61,y=500, s="$U^2$", fontsize=14)
+ax.text(x=-3, y=710, s="$w^r_{ht}$")
+#ax.scatter(x=20, y=m_num + sol_1_num * (l0_num-20), zorder=2)
+ax.vlines(l0_num-l_arbeid,0,700 - 10 *20, linestyles="dashed")
+plt.savefig("figur6.png", dpi = 300)
+```
+
+```{python}
+# Definerer en akse
+def create_ax():
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.set(xlim=(0, 75))
+    ax.set(ylim=(0, 1000))
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+    plt.xlabel('Fritid (l)',loc="right")
+    plt.ylabel('Konsum (c)', loc="top")
+    return fig, ax
+
+fig, ax = create_ax()
+
+# Plotter indifferenskurver
+ax.plot(l_verdier_2, c_funk_2(l_verdier_2))
+ax.plot(l_verdier_2, c_funk_3(l_verdier_2))
+# Plotter budsjettbettingelser
+ax.plot(l_verdier, bud_wage_2(l_verdier), linestyle="--")
+ax.plot(l_verdier, bud_wage_3(l_verdier))
+# Plotter budsjettbettingelser
+ax.plot(l_values, bud_wage(l_values))
+# Viser arbeidsfri inntekt
+ax.hlines(m_num,0,l0_num, linestyles="dashed")
+# Viser hvor personen ikke går i arbeid
+ax.vlines(l0_num,0,500, linestyles="dashed")
+# Definerer noen punkter
+#ax.text(x=61,y=100, s="$U^0$", fontsize=14)
+ax.text(x=20, y=30, s='$L^{ht}$', size=12)
+#ax.text(x=60, y=-45, s='$L^0$', size=12)
+ax.text(x=3, y=111, s="Arbeidsfri inntekt m")
+ax.text(x=-3, y=710, s="$w^r_{ht}$")
+# Definerer noen punkter
+ax.text(x=61,y=220, s="$U^1$", fontsize=14)
+# Definerer noen punkter
+ax.text(x=61,y=500, s="$U^2$", fontsize=14)
+ax.text(x=25, y=470, s="$-(w-0.25w)$")
+ax.vlines(l0_num-l_arbeid,0,700 - 10 *20, linestyles="dashed")
+plt.savefig("figur7.png", dpi = 300)
+```
+
 # Utfordring 3.1
 
 ## Matematisk utledning
@@ -298,12 +512,14 @@ Ved å substituere inn tallverdier oppgitt ovenfor får vi at hennes statiske re
 
 Ved å endre på størrelsen på parameteren stønad $\sigma$ kan man forandre hvilken reservasjonslønn som gjør at Tone går i arbeid.
 
+\clearpage
+
 ## Økonomisk intuisjon og grafisk analyse
 
 I et perfekt arbeidsmarked er det ingen arbeidsledighet fordi alle som vil ha arbeid tar arbeid, og alle som ikke har arbeid vil ikke gå inn i arbeidsmarkedet. I \autoref{fig:test1} ser man indifferenskurven til Tone hvor hun har en reservasjonslønn uten stønad. Reservasjonslønnen er den lønnen som gjør en arbeider indifferent mellom å jobbe eller ikke ifølge @kjelsrud. Tone har kun to valg, enten å jobbe i $L^{ft}$ eller å ikke jobbe i $L^0$ . Siden begge punktene treffer på indifferenskurven er hun derfor indifferent mellom å arbeide eller ikke.
 
 ```{=tex}
-\begin{figure}
+\begin{figure}[h]
 \centering
   \includegraphics[width=\linewidth]{figur1.png}
   \captionof{figure}{Tones reservasjonslønn uten stønad}
@@ -311,6 +527,8 @@ I et perfekt arbeidsmarked er det ingen arbeidsledighet fordi alle som vil ha ar
 \end{figure}
 ```
 I \autoref{fig:test2} så innføres en reservasjonslønn med en ny nytte inkludert en stønad $\sigma$ . Med innføringen av trygden øker verdien av å ikke delta på arbeidsmarkedet. Derfor vil Tone her kreve en høyere lønn som man kan se på den nye indifferenskurven i punkt $B$. Her er reservasjonslønnen som blir innført $w^{rs}$ er 12.5. Derfor må $w^{rs} > 12.5$ for at Tone skal velge å gå i arbeid, ellers er hun indifferent.
+
+\clearpage
 
 ```{=tex}
 \begin{figure}[h]
@@ -332,18 +550,13 @@ I \autoref{fig:test3} vises faktiske tallverdier innsatt av den matematiske utle
 ```
 ## Ufullkommen konkurranse
 
-Arbeidsmarkeder er sjeldent perfekte. Så hva skjer om arbeidsmarkedet er ufullkomment?
+Arbeidsmarkeder er normalt ikke perfekte og under fullkommen konkurranse. Hva skjer om markedet er ufullkommen?
 
-Reservasjonslønnen endrer seg fra å være statisk til å bli dynamisk, hvor statisk er forskjellen på å være i jobb eller ikke i det hele tatt. Og dynamisk vil si den lønnen som gjør individet indifferens mellom å akseptere et tilbud på lønn og fortsette søke arbeid. Videre så kan man nevne noen andre effekter:
+Reservasjonslønnen endrer seg fra å være statisk til å bli dynamisk, hvor statisk er forskjellen på å være i jobb eller ikke i det hele tatt. Mens dynamisk vil si den lønnen som gjør individet indifferent mellom å akseptere et tilbud på lønn og fortsette søke arbeid. Videre så kan man nevne noen andre effekter:
 
-1.  Jobb-søker effekten: En stønad øker den dynamiske reservasjonslønnen som gjør at en arbeidstaker blir mer kresen når det kommer til valg av arbeid fordi reservasjonslønnen går opp. Noe som gjør at individet blir å være lengre arbeidsledig.
-
-```{=html}
-<!-- -->
-```
-2.  Lønnseffekter: Stønad gjør slik at arbeideren og arbeidsgiver får en friksjon mellom hverandre, siden arbeidsgiver ikke enkelt finner ny arbeidstaker og det samme motsatt vei. Høyere stønad gir bedre forhandlingsposisjon til arbeidstaker, og høyere lønn og hvis arbeidstaker søker mindre intensivt blir det mindre verdi å ansette folk og kostnaden for å arbeidsgiver blir å øke.
-
-3.  Rettigetseffekter: Stønad gir incentiver for mer mennesker å delta i arbeidsmarkedet siden de øker verdien av ansettelse og arbeidsledighet over verdien av inaktivitet for de som ikke mottar stønaden.
+1.  Jobb-søker effekten: En stønad øker den dynamiske reservasjonslønnen som gjør at en arbeidstaker blir mer kresen når det kommer til valg av arbeid fordi reservasjonslønnen går opp. Noe som gjør at individet kan velge å være lengre arbeidsledig.
+2.  Lønnseffekter: Stønad kan gjøre slik at arbeideren og arbeidsgiver får en friksjon mellom hverandre, siden arbeidsgiver ikke enkelt finner ny arbeidstaker og det samme motsatt vei. Høyere stønad gir bedre forhandlingsposisjon til arbeidstaker, og høyere lønn og hvis arbeidstaker søker mindre intensivt blir det mindre verdi å ansette folk og kostnaden for å arbeidsgiver blir å øke.
+3.  Rettighetseffekter: Stønad gir incentiver for mer mennesker å delta i arbeidsmarkedet siden den øker verdien av ansettelse og arbeidsledighet over verdien av inaktivitet for de som ikke mottar stønaden.
 
 ```{r}
 #| output: False
@@ -465,13 +678,37 @@ a\) Sangen handler om egenmelding. Bruk data for å vise utviklingen i egenmeldi
 ```
 b\) Hva er disensentivproblemet i sangen? Bruk økonomisk intuisjon, hva skjer og hvorfor, hva er mekanismene? Tenk på mennesker når du svarer.
 
+```{=tex}
+\begin{figure}[h]
+\centering
+  \includegraphics[width=\linewidth]{figur5.png}
+  \captionof{figure}{Individets tilpasning når helt frisk}
+  \label{fig:test5}
+\end{figure}
+```
+```{=tex}
+\begin{figure}[h]
+\centering
+  \includegraphics[width=\linewidth]{figur6.png}
+  \captionof{figure}{Individets tilpasning ved full kompensasjonsgrad}
+  \label{fig:test6}
+\end{figure}
+```
+```{=tex}
+\begin{figure}[h]
+\centering
+  \includegraphics[width=\linewidth]{figur7.png}
+  \captionof{figure}{25 prosent kompensasjonsgrad}
+  \label{fig:test7}
+\end{figure}
+```
 c\) Bruk økonomisk teori og foreså et virkemiddel for å redusere disinsentiveffekten, bruk figur og husk å forklare økonomisk intuisjon. Foreslå virkemidler til den metoden du velger å bruke.
 
 # Appendiks
 
-Bruk av KI: ChatGPT 4 inkludert advanced data analysis.
+Bruk av KI: ChatGPT 4 inkludert advanced data analysis og funksjon for å kunne lese fra bilder.
 
-Punkt for KI her.
+Får ikke lov å referere til chat med bilder, men jeg spurte ChatGPT hvordan regne ut en lagrange funksjon i python-kode, og fikk til svar kodeblokk 6 som jeg brukte til å regne ut verdiene for å plotte de siste tre figurene.
 
 Punkt for KI her.
 
