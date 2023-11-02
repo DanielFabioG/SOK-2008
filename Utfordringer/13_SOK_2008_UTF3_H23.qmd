@@ -516,7 +516,7 @@ Ved å endre på størrelsen på parameteren stønad $\sigma$ kan man forandre h
 
 ## Økonomisk intuisjon og grafisk analyse
 
-I et perfekt arbeidsmarked er det ingen arbeidsledighet fordi alle som vil ha arbeid tar arbeid, og alle som ikke har arbeid vil ikke gå inn i arbeidsmarkedet. I \autoref{fig:test1} ser man indifferenskurven til Tone hvor hun har en reservasjonslønn uten stønad. Reservasjonslønnen er den lønnen som gjør en arbeider indifferent mellom å jobbe eller ikke ifølge @kjelsrud. Tone har kun to valg, enten å jobbe i $L^{ft}$ eller å ikke jobbe i $L^0$ . Siden begge punktene treffer på indifferenskurven er hun derfor indifferent mellom å arbeide eller ikke.
+I et perfekt arbeidsmarked er det ingen arbeidsledighet fordi alle som vil ha arbeid tar arbeid, og alle som ikke har arbeid vil ikke gå inn i arbeidsmarkedet. I \autoref{fig:test1} ser man indifferens-kurven til Tone hvor hun har en reservasjonslønn uten stønad. Reservasjonslønnen er den lønnen som gjør en arbeider indifferent mellom å jobbe eller ikke ifølge @kjelsrud. Tone har kun to valg, enten å jobbe i $L^{ft}$ eller å ikke jobbe i $L^0$ . Siden begge punktene treffer på indifferens-kurven er hun derfor indifferent mellom å arbeide eller ikke.
 
 ```{=tex}
 \begin{figure}[h]
@@ -526,7 +526,7 @@ I et perfekt arbeidsmarked er det ingen arbeidsledighet fordi alle som vil ha ar
   \label{fig:test1}
 \end{figure}
 ```
-I \autoref{fig:test2} så innføres en reservasjonslønn med en ny nytte inkludert en stønad $\sigma$ . Med innføringen av trygden øker verdien av å ikke delta på arbeidsmarkedet. Derfor vil Tone her kreve en høyere lønn som man kan se på den nye indifferenskurven i punkt $B$. Her er reservasjonslønnen som blir innført $w^{rs}$ er 12.5. Derfor må $w^{rs} > 12.5$ for at Tone skal velge å gå i arbeid, ellers er hun indifferent.
+I \autoref{fig:test2} så innføres en reservasjonslønn med en ny nytte inkludert en stønad $\sigma$ . Med innføringen av trygden øker verdien av å ikke delta på arbeidsmarkedet. Derfor vil Tone her kreve en høyere lønn som man kan se på den nye indifferens-kurven i punkt $B$. Her er reservasjonslønnen som blir innført $w^{rs}$ er 12.5. Derfor må $w^{rs} > 12.5$ for at Tone skal velge å gå i arbeid, ellers er hun indifferent.
 
 \clearpage
 
