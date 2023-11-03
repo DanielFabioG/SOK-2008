@@ -261,7 +261,6 @@ ax.text(x=20, y=-45, s='$L^{ft}$', size=12)
 ax.text(x=60, y=-45, s='$L^0$', size=12)
 ax.text(x=-2, y=400, s="$w^r$")
 ax.text(x=-2, y=825, s="$w^{rs}$")
-# Viser hvor personen ...?
 ax.scatter(x =20, y=m_num + sol_2_num * (l0_num-20), zorder=2, color="green")
 ax.scatter(x=20, y=m_num + sol_1_num * (l0_num-20), zorder=2)
 ax.legend()
@@ -322,66 +321,65 @@ def bud_wage_2(l_values):
 def bud_wage_3(l_values):
     return (650- 0.75*10*l_values)
 
-# Define the variables and the Lagrange multiplier
+# Definerer variabler
 c, l, lam = symbols('c l lam', real=True, positive=True)
 
-# Define the utility function
+# Nyttefunksjon
 utility = c**(5/7) * l**(2/7)
-# Define the constraint
+
+# Definerer bibetingelsen
 constraint = Eq(700 - 10*l - c, 0)
 
-# Define the Lagrangian
+# Definerer lagrange
 L = utility + lam * (700 - 10*l - c)
 
-# Take partial derivatives of the Lagrangian
+# Tar de partiellderiverte for c og l
 partial_c = diff(L, c)
 partial_l = diff(L, l)
 
-# Set the partial derivatives to zero to find the stationary points
+# Finner stasjonærpunktene
 equation1 = Eq(partial_c, 0)
 equation2 = Eq(partial_l, 0)
 
-# Solve the equations
+# Løser for c l og lambda
 solutions = solve((equation1, equation2, constraint), (c, l, lam))
 ```
 
 ```{python include=FALSE}
-# Define the constraint
+# Definerer bibetinglse
 constraint = Eq(500 - 10*l - c, 0)
 
-# Define the Lagrangian
-L = utility + lam * (700 - 10*l - c)
 
-# Take partial derivatives of the Lagrangian
+# Partiellderiverte
 partial_c = diff(L, c)
 partial_l = diff(L, l)
 
-# Set the partial derivatives to zero to find the stationary points
+# Finner stasjonærpunktene
 equation1 = Eq(partial_c, 0)
 equation2 = Eq(partial_l, 0)
 
-# Solve the equations
+# Løser for c l og lambda
 solutions = solve((equation1, equation2, constraint), (c, l, lam))
 ```
 
 ```{python include=FALSE}
-# Define the constraint
+# Ny bibetinglse
 constraint = Eq(650 - 0.75*10*l - c, 0)
 
 utility_2 = c**(0.4) * l**(0.6)
 
-# Define the Lagrangian
+# Ny langrange
 L = utility_2 + lam * (650 - 7.5*l - c)
 
-# Take partial derivatives of the Lagrangian
+# Partiellderiverer
 partial_c = diff(L, c)
 partial_l = diff(L, l)
 
-# Set the partial derivatives to zero to find the stationary points
+# Finner stasjonærpunkter
 equation1 = Eq(partial_c, 0)
 equation2 = Eq(partial_l, 0)
 
-# Solve the equations
+# Løser for c l og lambda
 solutions = solve((equation1, equation2, constraint), (c, l, lam))
 ```
 
@@ -389,7 +387,7 @@ solutions = solve((equation1, equation2, constraint), (c, l, lam))
 alpha = sp.Symbol('alpha', real = True)
 # Definer nyttefunksjonen
 nytte = c**(1-alpha) * l**alpha
-
+# definerer sykdomsindekssen alpha med forksjellige sykdomsverdier
 alpha_num = 2/7
 alpha_num_2 = 0.6
 
@@ -414,7 +412,7 @@ l_verdier = np.linspace(20, 60, 1000)
 
 # Definerer en akse
 def create_ax():
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 5))
     ax.set(xlim=(0, 70))
     ax.set(ylim=(0, 1000))
     ax.spines['top'].set_color('none')
@@ -445,7 +443,7 @@ plt.savefig("figur5.png", dpi = 300)
 l_verdier_2 = np.linspace(0.1, 70, 1000)
 # Definerer en akse
 def create_ax():
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 5))
     ax.set(xlim=(0, 75))
     ax.set(ylim=(0, 1000))
     ax.spines['top'].set_color('none')
@@ -484,7 +482,7 @@ plt.savefig("figur6.png", dpi = 300)
 ```{python include=FALSE}
 # Definerer en akse
 def create_ax():
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(10, 5))
     ax.set(xlim=(0, 75))
     ax.set(ylim=(0, 1000))
     ax.spines['top'].set_color('none')
@@ -600,7 +598,7 @@ I et perfekt arbeidsmarked er det ingen arbeidsledighet fordi alle som vil ha ar
   \label{fig:test1}
 \end{figure}
 ```
-I \autoref{fig:test2} så innføres en reservasjonslønn med en ny nytte inkludert en stønad $\sigma$ . Med innføringen av trygden øker verdien av å ikke delta på arbeidsmarkedet. Derfor vil Tone her kreve en høyere lønn som man kan se på den nye indifferens-kurven i punkt $B$. Her er reservasjonslønnen som blir innført $w^{rs}$ er 12.5. Derfor må $w^{rs} > 12.5$ for at Tone skal velge å gå i arbeid, ellers er hun indifferent.
+I \autoref{fig:test2} så innføres en reservasjonslønn med en ny nytte inkludert en stønad $\sigma$ . Med innføringen av trygden øker verdien av å ikke delta på arbeidsmarkedet. Derfor vil Tone her kreve en høyere lønn som man kan se på den nye indifferens-kurven i punkt $B$ og. Her er reservasjonslønnen som blir innført $w^{rs}$ 12.5, og er helningen til den grønne stiplede linjen. Derfor må $w^{rs} > 12.5$ for at Tone skal velge å gå i arbeid, ellers er hun indifferent.
 
 \clearpage
 
@@ -612,7 +610,7 @@ I \autoref{fig:test2} så innføres en reservasjonslønn med en ny nytte inklude
   \label{fig:test2}
 \end{figure}
 ```
-I \autoref{fig:test3} vises faktiske tallverdier innsatt av den matematiske utledningen for reservasjonslønnen $w^r$ som er 5 uten stønad og $w^{rs} =$ 12.5 med stønad.
+I \autoref{fig:test3} vises faktiske tallverdier innsatt av den matematiske utledningen.
 
 ```{=tex}
 \begin{figure}[h]
@@ -622,9 +620,11 @@ I \autoref{fig:test3} vises faktiske tallverdier innsatt av den matematiske utle
   \label{fig:test3}
 \end{figure}
 ```
+\clearpage
+
 ## Ufullkommen konkurranse
 
-Arbeidsmarkeder er normalt ikke perfekte og under fullkommen konkurranse. Hva skjer om markedet er ufullkommen?
+Hvilke effekter vil en stønad/trygd ha på et ufullkomment arbeidsmarked?
 
 Reservasjonslønnen endrer seg fra å være statisk til å bli dynamisk, hvor statisk er forskjellen på å være i jobb eller ikke i det hele tatt. Mens dynamisk vil si den lønnen som gjør individet indifferent mellom å akseptere et tilbud på lønn og fortsette søke arbeid. Videre så kan man nevne noen andre effekter:
 
@@ -632,13 +632,17 @@ Reservasjonslønnen endrer seg fra å være statisk til å bli dynamisk, hvor st
 2.  Lønnseffekter: Stønad kan gjøre slik at arbeideren og arbeidsgiver får en friksjon mellom hverandre, siden arbeidsgiver ikke enkelt finner ny arbeidstaker og det samme motsatt vei. Høyere stønad gir bedre forhandlingsposisjon til arbeidstaker, og høyere lønn og hvis arbeidstaker søker mindre intensivt blir det mindre verdi å ansette folk og kostnaden for å arbeidsgiver blir å øke.
 3.  Rettighetseffekter: Stønad gir incentiver for mer mennesker å delta i arbeidsmarkedet siden den øker verdien av ansettelse og arbeidsledighet over verdien av inaktivitet for de som ikke mottar stønaden.
 
+For å motvirke atferdsrisiko er det også mulig for staten å innføre sanksjoner mot de som ikke søker jobber tilstrekkelig eller som nekter å godta jobbene de blir tilbudt. Disse effektene kan være for eksempel redusert trygd/stønad, og om de da blir straffet blir alternativkostnaden av å være arbeidsledig høyere slik at de vil komme seg raskere ut i arbeidsmarkedet igjen.
+
+Empiriske funn sier også at lengre maks erstatnings-tid fører til lengre tid i arbeidsledighet, men nivået på erstatningen har mindre effekt ifølge @van2006shortening.
+
 # Utfordring 3.2
 
 ## Utviklingen i egenmeldinger
 
-a\) Sangen handler om egenmelding. Bruk data for å vise utviklingen i egenmelding. (Har du noen bedre ide, se på det hvis du tror sangpersonen har jobbet) Når jeg skriver diskuter, ikke si en linje men utdyp og forklar ved bruk av økonomisk teori.
+Sangen Tredagern av Gatas Parlament handler om egenmeldinger, og personen som synger sangen gir flere grunner til hvorfor han skal ringe å ta tre dager med egenmelding selv om personen egentlig ikke er "syk". Dette er for eksempel ikke en god grunn for å bruke egenmelding og kan klassifiseres som missbruk.
 
-I \autoref{fig:test4} ser man utviklingen av egenmeldinger i industrien fra 2001 inkludert kvinner og menn. Det man kan se er at det over tid kan observeres en sammenheng med at flere personer bruker egenmelding enn tidligere.
+I \autoref{fig:test4} ser man utviklingen av egenmeldinger i industrien fra 2001 inkludert kvinner og menn. Det man kan se er at det over tid kan observeres en svak sammenheng med at flere personer bruker egenmelding enn tidligere. I figuren vises covid-19 årene som kan avvike noe fra hva som ville vært normalt.
 
 ```{=tex}
 \begin{figure}[h]
@@ -648,38 +652,56 @@ I \autoref{fig:test4} ser man utviklingen av egenmeldinger i industrien fra 2001
   \label{fig:test4}
 \end{figure}
 ```
-b\) Hva er disensentivproblemet i sangen? Bruk økonomisk intuisjon, hva skjer og hvorfor, hva er mekanismene? Tenk på mennesker når du svarer.
+## Disencentiv-problemet i sangen
+
+Disensentiv-problemet i sangen er at friske individer eller individer som ikke er helt syke kan bli fristet til å missbruke systemet. Vi se på dette med en Cobb-Douglas nyttefunksjon som har en sykdomsindeks $\alpha$ hvor størrelsen på parameteren $\alpha > 1$ bestemmer sykdomsnivået, hvor 0 er frisk og 1 er helt syk.
+
+$$
+U(c,l) = c^{(1-\alpha)} * l^\alpha
+$$
+
+I \autoref{fig:test5} kan man se et individs optimale tilpasning mellom konsum og fritid når individet er helt frisk.
 
 ```{=tex}
 \begin{figure}[h]
 \centering
-  \includegraphics[width=\linewidth]{figur5.png}
+  \includegraphics[width=0.8\linewidth]{figur5.png}
   \captionof{figure}{Individets tilpasning når helt frisk}
   \label{fig:test5}
 \end{figure}
 ```
+\clearpage
+
+\autoref{fig:test6} viser hvordan et friskt menneske kan missbruke sykepengeordningen med en høyere $\alpha$ å gå fra venstre side av den oransje linjen i fullt arbeid til å tilpasse seg i det nye likevekts-punktet på indifferenskurven $U^2$ . Helningen til den oransje linjen blir $-(w-1w)$ og er da på det samme konsumet som individet hadde i arbeid, men tilpasningen blir på 0 timer arbeid siden individet velger å ikke ta arbeid på grunn av 100% kompensasjon fra staten, som kan referere til det samme problemet som i sangen der han som synger velger å ta tre dager egenmelding.
+
 ```{=tex}
 \begin{figure}[h]
 \centering
-  \includegraphics[width=\linewidth]{figur6.png}
+  \includegraphics[width=0.8\linewidth]{figur6.png}
   \captionof{figure}{Individets tilpasning ved full kompensasjonsgrad}
   \label{fig:test6}
 \end{figure}
 ```
+Et godt virkemiddel for å kunne redusere disensentiv-effekten som sangen handler om kan være å velge en lavere kompensasjonsgrad enn 100%. I \autoref{fig:test7} så ser man at om man innfører en lavere kompensasjonsgrad så blir individet å tilpasse seg på den nye indifferenskurven $U^1$ hvor det optimale punktet for individet blir hvor den tangerer den nye reservasjonslønnen med helningen $-(w-0.25w)$ . Her vil individet velge få en mindre nytte enn tidligere og samtidig velge å gå litt i arbeid, noe som kan føre til at individet fortere vil velge å gå tilbake til arbeidsmarkedet.
+
 ```{=tex}
-\begin{figure}[h]
+ \begin{figure}[h]
 \centering
-  \includegraphics[width=\linewidth]{figur7.png}
+  \includegraphics[width=0.8\linewidth]{figur7.png}
   \captionof{figure}{25 prosent kompensasjonsgrad}
   \label{fig:test7}
 \end{figure}
 ```
-c\) Bruk økonomisk teori og foreså et virkemiddel for å redusere disinsentiveffekten, bruk figur og husk å forklare økonomisk intuisjon. Foreslå virkemidler til den metoden du velger å bruke.
+Avslutningsvis er det verdt å nevne at en stram sykepengeordning kan føre til at mennesker som ikke utnytter systemet kan velge å gå tilbake i arbeid selv om de ikke er friske nok.
 
 # Appendiks
 
 Bruk av KI: ChatGPT 4 inkludert advanced data analysis og funksjon for å kunne lese fra bilder.
 
-Får ikke lov å referere til chat med bilder, men jeg spurte ChatGPT hvordan regne ut en lagrange funksjon i python-kode, og fikk til svar kodeblokk 6 som jeg brukte til å regne ut verdiene for å plotte de siste tre figurene, samt kodeblokk 7 og 8 som er modifiserte versjoner av 6 med andre tallverdier.
+Får ikke lov å referere til chat med bilder(da dette kan missbrukes), men jeg spurte ChatGPT hvordan regne ut en lagrange funksjon i python-kode, og fikk til svar kodeblokk 6 som jeg brukte til å regne ut verdiene for å plotte de siste tre figurene, samt kodeblokk 7 og 8 som er modifiserte versjoner av 6 med andre tallverdier.
+
+Jeg har også brukt noe AI til å prøve å forklare meg noe av matematikken i første del av oppgaven da jeg ikke har helt forstått hva det har blitt spurt om.
+
+Til sist er det verdt å nevne at noe av lagrange bibetingelsene var vanskelig å forstå hvordan man skulle finne ut av, så endte opp med å bruke bibetingelsene som er satt opp i løsningsforslaget til seminar 4, og alle tallverdier og utregning er ellers også det samme som i løsningen til seminaret.
 
 # Referanser
