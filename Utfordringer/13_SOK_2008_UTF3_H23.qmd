@@ -259,11 +259,12 @@ ax.text(x=3, y=211, s="Arbeidsfri inntekt + stønad = m + $\sigma$")
 #
 ax.text(x=20, y=-45, s='$L^{ft}$', size=12)
 ax.text(x=60, y=-45, s='$L^0$', size=12)
-ax.text(x=-2, y=400, s="$w^r$")
-ax.text(x=-2, y=825, s="$w^{rs}$")
+ax.text(x=-2, y=400, s='$w^r$')
+ax.text(x=-2, y=825, s='$w^{rs}$')
 ax.scatter(x =20, y=m_num + sol_2_num * (l0_num-20), zorder=2, color="green")
 ax.scatter(x=20, y=m_num + sol_1_num * (l0_num-20), zorder=2)
 ax.legend()
+plt.savefig("figur2.png", dpi=300)
 ```
 
 ```{python include=FALSE}
